@@ -1,0 +1,23 @@
+ + Controller
+	/recommend/main.do	- RecommendServlet
+	/recommend/check.do	- RecommendCheckServlet
+ + Service
+	RecommendService.java
+		public int getTotal(); //SELECT count(*) 결과 반환
+		public void check(Recommend user);
+			// user의 ID가 존재하는지 체크
+ + DAO
+	RecommendDao.java
+		public int getTotal(Recommend r);
+		public void check(Recommend r);
+		public void insert(Recommend r);
+		public void delete(Recommend r);
+ + DTO
+	Recommend.java
+		String recommendId;
+ + VIEW
+	/view/recommend/main.jsp
+ + Table
+	RECOMMEND_TB
+
+	recommend_ID VARCHAR2(50) -- 추천인 ID
