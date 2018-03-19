@@ -16,10 +16,15 @@ public class SignIn extends HttpServlet {
 	private static final long serialVersionUID = 1L;
       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("utf-8");
+		request.setCharacterEncoding("utf-8");
 		request.getRequestDispatcher("/SignInView/SignInView.jsp").forward(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setCharacterEncoding("utf-8");
+		request.setCharacterEncoding("utf-8");
+		
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
 		

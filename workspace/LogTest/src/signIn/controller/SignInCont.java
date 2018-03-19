@@ -20,6 +20,7 @@ public class SignInCont extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("utf-8");
+		request.setCharacterEncoding("utf-8");
 		
 		bouncer = new Bouncer();
 		if(bouncer.check(request)) {
