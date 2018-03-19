@@ -22,19 +22,20 @@ public class SignIn extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
-		if(""==id||id==null||""==pw||pw==null) {
-			response.sendRedirect("http://localhost:8001/LogTest/SignIn");
-		}
+		
 		Account account = new Account();
 		account.setId(id);
 		account.setPw(pw);
 		SignUpDao sign = new SignUpDao();
 		
-		if(sign.signIn(account)){
+		if(""==id||id==null||""==pw||pw==null) {
+			response.sendRedirect("http://localhost:8001/LogTest/SignIn");
+		}else if(sign.signIn(account)) {
 			Bouncer bouncer = new Bouncer();
 			bouncer.stamp(request);
 			request.getRequestDispatcher("/Door").forward(request, response);
+		} else {
+			response.sendRedirect("http://localhost:8001/LogTest/SignIn");
 		}
-		response.sendRedirect("http://localhost:8001/LogTest/SignIn");
 	}
 }

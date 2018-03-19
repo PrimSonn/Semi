@@ -13,7 +13,7 @@ public class SignUpDao {
 	
 	private final String url = "jdbc:oracle:thin:@localhost:1521:xe";
 	private final String tbUser = "scott";
-	private final String tbPass = "scott";
+	private final String tbPass = "tiger";
 	private Connection conn = null;
 	private Statement st = null;
 	private PreparedStatement pst = null;
@@ -55,7 +55,7 @@ public class SignUpDao {
 			String pw = rs.getString("PW");
 			if(""==pw) {
 				return false;
-			} else if(pw!=account.getPw()) {
+			} else if(!pw.equals(account.getPw())) {
 				return false;
 			} else {
 				return true;

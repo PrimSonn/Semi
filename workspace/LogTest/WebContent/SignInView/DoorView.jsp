@@ -20,6 +20,6 @@
 <body>
 	<p>Door</p>
 	<button id='signUp'>SignUp</button>
-	<button id='signIn'>SignIp</button>
+	<button id='signIn'>SignIn</button>
 </body>
 </html>
