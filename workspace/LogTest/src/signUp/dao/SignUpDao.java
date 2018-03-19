@@ -51,17 +51,21 @@ public class SignUpDao {
 			pst.setString(1, account.getId());
 			
 			rs = pst.executeQuery();
-			rs.next();
-			String pw = rs.getString("PW");
-			if(""==pw) {
-				return false;
-			} else if(!pw.equals(account.getPw())) {
-				return false;
-			} else if(pw.equals(account.getPw())){
-				System.out.println(pw);
-				System.out.println("pw match!");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				return true;
+			if(rs.next()) {
+					String pw = rs.getString("PW");
+				if(""==pw) {
+					return false;
+				} else if(!pw.equals(account.getPw())) {
+					return false;
+				} else if(pw.equals(account.getPw())){
+					System.out.println(pw);
+					System.out.println("pw match!");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					return true;
+				}
+			} else {
+//				System.out.println("no such account exist");
 			}
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
