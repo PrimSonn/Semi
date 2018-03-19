@@ -1,0 +1,42 @@
+
+
+create table ACCOUNT_TB (ID varchar2(20),PW varchar2(20));
+
+
+create or replace procedure SignIn (NewID in varchar2, NewPW in varchar2) begin
+	if NewID is NULL or NewID==''
+	insert into ACCOUNT_TB (ID,PW) values (NewID,NewPW);
+
+
+
+
+
+
+create or replace procedure ProcGetDept (PDeptNo in Dept.DeptNo%type)
+is
+    V_Dname Dept.DName%type;
+begin
+    select DName into V_Dname from Dept where DeptNo = PDeptNo;
+    Dbms_Output.Put_Line(V_Dname);
+end;
+/
+
+
+
+
+
+file upload/pluggin
+
+
+
+static import
+sequence
+procedure
+sql
+upload to..
+image file mapping
+
+
+similar movies
+header-footer
+header-search
