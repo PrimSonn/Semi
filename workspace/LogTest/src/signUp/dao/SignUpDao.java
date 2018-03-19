@@ -57,7 +57,9 @@ public class SignUpDao {
 				return false;
 			} else if(!pw.equals(account.getPw())) {
 				return false;
-			} else {
+			} else if(pw.equals(account.getPw())){
+				System.out.println(pw);
+				System.out.println("pw match!");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				return true;
 			}
 			

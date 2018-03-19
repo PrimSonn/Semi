@@ -5,8 +5,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script>
+	window.onload = function(){ 
+		
+		document.getElementById("SignOut").onclick = function() {
+			window.location.href = "http://localhost:8001/LogTest/SignOut";
+		}
+	}
+</script>
 </head>
 <body>
 	<p>MainView</p>
+	<button id='SignOut'>SignOut</button>
 </body>
 </html>
