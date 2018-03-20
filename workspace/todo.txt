@@ -89,6 +89,7 @@ https://stackoverflow.com/questions/25621497/get-attribute-from-servletcontext-o
 https://stackoverflow.com/questions/28392888/init-param-and-context-param
 https://www.roseindia.net/servlets/ServletContextListener-example.shtml
 http://tomcat.apache.org/tomcat-4.0-doc/servletapi/javax/servlet/ServletConfig.html
+https://stackoverflow.com/questions/18891903/how-do-i-put-listener-in-web-xml-java
 servelet context listener..
 
 
