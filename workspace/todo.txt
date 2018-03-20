@@ -1,16 +1,20 @@
 
 
+
+====================================================================  SIGN IN TEST DRIVER TABLE  =========================================================================================
+
+
 create table ACCOUNT_TB (ID varchar2(20),PW varchar2(20));
 
 
 create or replace procedure SignIn (NewID in varchar2, NewPW in varchar2) begin
-	if NewID is NULL or NewID==''
+	if NewID is NULL or NewID=='' then
 	insert into ACCOUNT_TB (ID,PW) values (NewID,NewPW);
 
 
 
 
-
+=======================================================================  PROCEDURE WIP AREA  =======================================================
 
 create or replace procedure ProcGetDept (PDeptNo in Dept.DeptNo%type)
 is
@@ -21,13 +25,77 @@ begin
 end;
 /
 
+====================================================================  MIX LOAD TEST DRIVER TABLE  =================================================================================================
 
+
+create table MOVIES ( IDX number, TITLE varchar2(20));
+
+create table ACCOUNTS ( IDX number, ID varchar2(20));
+
+create table MOVIE_COMMENTS ( IDX number, TITLE varchar2(20));
+
+create table MOVIE_IMGS ( TYPE varchar2(20));
+
+create table ACCOUNT_IMGS ( TYPE varchar2(20));
+
+-------------------------------------------------------  inserted test rows ----------------------------------------------------------------------------------
+
+ insert
+ 
+-MOVIES
+1 MOVIE1
+2 영화2
+-ACCOUNTS
+1 ID1
+2 아이디2
+-MOVIE_COMMENTS
+1 댓글1
+2 댓글2
+-MOVIE_IMGS
+thumb
+poster
+-ACCOUNT_IMGS
+thumb
+back
+
+INSERT ALL
+   INTO t (col1, col2, col3) VALUES ('val1_1', 'val1_2', 'val1_3')
+   INTO t (col1, col2, col3) VALUES ('val2_1', 'val2_2', 'val2_3')
+   INTO t (col1, col2, col3) VALUES ('val3_1', 'val3_2', 'val3_3')
+   .
+   .
+   .
+SELECT 1 FROM DUAL;
+
+insert all
+	into MOVIES (IDX, TITLE) values (1,'Movie1')
+	into MOVIES (IDX, TITLE) values (2, '영화2')
+	into ACCOUNTS (IDX, ID) values (1, 'Id1')
+	into ACCOUNTS (IDX, ID) values (2, '아이디2')
+	into MOVIE_COMMENTS (IDX, TITLE) values (1, 'Comment1')
+	into MOVIE_COMMENTS (IDX, TITLE) values (2, '아이디2')
+	into MOVIE_IMGS (TYPE) values (thumb)
+	into MOVIE_IMGS (TYPE) values (poster)
+	into ACCOUNT_IMGS (TYPE) values (poster)
+	into ACCOUNT_IMGS (TYPE) values (back)
+select 1 from DUAL;
+
+
+=============================================================================================================================================================================================
+
+https://stackoverflow.com/questions/2526968/how-to-import-constants-in-a-jsp-page
+https://docs.oracle.com/javase/6/docs/api/javax/sql/rowset/RowSetMetaDataImpl.html
+https://stackoverflow.com/questions/25621497/get-attribute-from-servletcontext-on-jsp-page
+https://stackoverflow.com/questions/28392888/init-param-and-context-param
+https://www.roseindia.net/servlets/ServletContextListener-example.shtml
+http://tomcat.apache.org/tomcat-4.0-doc/servletapi/javax/servlet/ServletConfig.html
+servelet context listener..
 
 
 
 file upload/pluggin
 
-
+application scoped static method?
 
 static import
 sequence
