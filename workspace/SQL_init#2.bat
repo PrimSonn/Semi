@@ -1,0 +1,1 @@
+sqlplus scott/tiger @"%~dp0\MIX LOAD TEST DRIVER TABLE.sql"

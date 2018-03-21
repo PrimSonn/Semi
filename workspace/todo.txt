@@ -12,8 +12,6 @@ create or replace procedure SignIn (NewID in varchar2, NewPW in varchar2) begin
 	insert into ACCOUNT_TB (ID,PW) values (NewID,NewPW);
 
 
-
-
 =======================================================================  PROCEDURE WIP AREA  =======================================================
 
 create or replace procedure ProcGetDept (PDeptNo in Dept.DeptNo%type)
@@ -25,8 +23,21 @@ begin
 end;
 /
 
-====================================================================  MIX LOAD TEST DRIVER TABLE  =================================================================================================
+-------------------------------------------------------------------------------------------------------------------------------------
 
+select C.IDX C_IDX, C.TITLE C_TITLE, M_IDX, M_TITLE, A_IDX, A_ID,
+    case 
+        when T.M_IDX is not null then 'M'
+        when T.A_IDX is not null then 'A'
+        when C.IDX is not null then 'C'
+    end as TAG
+from MOVIE_COMMENTS C full outer join (
+    select M.IDX M_IDX , A.IDX A_IDX, M.TITLE M_TITLE , A.ID A_ID from MOVIES M full outer join ACCOUNTS A on 1=2) T 
+on 1=2
+order by TAG asc;
+
+
+====================================================================  MIX LOAD TEST DRIVER TABLE  =================================================================================================
 
 create table MOVIES ( IDX number, TITLE varchar2(20));
 
