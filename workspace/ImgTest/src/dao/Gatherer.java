@@ -2,11 +2,13 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import javax.servlet.http.HttpServletRequest;
+
+import dto.Pack;
+import dto.Packer;
 
 public class Gatherer {
 	
@@ -15,7 +17,7 @@ public class Gatherer {
 	private static final String PASS = "tiger";
 	
 	private Connection conn = null;
-	private Statement st = null;
+//	private PreparedStatement pst = null;
 	private ResultSet rs = null;
 	
 	
@@ -27,11 +29,33 @@ public class Gatherer {
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-	}//gatherer ends
+	}
 	
-	public boolean getThings(HttpServletRequest request) {
+	public Pack getThings() {
 		
-		return false;
+		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX, MOVIE_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
+						" case" + 
+						" when T.MOVIE_IDX is not null then 'MOVIE'" + 
+						" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
+						" when C.IDX is not null then 'COMMENT'" + 
+						" end as TAG" + 
+					" from MOVIE_COMMENTS C full outer join (" + 
+						" select M.IDX MOVIE_IDX , A.IDX ACCOUNT_IDX, M.TITLE MOVIE_TITLE , A.ID ACCOUNT_ID from MOVIES M full outer join ACCOUNTS A on 1=2) T" + 
+					" on 1=2";
+		
+		try {
+//			pst = conn.prepareStatement(sql);
+//			pst.setString(1, "");
+//			pst.setString(2, "");
+//			pst.setString(3, "");
+//			rs = pst.executeQuery();
+			return new Packer(conn.createStatement().executeQuery(sql)) ;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 }

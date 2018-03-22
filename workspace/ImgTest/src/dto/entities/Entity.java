@@ -15,12 +15,12 @@ public class Entity {
 	}
 	
 	public int getIdx() {
-		return Integer.parseInt(properties.get("idx"));
+		return Integer.parseInt(properties.get("IDX"));
 	}
 	
 	public boolean setIdx(int idx) {
 		try {
-			properties.put("idx",String.valueOf(idx));
+			properties.put("IDX",String.valueOf(idx));
 			}catch(NullPointerException e) {
 				e.printStackTrace();
 				return false;
