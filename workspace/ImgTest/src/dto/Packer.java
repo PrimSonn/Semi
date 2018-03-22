@@ -21,6 +21,8 @@ public class Packer extends Pack{
 		
 		try {
 			
+//			System.out.println("findColumn: "+rs.findColumn("TAG"));
+			
 			ResultSetMetaData meta = rs.getMetaData();
 			Hashtable<String,Hashtable<Integer,String>> columns = new Hashtable<String,Hashtable<Integer,String>>(5);
 			Hashtable<Integer,String> propset = new Hashtable<Integer,String>();
@@ -35,8 +37,9 @@ public class Packer extends Pack{
 				
 					String label = meta.getColumnLabel(i);
 					
-					if(label=="TAG") {
-						tagnum=i;System.err.println("tagnum i = " +i);//----testcode--BUG FOUND!!!!!!!!!!
+					if("TAG".matches(label)) {
+						tagnum=i;
+//						System.err.println("tagnum i = " +i);//----testcode--BUG FOUND!!!!!!!!!!
 						continue;
 					}
 					
@@ -52,7 +55,7 @@ public class Packer extends Pack{
 						try {
 							prefix = label.substring(0, j);
 							property = label.substring(j+1);
-							System.out.print("i: "+i +"  prefix: "+prefix+"  property: "+property+"\r");//---------test
+//							System.out.print("i: "+i +"  prefix: "+prefix+"  property: "+property+"\r");//---------test
 						}catch(IndexOutOfBoundsException e) {
 							e.printStackTrace();
 						}
@@ -68,15 +71,15 @@ public class Packer extends Pack{
 				}// sorting for end
 			
 			while(rs.next()) {//packaging start.	
-				System.out.println("tegnum: "+tagnum);//test
+//				System.out.println("tegnum: "+tagnum);//test
 				tag = rs.getString(tagnum);
-				System.out.println("tag: " + tag);//---test--ok
+//				System.out.println("tag: " + tag);//---test--ok
 //				switch(tag) {
 //					case "": break;
 //				}
 				entity = new Entity();
 				propset = columns.get(tag);
-				System.out.println("propset: " +propset);//-----test
+//				System.out.println("propset: " +propset);//-----test
 				for(Integer i : propset.keySet() ) {
 					entity.setProperty(propset.get(i), rs.getString(i) );
 				}

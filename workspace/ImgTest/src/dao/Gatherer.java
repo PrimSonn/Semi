@@ -2,10 +2,8 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 import dto.Pack;
 import dto.Packer;
@@ -23,21 +21,22 @@ public class Gatherer {
 	
 	public Gatherer() {
 		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(URL,USER,PASS);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				conn = DriverManager.getConnection(URL,USER,PASS);
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
+			
 	}
 	
 	public Pack getThings() {
 		
 		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX, MOVIE_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
 						" case" + 
-						" when T.MOVIE_IDX is not null then 'MOVIE'" + 
-						" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
-						" when C.IDX is not null then 'COMMENT'" + 
+							" when T.MOVIE_IDX is not null then 'MOVIE'" + 
+							" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
+							" when C.IDX is not null then 'COMMENT'" + 
 						" end as TAG" + 
 					" from MOVIE_COMMENTS C full outer join (" + 
 						" select M.IDX MOVIE_IDX , A.IDX ACCOUNT_IDX, M.TITLE MOVIE_TITLE , A.ID ACCOUNT_ID from MOVIES M full outer join ACCOUNTS A on 1=2) T" + 
@@ -57,5 +56,4 @@ public class Gatherer {
 		
 		return null;
 	}
-	
 }
