@@ -1,0 +1,42 @@
+
+
+
+============ upload(commit) ============
+
+no Build folder
+no .setting folder
+no .classpath file
+no .project file
+
+
+==============   Tagging protocol   ==============
+
+
+full outer join where 1=2
+add table name as (tag) on column
+special table(selected within a table) will joined with (subtag)
+
+column = (prefix)_property
+prefix = (tag)_(subtag)_(subtag)....
+
+subtag will check all the super tag's colimn
+
+	Table:	TAG  || (prefix)_property  || (prefix)_property ||  (prefix)_property  ||  (prefix)_property
+			(TAG)
+			(TAG)
+			(TAG)
+			(TAG)
+
+--------------------------------------------
+
+columns: Hashtable< "prefix(tag)", Hashtable<"column index related to tag", "colimn's prorperty name"> >
+this wil map which column to look when searching through a row.
+
+----- get entity package ----
+Gatherer get = new Gatherer();
+Pack pack = get.getThings();
+
+or
+Pack pack = (new Gatherer().getThings());
+
+

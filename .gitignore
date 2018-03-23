@@ -1,2 +1,6 @@
 .GK
 EclipseWorkSpace/
+workspace/build/
+workspace/.settings/
+workspace/.classpath
+workspace/.project
