@@ -34,6 +34,7 @@ public class Gatherer {
 		
 		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX, MOVIE_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
 						" case" + 
+//							" when T.MOVIE_IDX =1 then 'MOVIE_Selected'" + 
 							" when T.MOVIE_IDX is not null then 'MOVIE'" + 
 							" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
 							" when C.IDX is not null then 'COMMENT'" + 
