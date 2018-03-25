@@ -1,0 +1,16 @@
+
+
+========== Movie Specific Page ===========
+
+Movies: selected, similar movie list
+
+Accounts: selected(from Session), 
+	MyMovies(paid)
+	WishList
+
+Comments: Selected movie's comments
+
++Ratings: 
+
+RATINGS: IDX__(sequence), IDX(refers MOVIE), IDX(refers ACCOUNTS), RATING number.
+

@@ -106,6 +106,8 @@ servelet context listener..
 
 automated prefixed column!!!
 
+DB specific name rule
+
 file upload/pluggin
 
 application scoped static method?

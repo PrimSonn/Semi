@@ -33,3 +33,8 @@ commit;
 
 --SET TERMOUT ON
 --SET ECHO ON
+
+disc;
+
+host pause
+host exit

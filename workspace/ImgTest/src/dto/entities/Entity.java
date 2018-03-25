@@ -14,8 +14,8 @@ public class Entity {
 		imgs = new Hashtable<String,ArrayList<String>>();
 	}
 	
-	public int getIdx() {
-		return Integer.parseInt(properties.get("IDX"));
+	public String getIdx() {
+		return properties.get("IDX");
 	}
 	
 	public boolean setIdx(int idx) {
@@ -32,9 +32,9 @@ public class Entity {
 		return properties.get(column);
 	}
 
-	public boolean setProperty(String column, String value) {
+	public boolean setProperty(String property, String value) {
 		try{
-			properties.put(column, value);
+			properties.put(property, value);
 		}catch (NullPointerException e){
 			e.printStackTrace();
 			return false;

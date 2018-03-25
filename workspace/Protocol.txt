@@ -13,7 +13,10 @@ no .project file
 
 
 full outer join where 1=2
+
 add table name as (tag) on column
+tags and property names are separated by '_'
+
 special table(selected within a table) will joined with (subtag)
 
 column = (prefix)_property
@@ -29,10 +32,19 @@ subtag will check all the super tag's colimn
 
 --------------------------------------------
 
-columns: Hashtable< "prefix(tag)", Hashtable<"column index related to tag", "colimn's prorperty name"> >
+columMap: Hashtable< "prefix(tag)", Hashtable<"column index related to tag", "colimn's prorperty name"> >
 this wil map which column to look when searching through a row.
 
------ get entity package ----
+-----------------------------------------
+
+uniList: all the entities will be here
+
+tag without subtag : ENTITY[]
+
+
+
+
+---------- get entity package ------------
 Gatherer get = new Gatherer();
 Pack pack = get.getThings();
 
