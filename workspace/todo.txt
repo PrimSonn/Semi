@@ -123,3 +123,16 @@ image file mapping
 similar movies
 header-footer
 header-search
+
+
+
+Collections.sort(names, new Comparator<String>() {
+    @Override
+    public int compare(String a, String b) {
+        return b.compareTo(a);
+    }
+});
+
+Collections.sort(names, (a, b) -> b.compareTo(a));
+
+
