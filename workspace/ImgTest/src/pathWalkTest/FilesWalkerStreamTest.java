@@ -56,15 +56,22 @@ public class FilesWalkerStreamTest {
 		Stack<File> stack = new Stack<File>();
 		File file = new File("./");
 		
+		int dth=0;
+		
 		for(File f : file.listFiles()) {
 			stack.push(f);
 		}
 		for(;;) {
 			if(stack.isEmpty())break;
 			file=stack.pop();
-			if(file.isFile()) {
-				System.out.println(file);
+			if(file==null) {
+				dth--;
+			}
+			else if(file.isFile()) {
+				System.out.println("level "+dth+": "+file);
 			}else if(file.isDirectory()) {
+				dth++;
+					stack.push(null);
 				for(File f : file.listFiles()) {
 					stack.push(f);
 				}
