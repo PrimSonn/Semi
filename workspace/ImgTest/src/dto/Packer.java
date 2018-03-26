@@ -1,5 +1,6 @@
 package dto;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Stack;
 import java.util.stream.Stream;
 
 import dto.entities.Entity;
@@ -165,15 +167,31 @@ public class Packer extends Pack{
 	
 	private void curator(String tag,String realPath, String contextPath, Entity entity) {
 		
+		Stack<File> stack = new Stack<File>();
 		String idx = entity.getIdx();
-		try {
-			Stream<Path> path = Files.walk(Paths.get("/../../../"));
-			path.filter(path ->path.toFile().isFile())
-				.forEach(action);//--------------------------------------WIP------------------!!
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+		File file = new File(realPath+"\\"+"img\\");
+		
+		for(File f : file.listFiles()) {
+			stack.push(f);
 		}
+		
+		for(;;) {
+			if(stack.isEmpty())break;
+			file=stack.pop();
+			if(file.isFile()) {
+				//add
+			}else if(file.isDirectory()) {
+				for(File f : file.listFiles()) {
+					stack.push(f);
+				}
+			}else {
+				System.err.println("somethings wrong here..");
+			}
+		
+		
+		}
+		
+		
 		
 	}
 	

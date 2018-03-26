@@ -39,14 +39,43 @@ public class FilesWalkerStreamTest {
 		*/
 		
 		
-			//----------this wont work on servlet.------------
+		/*	//----------this wont work on servlet.------------
 		try (Stream<Path> paths = Files.walk(Paths.get("./"))) {
 			paths.filter(path->path.toFile().isFile()).forEach(System.out::println);
 			System.out.println("----------------");
 		    paths.forEach(System.out::println);
+//		    paths.map(mapper);
 		    } catch (IOException e) {
 		      e.printStackTrace();
 		    }
+		*/
+		
+		
+		
+		//--------------------------Yay!! done!!-------------------------------
+		Stack<File> stack = new Stack<File>();
+		File file = new File("./");
+		
+		for(File f : file.listFiles()) {
+			stack.push(f);
+		}
+		for(;;) {
+			if(stack.isEmpty())break;
+			file=stack.pop();
+			if(file.isFile()) {
+				System.out.println(file);
+			}else if(file.isDirectory()) {
+				for(File f : file.listFiles()) {
+					stack.push(f);
+				}
+			}else {
+				System.err.println("somethings wrong here..");
+			}
+		}
+		
+		
+		
+		
 		
 	}
 
