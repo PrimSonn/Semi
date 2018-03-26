@@ -12,7 +12,7 @@ public class TestDriver {
 		for(String key :pack.getKeys()) {
 			System.out.println(key);
 			for(Entity e :pack.getList(key)){
-				System.out.println("\t"+e.getPropertiesTable());
+				System.out.println("\tproperties: "+e.getPropertiesTable());
 			}
 		}
 		

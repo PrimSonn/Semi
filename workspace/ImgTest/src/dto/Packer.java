@@ -1,14 +1,20 @@
 package dto;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.stream.Stream;
 
 import dto.entities.Entity;
 //import dto.entities.Account;
 //import dto.entities.Comment;
 //import dto.entities.Movie;
+
 
 public class Packer extends Pack{
 	
@@ -94,6 +100,7 @@ public class Packer extends Pack{
 				for(Integer i : propset.keySet() ) {
 					entity.setProperty(propset.get(i), rs.getString(i) );
 				}
+				entity.setIdx();
 				
 				t_ag = tag.toCharArray();
 				for(int i = 0; t_ag.length>i ;i++) {//cut subtag;
@@ -102,11 +109,8 @@ public class Packer extends Pack{
 					}
 				}
 				
-				String idx = entity.getIdx();
 				String dummyContextPath = null;
-				if(idx!=null) {
-					curator(tag ,idx, entity, dummyContextPath); //+need to solve contextPath !!!!!!!!
-				}
+				curator(tag , entity, dummyContextPath); //+need to solve contextPath !!!!!!!!
 				
 				super.putList(tag, entity);
 			}
@@ -159,8 +163,17 @@ public class Packer extends Pack{
 	}//cartographer() ends
 	
 	
-	private void curator(String tag, String idx, Entity entity, String contextPath) {
+	private void curator(String tag,String realPath, String contextPath, Entity entity) {
 		
+		String idx = entity.getIdx();
+		try {
+			Stream<Path> path = Files.walk(Paths.get("/../../../"));
+			path.filter(path ->path.toFile().isFile())
+				.forEach(action);//--------------------------------------WIP------------------!!
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

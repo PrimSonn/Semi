@@ -7,7 +7,7 @@ public class Entity {
 	
 	private Hashtable<String,String> properties;
 	private Hashtable<String,ArrayList<String>> imgs;
-	
+	private String idx;
 	
 	public Entity() {
 		properties = new Hashtable<String,String>();
@@ -15,17 +15,25 @@ public class Entity {
 	}
 	
 	public String getIdx() {
-		return properties.get("IDX");
+		
+		if (idx!=null) return idx;
+		else {
+			return properties.get("IDX");
+		}
+		
 	}
 	
-	public boolean setIdx(int idx) {
-		try {
-			properties.put("IDX",String.valueOf(idx));
-			}catch(NullPointerException e) {
-				e.printStackTrace();
-				return false;
-			}
-		return true;
+	public boolean setIdx() {
+		String s = properties.get("IDX");
+		if(s!=null) {
+			idx=null;
+			return true;
+		} else return false;
+	}
+	
+	public void setIdx(String idx) {
+		this.idx=idx;
+		properties.put("IDX", idx);
 	}
 	
 	public String getProperty(String column) {
@@ -46,9 +54,15 @@ public class Entity {
 		return imgs.get(type);
 	}
 
-	public boolean setImgs(String type, String dir) {
+	public boolean setImgs(String type, String file) {
 		try {
-			imgs.get(type).add(dir);
+			if(imgs.containsKey(type)) {
+				imgs.get(type).add(file);
+			}else {
+				imgs.put(type, new ArrayList<String>());
+				imgs.get(type).add(file);
+			}
+			
 		} catch(NullPointerException e) {
 			e.printStackTrace();
 			return false;
