@@ -7,12 +7,16 @@ import dto.entities.Entity;
 public class TestDriver {
 	public static void main(String[] a) {
 		
-		Gatherer get = new Gatherer();
-		Pack pack = get.getThings();
+		
+		String dummyContextPath = "/DummyContext";//---------------------------------------------
+		String dummyRealPath = "D:\\PWorkspace\\Semi\\EclipseWorkSpace\\ImgTest\\WebContent";//----------------------------------------------
+		
+		Pack pack = (new Gatherer()).getThings(dummyContextPath,dummyRealPath);
 		for(String key :pack.getKeys()) {
 			System.out.println(key);
 			for(Entity e :pack.getList(key)){
-				System.out.println("\tproperties: "+e.getPropertiesTable());
+				System.out.println("\tProperties: "+e.getPropertiesTable());
+				System.out.println("\tImgs: "+e.getImgsTable());
 			}
 		}
 		

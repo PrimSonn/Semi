@@ -23,12 +23,13 @@ public class Entity {
 		
 	}
 	
-	public boolean setIdx() {
+	public void setIdx() {
 		String s = properties.get("IDX");
 		if(s!=null) {
 			idx=null;
-			return true;
-		} else return false;
+//			return true;
+		} 
+//		else return false;
 	}
 	
 	public void setIdx(String idx) {
@@ -40,21 +41,21 @@ public class Entity {
 		return properties.get(column);
 	}
 
-	public boolean setProperty(String property, String value) {
+	public void setProperty(String property, String value) {
 		try{
 			properties.put(property, value);
 		}catch (NullPointerException e){
 			e.printStackTrace();
-			return false;
+//			return false;
 		}
-		return true;
+//		return true;
 	}
 
 	public ArrayList<String> getImgs(String type) {
 		return imgs.get(type);
 	}
 
-	public boolean setImgs(String type, String file) {
+	public void setImgs(String type, String file) {
 		try {
 			if(imgs.containsKey(type)) {
 				imgs.get(type).add(file);
@@ -65,9 +66,9 @@ public class Entity {
 			
 		} catch(NullPointerException e) {
 			e.printStackTrace();
-			return false;
+//			return false;
 		}
-		return true;
+//		return true;
 	}
 	
 	public Hashtable<String,String> getPropertiesTable(){

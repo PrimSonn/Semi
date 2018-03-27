@@ -1,16 +1,12 @@
 package dto;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.EmptyStackException;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.stream.Stream;
 
 import dto.entities.Entity;
 //import dto.entities.Account;
@@ -20,6 +16,7 @@ import dto.entities.Entity;
 
 public class Packer extends Pack{
 	
+	private static final String ADDRESS = "http://192.168.30.52:8001";
 //	ResultSetMetaData meta;
 //	Hashtable<String,Hashtable<Integer,String>> columMap;
 //	Hashtable<Integer,String> propset;
@@ -32,7 +29,8 @@ public class Packer extends Pack{
 //	public Packer() {
 //	}
 	
-	public Packer (ResultSet rs){
+	public Packer (ResultSet rs,String contextPath, String realPath){
+		
 		super();
 		Entity entity = null;
 //		Entity mainAccount = new Account();
@@ -111,8 +109,7 @@ public class Packer extends Pack{
 					}
 				}
 				
-				String dummyContextPath = null;
-				curator(tag , entity, dummyContextPath); //+need to solve contextPath !!!!!!!!
+				curator(tag ,realPath, contextPath, entity); //+need to solve contextPath !!!!!!!!
 				
 				super.putList(tag, entity);
 			}
@@ -168,29 +165,29 @@ public class Packer extends Pack{
 	private void curator(String tag,String realPath, String contextPath, Entity entity) {
 		
 		Stack<File> stack = new Stack<File>();
-		String idx = entity.getIdx();
-		File file = new File(realPath+"\\"+"img\\");
-		
-		for(File f : file.listFiles()) {
-			stack.push(f);
-		}
+		String mask = realPath+"\\"+"Imgs\\"+tag+"\\"+ entity.getIdx()+"\\";
+		File file = new File(mask);
+		int cutter = realPath.length();
 		
 		for(;;) {
-			if(stack.isEmpty())break;
-			file=stack.pop();
 			if(file.isFile()) {
 				//add
+//				System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//-----------test
+				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));
+				entity.setImgs ( file.getAbsoluteFile().getParentFile().getName()
+						, ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/') );
+				
 			}else if(file.isDirectory()) {
 				for(File f : file.listFiles()) {
 					stack.push(f);
 				}
-			}else {
-				System.err.println("somethings wrong here..");
+			} else {
+				System.out.println("Something's wrong here: "+ file);
 			}
-		
-		
+			
+			try { file=stack.pop(); }
+			catch(EmptyStackException e) {break;}
 		}
-		
 		
 		
 	}

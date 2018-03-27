@@ -69,6 +69,8 @@ public class FilesWalkerStreamTest {
 			}
 			else if(file.isFile()) {
 				System.out.println("level "+dth+": "+file);
+//				System.out.println("parent: "+file.getParent());
+				System.out.println("parent dir: "+ file.getAbsoluteFile().getParentFile().getName());
 			}else if(file.isDirectory()) {
 				dth++;
 					stack.push(null);

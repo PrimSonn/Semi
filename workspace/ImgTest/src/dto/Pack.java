@@ -22,7 +22,7 @@ public class Pack {
 //		commentList = new ArrayList<Comment>(); 
 	}
 	
-	public boolean putList(String tag, Entity ent) {
+	public void putList(String tag, Entity ent) {
 		try {
 			if(uniList.containsKey(tag)) {
 				uniList.get(tag).add(ent);
@@ -31,11 +31,11 @@ public class Pack {
 				temp.add(ent);
 				uniList.put(tag, temp);
 			}
-			return true;
+//			return true;
 		} catch(NullPointerException e) {
 			e.printStackTrace();
 		}
-		return false;
+//		return false;
 	}
 	
 	public ArrayList<Entity> getList(String tag){

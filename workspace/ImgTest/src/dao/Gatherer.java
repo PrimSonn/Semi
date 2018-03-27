@@ -16,9 +16,8 @@ public class Gatherer {
 	
 	private Connection conn = null;
 //	private PreparedStatement pst = null;
-	private ResultSet rs = null;
-	
-	
+//	private ResultSet rs = null;
+		
 	public Gatherer() {
 		
 			try {
@@ -30,7 +29,7 @@ public class Gatherer {
 			
 	}
 	
-	public Pack getThings() {
+	public Pack getThings(String contextPath, String realPath) {
 		
 		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX, MOVIE_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
 						" case" + 
@@ -49,7 +48,7 @@ public class Gatherer {
 //			pst.setString(2, "");
 //			pst.setString(3, "");
 //			rs = pst.executeQuery();
-			return new Packer(conn.createStatement().executeQuery(sql)) ;
+			return new Packer(conn.createStatement().executeQuery(sql),contextPath, realPath) ;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
