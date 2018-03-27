@@ -124,7 +124,7 @@ public class Packer extends Pack{
 	
 	private void cartographer(Hashtable<String,Hashtable<Integer,String>> columMap, int colnum, String prefix, String property){
 		
-		System.out.println("prefix: "+prefix);//-------------test
+//		System.out.println("prefix: "+prefix);//-------------test
 		String keyFrag = null;
 		boolean hasMatchPrefix = false;
 		
@@ -134,61 +134,50 @@ public class Packer extends Pack{
 			Hashtable<Integer,String> prefixMap =columMap.get(prefix) ;
 			
 			if(key.contentEquals(prefix)) {
-				System.out.println("match prefix: "+key);//-----------test
+//				System.out.println("match prefix: "+key);//-----------test
 				keyMap.put(colnum, property);
 				hasMatchPrefix = true;
 				
 			}else if(key.length()>prefix.length()){
-				System.out.println("keylength compare key: "+key+"  prefix: "+prefix);//--------test
+//				System.out.println("keylength compare key: "+key+"  prefix: "+prefix);//--------------------test
 				char[] k_ey = key.toCharArray();
 				
 				for(int i = prefix.length()-1; k_ey.length>i; i++) {
 					if(k_ey[i]=='_') {
 						keyFrag = key.substring(0,i);
-						System.out.println("keyFrag: "+ keyFrag);//--------------test
+//						System.out.println("keyFrag: "+ keyFrag);//---------------------------------test
 						if(keyFrag.contentEquals(prefix)) {
-							System.out.println("keyFrag Equeals: "+keyFrag+"  key: "+key+"  colnum: "+colnum+"  property: "+property);//----------test
+//							System.out.println("keyFrag Equeals: "+keyFrag+"  key: "+key+"  colnum: "+colnum+"  property: "+property);//----------test
 							keyMap.put(colnum, property);
-							if(!columMap.containsKey(key))System.out.println("No such key: " +key);//--------test
+//							if(!columMap.containsKey(key))System.out.println("No such key: " +key);//-------------------------test
 							break;
 						}//prefixFragcheck ends
 					}// '_' checker ends
 				}//char sequence checker ends 
-			} else{//key=prefix checker ends
-				System.out.println("prefix parsing..  prefix: "+prefix+"  key: "+key);
+			} else{//key=prefix checker ends. now prefix parsing..
+//				System.out.println("prefix parsing..  prefix: "+prefix+"  key: "+key);//-------------------------test
 				char[] p_refix = prefix.toCharArray();
 				
 				for(int i = key.length()-1; prefix.length()>i; i++) {
 					
 					if(p_refix[i]=='_' && prefix.substring(0,i).contentEquals(key)) {
-						if(columMap.containsKey(prefix)) {
-							
-							for(int keyColNum : keyMap.keySet()) {
-								for(int prefixColnum : keyMap.keySet()) {
-									if(keyColNum!=prefixColnum) {
-										System.out.println("Prefix: "+prefix +"  key: "+key+"  keycolnum: "+ keyColNum+"  prefixColnum" + prefixColnum);
-										keyMap.put(keyColNum, property);
-									}
-								}//columMap-prefix keyset foreach ends
-							}//columMap-key keyset foreach ends
-							
-						}else {
-							Hashtable<Integer,String> temp = keyMap;
+//						System.out.println("in! prefix: "+ prefix +"  key: "+key);//---------------------------test
+						if(!columMap.containsKey(prefix)) {
+//							System.out.println("no prefix found but prefixFrag match. prefix: "+prefix+"  key: "+key);//---------------------------test
+							Hashtable<Integer,String> temp = (Hashtable<Integer, String>) keyMap.clone();
+							temp.put(colnum, property);
 							columMap.put(prefix, temp);
 						}
 						hasMatchPrefix = true;
 						break;
 					}//prefix parsing '_' + compare to key if-else ends
-					
 				}//prefix parsing for ends
 				
 			}//columMap key set if-else ends
-			
-			
 		}//for ends
 		
 		if(!hasMatchPrefix) {
-			System.out.println("no match: "+prefix);//------------------------------>test
+//			System.out.println("no match: "+prefix);//------------------------------>test
 			Hashtable<Integer,String> temp = new Hashtable<Integer,String>();
 			temp.put(colnum, property);
 			columMap.put(prefix, temp);

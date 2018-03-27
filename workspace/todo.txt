@@ -1,4 +1,4 @@
-
+﻿
 
 
 ====================================================================  SIGN IN TEST DRIVER TABLE  =========================================================================================
@@ -103,6 +103,13 @@ http://tomcat.apache.org/tomcat-4.0-doc/servletapi/javax/servlet/ServletConfig.h
 https://stackoverflow.com/questions/18891903/how-do-i-put-listener-in-web-xml-java
 servelet context listener..
 
+filter
+https://docs.oracle.com/cd/B14099_19/web.1012/b14017/filters.htm
+
+java mail (smtp server)
+https://www.tutorialspoint.com/java/java_sending_email.htm
+free SMTP server?
+http://www.softstack.com/freesmtp.html
 
 
 1.DB creation.
