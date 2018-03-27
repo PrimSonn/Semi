@@ -10,8 +10,11 @@ public class TestDriver {
 		
 		String dummyContextPath = "/DummyContext";//---------------------------------------------
 		String dummyRealPath = "D:\\PWorkspace\\Semi\\EclipseWorkSpace\\ImgTest\\WebContent";//----------------------------------------------
+		String dummyAccountIdx = "1";
+		String dummyMovieIdx = "1";
 		
-		Pack pack = (new Gatherer()).getThings(dummyContextPath,dummyRealPath);
+		
+		Pack pack = (new Gatherer()).getThings(dummyContextPath,dummyRealPath,dummyAccountIdx,dummyMovieIdx);
 		for(String key :pack.getKeys()) {
 			System.out.println(key);
 			for(Entity e :pack.getList(key)){

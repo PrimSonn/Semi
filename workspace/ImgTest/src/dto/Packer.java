@@ -86,14 +86,14 @@ public class Packer extends Pack{
 					
 			}// sorting for ends.
 			
+			System.out.println("columMap: "+columMap);//----test
+			
 			char[] t_ag;
 			while(rs.next()) {//packaging start.	
 //				System.out.println("tegnum: "+tagnum);//test
 				tag = rs.getString(tagnum);//-------------------TAG shouldn't be NULL!!!!!!!
-//				System.out.println("tag: " + tag);//---test--ok
-//				switch(tag) {
-//					case "": break;
-//				}
+//				System.out.println("tag: " + tag);//---test
+				
 				entity = new Entity();
 				propset = columMap.get(tag);
 //				System.out.println("propset: " +propset);//-----test
@@ -121,39 +121,74 @@ public class Packer extends Pack{
 	}//Packer() ends
 	
 	
-	private void cartographer(Hashtable<String,Hashtable<Integer,String>> columMap, int colnum, String  prefix, String property){
+	
+	private void cartographer(Hashtable<String,Hashtable<Integer,String>> columMap, int colnum, String prefix, String property){
 		
+		System.out.println("prefix: "+prefix);//-------------test
 		String keyFrag = null;
 		boolean hasMatchPrefix = false;
 		
 		for (String key: columMap.keySet()) {
 			
+			Hashtable<Integer,String> keyMap = columMap.get(key);
+			Hashtable<Integer,String> prefixMap =columMap.get(prefix) ;
+			
 			if(key.contentEquals(prefix)) {
-				
-				columMap.get(key).put(colnum, property);
+				System.out.println("match prefix: "+key);//-----------test
+				keyMap.put(colnum, property);
 				hasMatchPrefix = true;
 				
-			}else if(key.length()>=prefix.length()){
-				
+			}else if(key.length()>prefix.length()){
+				System.out.println("keylength compare key: "+key+"  prefix: "+prefix);//--------test
 				char[] k_ey = key.toCharArray();
 				
-				for(int i = prefix.length()-1; i<k_ey.length; i++) {
-					
+				for(int i = prefix.length()-1; k_ey.length>i; i++) {
 					if(k_ey[i]=='_') {
-						
 						keyFrag = key.substring(0,i);
-						
+						System.out.println("keyFrag: "+ keyFrag);//--------------test
 						if(keyFrag.contentEquals(prefix)) {
-							columMap.get(key).put(colnum, property);
-							hasMatchPrefix = true;
+							System.out.println("keyFrag Equeals: "+keyFrag+"  key: "+key+"  colnum: "+colnum+"  property: "+property);//----------test
+							keyMap.put(colnum, property);
+							if(!columMap.containsKey(key))System.out.println("No such key: " +key);//--------test
 							break;
 						}//prefixFragcheck ends
 					}// '_' checker ends
 				}//char sequence checker ends 
-			}//key=prefix checker ends
+			} else{//key=prefix checker ends
+				System.out.println("prefix parsing..  prefix: "+prefix+"  key: "+key);
+				char[] p_refix = prefix.toCharArray();
+				
+				for(int i = key.length()-1; prefix.length()>i; i++) {
+					
+					if(p_refix[i]=='_' && prefix.substring(0,i).contentEquals(key)) {
+						if(columMap.containsKey(prefix)) {
+							
+							for(int keyColNum : keyMap.keySet()) {
+								for(int prefixColnum : keyMap.keySet()) {
+									if(keyColNum!=prefixColnum) {
+										System.out.println("Prefix: "+prefix +"  key: "+key+"  keycolnum: "+ keyColNum+"  prefixColnum" + prefixColnum);
+										keyMap.put(keyColNum, property);
+									}
+								}//columMap-prefix keyset foreach ends
+							}//columMap-key keyset foreach ends
+							
+						}else {
+							Hashtable<Integer,String> temp = keyMap;
+							columMap.put(prefix, temp);
+						}
+						hasMatchPrefix = true;
+						break;
+					}//prefix parsing '_' + compare to key if-else ends
+					
+				}//prefix parsing for ends
+				
+			}//columMap key set if-else ends
+			
+			
 		}//for ends
 		
 		if(!hasMatchPrefix) {
+			System.out.println("no match: "+prefix);//------------------------------>test
 			Hashtable<Integer,String> temp = new Hashtable<Integer,String>();
 			temp.put(colnum, property);
 			columMap.put(prefix, temp);
@@ -170,19 +205,18 @@ public class Packer extends Pack{
 		int cutter = realPath.length();
 		
 		for(;;) {
+			
 			if(file.isFile()) {
-				//add
-//				System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//-----------test
-				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));
+//				System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//-----------test code
+//				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));----test code
 				entity.setImgs ( file.getAbsoluteFile().getParentFile().getName()
 						, ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/') );
 				
 			}else if(file.isDirectory()) {
-				for(File f : file.listFiles()) {
-					stack.push(f);
-				}
+				for(File f : file.listFiles()) stack.push(f);
+				
 			} else {
-				System.out.println("Something's wrong here: "+ file);
+//				System.out.println("Something's wrong here: "+ file);------test code
 			}
 			
 			try { file=stack.pop(); }

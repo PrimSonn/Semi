@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import dto.Pack;
@@ -15,8 +15,7 @@ public class Gatherer {
 	private static String USER = "scott", PASS = "tiger";
 	
 	private Connection conn = null;
-//	private PreparedStatement pst = null;
-//	private ResultSet rs = null;
+	private PreparedStatement pst = null;
 		
 	public Gatherer() {
 		
@@ -29,13 +28,15 @@ public class Gatherer {
 			
 	}
 	
-	public Pack getThings(String contextPath, String realPath) {
+	public Pack getThings(String contextPath, String realPath, String AccountIdx, String MovieIdx) {
 		
-		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX, MOVIE_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
+		
+		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX MOVIE_IDX, MOVIE_TITLE MOVIE_SELECTED_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
 						" case" + 
-//							" when T.MOVIE_IDX =1 then 'MOVIE_Selected'" + 
-							" when T.MOVIE_IDX is not null then 'MOVIE'" + 
+//							" when T.ACCOUNT_IDX =? then 'ACCOUNT_Selected'" + 
 							" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
+//							" when T.MOVIE_IDX =? then 'MOVIE_Selected'" + 
+							" when T.MOVIE_IDX is not null then 'MOVIE'" + 
 							" when C.IDX is not null then 'COMMENT'" + 
 						" end as TAG" + 
 					" from MOVIE_COMMENTS C full outer join (" + 
@@ -43,12 +44,10 @@ public class Gatherer {
 					" on 1=2";
 		
 		try {
-//			pst = conn.prepareStatement(sql);
-//			pst.setString(1, "");
-//			pst.setString(2, "");
-//			pst.setString(3, "");
-//			rs = pst.executeQuery();
-			return new Packer(conn.createStatement().executeQuery(sql),contextPath, realPath) ;
+			pst = conn.prepareStatement(sql);
+//			pst.setString(1, AccountIdx);
+//			pst.setString(2, MovieIdx);
+			return new Packer(pst.executeQuery(), contextPath, realPath) ;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -104,27 +104,33 @@ https://stackoverflow.com/questions/18891903/how-do-i-put-listener-in-web-xml-ja
 servelet context listener..
 
 
-automated prefixed column!!!
 
+1.DB creation.
+real DB--sql
 DB specific name rule
-
-file upload/pluggin
-
-application scoped static method?
-
-static import
 sequence
-procedure
-sql
-upload to..
-image file mapping
+automated prefixed column!!!maybeNot?
+procedure --no
 
-
+2.more function
 similar movies
+upload to..image file mapping
+file upload/plug-ready
+application scoped static method?
+static import--maybeNot
+
+3. web side
+SignIn
+main page - page interface & link
+MovieSpecificPage------------------!!!
 header-footer
 header-search
 
 
+
+
+
+----------------- Stream API Ex -------------------------
 
 Collections.sort(names, new Comparator<String>() {
     @Override
