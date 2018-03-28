@@ -31,11 +31,11 @@ public class Gatherer {
 	public Pack getThings(String contextPath, String realPath, String AccountIdx, String MovieIdx) {
 		
 		
-		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX MOVIE_IDX, MOVIE_TITLE MOVIE_SELECTED_TITLE, ACCOUNT_IDX, ACCOUNT_ID," + 
+		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX MOVIE_IDX, MOVIE_TITLE MOVIE_SELECTED_TITLE, ACCOUNT_IDX, ACCOUNT_ID ACCOUNT_SELECTED_ID," + 
 						" case" + 
-//							" when T.ACCOUNT_IDX =? then 'ACCOUNT_Selected'" + 
+							" when T.ACCOUNT_IDX =1 then 'ACCOUNT_SELECTED'" + 
 							" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
-//							" when T.MOVIE_IDX =? then 'MOVIE_Selected'" + 
+							" when T.MOVIE_IDX =1 then 'MOVIE_SELECTED'" + 
 							" when T.MOVIE_IDX is not null then 'MOVIE'" + 
 							" when C.IDX is not null then 'COMMENT'" + 
 						" end as TAG" + 
