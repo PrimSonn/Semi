@@ -10,9 +10,12 @@ Accounts: selected(from Session),
 
 Comments: Selected movie's comments
 
-+Ratings: 
-
-RATINGS: IDX__(sequence), IDX(refers MOVIE), IDX(refers ACCOUNTS), RATING number.
-
 PossesedMovie
 Subscription
+
+
++MVSCORE:
+MV_SCORE: IDX__(sequence), IDX(refers MOVIE), IDX(refers ACCOUNTS), SCORE number.
+
++MOVIE	-DONE!!
++attribute: TOT_SCORE default 0, SCORE_COUNT default 0
