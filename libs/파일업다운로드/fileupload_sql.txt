@@ -1,0 +1,22 @@
+CREATE TABLE video_file (
+    no NUMBER,
+    video_name VARCHAR2(100),
+    video BLOB,
+    len NUMBER );
+CREATE SEQUENCE seq_video;
+--DROP TABLE video_file;
+--DROP SEQUENCE seq_video;
+
+CREATE TABLE image_file (
+	no NUMBER,
+	image VARCHAR2(500) );
+CREATE SEQUENCE seq_image;
+--DROP TABLE image_file;
+--DROP SEQUENCE seq_image;
+
+SELECT * FROM image_file
+FULL OUTER JOIN video_file
+ON image_file.no = video_file.no
+ORDER BY image_file.no, video_file.no;
+--DELETE image_file;
+--DELETE video_file;n

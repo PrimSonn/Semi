@@ -1,0 +1,141 @@
+ + 페이징에 필요한 변수들
+  - curPage : 현재 페이지 번호 (현재 선택한 페이지)
+
+  - totalCount : 총 게시글 수 (DB 조회 결과로 얻어옴)
+  - listCount : 한 페이지당 출력될 게시글 수 (직접 설정함)
+  - totalPage : 총 페이지 수 (계산으로 알아냄)
+
+  - pageCount : 한 화면에 출력될 페이지 수 (직접 설정함)
+  - startPage : 화면에 보이는 시작 페이지 (계산으로 알아냄)
+  - endPage : 화면에 보이는 끝 페이지 (계산으로 알아냄)
+
+  - startNo : 게시글 시작번호
+  - endNo : 게시글 끝번호
+
+
+
+ + 페이징 1단계
+  - totalCount : 총 게시글 수 (DB 조회 결과로 얻어옴)
+
+  - listCount : 한 페이지당 출력될 게시글 수 (직접 설정함)
+
+  - totalPage : 총 페이지 수 (계산으로 알아냄)
+
+	방법1.
+	totalPage = totalCount / listCount;
+	if( totalCount % listCount > 0 ) totalPage++;
+
+	// totalCount==78 && listCount==10 이면
+	// 78/10==7 -> totalPage==7
+	// 78%10==7 -> 0보다 크므로 totalPage++ -> totalPage==8
+
+	방법2.
+	totalPage = totalCount / listCount;
+	if( totalCount > listCount*totalPage ) totalPage++;
+
+	// totalCount==78 && listCount==10 이면
+	// 78/10==7 -> totalPage==7
+	// listCount*totalPage -> 10*7==70
+	// 78>70 == true 이므로 totalPage++ -> totalPage==8
+
+  - 추가 작업
+	// 현재 페이지가 총 페이지보다 크게 입력되면
+	// 강제로 마지막페이지 고정
+	if (totalPage < curPage)  curPage = totalPage;
+
+
+ + 페이징 2단계
+  - pageCount : 한 화면에 출력될 페이지 수 (직접 설정함)
+
+  - startPage : 화면에 보이는 시작 페이지 (계산으로 알아냄)
+
+  - endPage : 화면에 보이는 끝 페이지 (계산으로 알아냄)
+
+  - startNo : 게시글 시작번호
+  - endNo : 게시글 끝번호
+
+
+  - 페이징 넘버링 방식
+	1. 현재 페이지 기준으로 앞뒤 페이지를 몇개 보여주기
+		ex) 12번 페이지를 보고 있으면 << 10 11 12 13 14 >>
+
+	2. pageCount 만큼씩 고정된 페이지 보여주기
+		ex) pageCount==5 일때
+		ex) 12번 페이지를 보고 있으면 << 11 12 13 14 15 >>
+		ex) 5번 페이지를 보고 있으면 << 1 2 3 4 5 >>
+
+  - 2번 방식
+	시작 페이지 번호를 알아내서 처리하기
+
+	startPage = ((curPage-1)/pageCount)*pageCount+1; // pageCount 만큼 자리수 맞추기
+	endPage = startPage+pageCount-1;
+
+	// pageCount == 10 일 때
+
+	// curPage==7 이라면
+	// startPage == ((7-1)/10)*10+1 ==> 1
+	// endPage == 1+10-1 ==> 10
+
+	// curPage==11 이라면
+	// startPage == ((11-1)/10)*10+1 ==> 11
+	// endPage == 11+10-1 ==> 20
+
+	// curPage==23 이라면
+	// startPage == ((23-1)/10)*10+1 ==> 21
+	// endPage == 21+10-1 ==> 30
+
+	// curPage==20 이라면
+	// startPage == ((20-1)/10)*10+1 ==> 11
+	// endPage == 11+10-1 ==> 20
+
+  - 추가 작업
+	// 계산된 마지막 페이지가 totalPage보다 커질 경우
+	// 강제로 최종 페이지까지만 보이도록 설정
+	if(endPage > totalPage)  endPage = totalPage;
+
+
+	ex) totalCount==155 && listCount==10 && pageCount==10 이라면
+
+	  totalPage = totalCount / listCount;
+	  if( totalCount % listCount > 0 ) totalPage++;
+
+	  totalPage==155 / 10 -> 15
+	  155%10==5 > 0 -> totalPage++
+
+	  totalPage==16
+
+	  startPage == ((16-1)/10)*10+1 ==> 11
+	  endPage == 11+10-1 ==> 20
+
+	  if( endPage > totalPage ) 에서 true 이므로
+	    endPage == 16
+
+  - 게시글 시작번호
+	startNo = (curPage-1)*listCount+1;
+  - 게시글 끝번호
+	endNo = curPage*listCount;
+
+
+ + 페이징 3단계
+  - 처음 버튼
+	방법 1. 현재 페이지가 1페이지가 아닐 경우 표시
+		if( curPage > 1 )  <a href="~~?page=1">처음</a>
+
+	방법 2. 시작 페이지가 1페이지가 아닐 경우 표시
+		if( startPage > 1 )  <a href="~~?page=1">처음</a>
+
+  - 이전 버튼
+	if( curPage > 1 )  <a href="~~?page=<%=curPage-1%>">이전</a>
+
+  - 페이징 출력
+	for(int i = startPage; i<= endPage; i++)
+	  if( curPage == i )
+		<b><a href="~~?page=<%=i%>"><%=i%></a></b>
+	  else
+		<a href="~~?page=<%=i%>"><%=i%></a>
+
+  - 다음 버튼
+	if( curPage < totalPage )  <a href="~~?page=<%=curPage+1%>">이전</a>
+
+  - 끝 버튼
+	if( endPage < totalPage )  <a href="~~?page=<%=totalPage%>">끝</a>
