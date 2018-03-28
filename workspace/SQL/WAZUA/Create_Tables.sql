@@ -14,31 +14,31 @@ TABLE LIST:	MEMBER
 
 */
 -------------------------------------------Clear ALL-----------------------------------------------------------------------
---
---drop trigger TRAILERS_IDX_TRG;
---drop sequence TRAILERS_SEQ;
---drop table TRAILERS cascade constraints;
---drop trigger INQUIRE_IDX_TRG;
---drop sequence INQUIRE_SEQ;
---drop table INQUIRE cascade constraints;
---drop table WISH_LIST cascade constraints;
---drop table MOVIE_IMG cascade constraints;
---drop trigger REPORT_IDX_TRG;
---drop sequence REPORT_SEQ;
---drop table REPORT cascade constraints;
---drop trigger COMMENTS_IDX_TRG;
---drop sequence COMMENTS_SEQ;
---drop table COMMENTS cascade constraints;
---drop table WAZLEVEL cascade constraints;
---drop trigger WAZPOINT_IDX_TRG;
---drop sequence WAZPOINT_SEQ;
---drop table WAZPOINT cascade constraints;
---drop trigger MOVIE_IDX_TRG;
---drop sequence MOVIE_SEQ;
---drop table MOVIE cascade constraints;
---drop trigger MEMBER_IDX_TRG;
---drop sequence MEMBER_SEQ;
---drop table MEMBER cascade constraints;
+
+drop trigger TRAILERS_IDX_TRG;
+drop sequence TRAILERS_SEQ;
+drop table TRAILERS cascade constraints;
+drop trigger INQUIRE_IDX_TRG;
+drop sequence INQUIRE_SEQ;
+drop table INQUIRE cascade constraints;
+drop table WISH_LIST cascade constraints;
+drop table MOVIE_IMG cascade constraints;
+drop trigger REPORT_IDX_TRG;
+drop sequence REPORT_SEQ;
+drop table REPORT cascade constraints;
+drop trigger COMMENTS_IDX_TRG;
+drop sequence COMMENTS_SEQ;
+drop table COMMENTS cascade constraints;
+drop table WAZLEVEL cascade constraints;
+drop trigger WAZPOINT_IDX_TRG;
+drop sequence WAZPOINT_SEQ;
+drop table WAZPOINT cascade constraints;
+drop trigger MOVIE_IDX_TRG;
+drop sequence MOVIE_SEQ;
+drop table MOVIE cascade constraints;
+drop trigger MEMBER_IDX_TRG;
+drop sequence MEMBER_SEQ;
+drop table MEMBER cascade constraints;
 
 ------------------------------------------------------------------------------------------------------------------
 
