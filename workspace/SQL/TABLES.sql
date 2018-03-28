@@ -13,8 +13,36 @@ TABLE LIST:	MEMBER
 			TRAILERS
 
 */
+-------------------------------------------Clear ALL-----------------------------------------------------------------------
+--
+--drop trigger TRAILERS_IDX_TRG;
+--drop sequence TRAILERS_SEQ;
+--drop table TRAILERS cascade constraints;
+--drop trigger INQUIRE_IDX_TRG;
+--drop sequence INQUIRE_SEQ;
+--drop table INQUIRE cascade constraints;
+--drop table WISH_LIST cascade constraints;
+--drop table MOVIE_IMG cascade constraints;
+--drop trigger REPORT_IDX_TRG;
+--drop sequence REPORT_SEQ;
+--drop table REPORT cascade constraints;
+--drop trigger COMMENTS_IDX_TRG;
+--drop sequence COMMENTS_SEQ;
+--drop table COMMENTS cascade constraints;
+--drop table WAZLEVEL cascade constraints;
+--drop trigger WAZPOINT_IDX_TRG;
+--drop sequence WAZPOINT_SEQ;
+--drop table WAZPOINT cascade constraints;
+--drop trigger MOVIE_IDX_TRG;
+--drop sequence MOVIE_SEQ;
+--drop table MOVIE cascade constraints;
+--drop trigger MEMBER_IDX_TRG;
+--drop sequence MEMBER_SEQ;
+--drop table MEMBER cascade constraints;
 
+------------------------------------------------------------------------------------------------------------------
 
+ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 create table MEMBER (
     IDX			int not null,
@@ -29,7 +57,7 @@ create table MEMBER (
     constraint MEMBER_PK primary key ( IDX )
 );
 
-create sequence MEMBER_SEQ start with 1 increment by 1;
+create sequence MEMBER_SEQ start with 1 increment by 1; 
 
 /
 create or replace trigger MEMBER_IDX_TRG
@@ -37,6 +65,7 @@ create or replace trigger MEMBER_IDX_TRG
     referencing
         new as new
     for each row
+    WHEN (new.IDX IS NULL)
 begin
     select
         MEMBER_SEQ.nextval
@@ -95,11 +124,14 @@ create table MOVIE
 create sequence MOVIE_SEQ start with 1 increment by 1;
 
 /
-create or replace trigger MOVIE_IDX_TRG	before insert on MOVIE 
-referencing new as new for each row 
+create or replace trigger MOVIE_IDX_TRG	
+    before insert on MOVIE 
+    referencing new as new
+    for each row 
+    WHEN (new.IDX IS NULL)
 begin 
     select MOVIE_SEQ.nextval
-    into: new.IDX
+    into:new.IDX
     from DUAL;
 end;
 /
@@ -157,10 +189,11 @@ create sequence WAZPOINT_SEQ start with 1 increment by 1;
 /
 create or replace trigger WAZPOINT_IDX_TRG
 	before insert on WAZPOINT 
-	referencing new as new for each row 
+	referencing new as new
+    for each row 
 begin 
     select WAZPOINT_SEQ.nextval
-    into: new.IDX
+    into:new.IDX
     from DUAL;
 end;
 /
@@ -227,7 +260,7 @@ before insert on COMMENTS
 referencing new as new for each row 
 begin 
     select COMMENTS_SEQ.nextval
-    into: new.IDX
+    into:new.IDX
     from DUAL;
 end;
 /
@@ -274,7 +307,7 @@ create or replace trigger REPORT_IDX_TRG
 	referencing new as new for each row 
 begin 
     select REPORT_SEQ.nextval
-    into: new.IDX
+    into:new.IDX
     from DUAL;
 end;
 /
@@ -287,13 +320,13 @@ comment on column REPORT.MEM_IDX is '회원번호(참초키)';
 
 comment on column REPORT.COMM_IDX is '코멘트번호(참조키)';
 
-comment on column REPORT.DECLARATION_DATE is '신고일자';
+comment on column REPORT.REPORT_DATE is '신고일자';
 
 comment on column REPORT.DEALT is '조치내용';
 
 alter table REPORT add constraint FK_REPORT_MEM_IDX_MEMBER foreign key (MEM_IDX) references MEMBER (IDX);
 
-alter table REPORT add constraint FK_REPORT_COMM_IDX_COMMENT_T foreign key (COMM_IDX) references COMMENT (IDX);
+alter table REPORT add constraint FK_REPORT_COMM_IDX_COMMENT_T foreign key (COMM_IDX) references COMMENTS (IDX);
 
 
 --drop trigger REPORT_IDX_TRG;
@@ -359,7 +392,7 @@ alter table WISH_LIST add constraint FK_WISH_LIST_MEM_IDX_MEMBER foreign key (ME
 alter table WISH_LIST add constraint FK_WISH_LIST_MOVIE_IDX_MOVI foreign key (MOVIE_IDX) references MOVIE (IDX);
 
 
---drop table WISH_LIST cascade constraints	
+--drop table WISH_LIST cascade constraints;
 -----------------------------------------------------------------------------
 
 create table INQUIRE
@@ -381,7 +414,7 @@ before insert on INQUIRE
 referencing new as new for each row 
 begin 
     select INQUIRE_SEQ.nextval
-    into: new.IDX
+    into:new.IDX
     from DUAL;
 end;
 /
@@ -425,7 +458,7 @@ before insert on TRAILERS
 referencing new as new for each row 
 begin 
     select TRAILERS_SEQ.nextval
-    into: new.IDX
+    into:new.IDX
     from DUAL;
 end;
 /
