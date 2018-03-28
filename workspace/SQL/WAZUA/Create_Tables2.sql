@@ -1,39 +1,4 @@
 
-/*
-
-TABLE LIST:	MEMBER
-			MOVIE
-			WAZPOINT
-			WAZLEVEL
-			COMMENTS
-			REPORT
-			MOVIE_IMG
-			WISH_LIST
-			INQUIRE
-			TRAILERS
-
-SequenceList:
-			MEMBER_SEQ
-			MOVIE_SEQ
-			WAZPOINT_SEQ
-			COMMENTS_SEQ
-			REPORT_SEQ
-			INQUIRE_SEQ
-			TRAILERS_SEQ
-
-
-TriggerList:
-			MEMBER_IDX_TRG
-			MOVIE_IDX_TRG
-			WAZPOINT_IDX_TRG
-			COMMENTS_IDX_TRG
-			REPORT_SEQ
-			INQUIRE_SEQ
-			TRAILERS_IDX_TRG
-
-*/
--------------------------------------------Clear ALL-----------------------------------------------------------------------
-
 drop trigger TRAILERS_IDX_TRG;
 drop sequence TRAILERS_SEQ;
 drop table TRAILERS cascade constraints;
@@ -59,8 +24,6 @@ drop trigger MEMBER_IDX_TRG;
 drop sequence MEMBER_SEQ;
 drop table MEMBER cascade constraints;
 
-------------------------------------------------------------------------------------------------------------------
-
 ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 create table MEMBER (
@@ -75,11 +38,9 @@ create table MEMBER (
     IMG			varchar2(255) default '-',
     constraint MEMBER_PK primary key ( IDX )
 );
-------DEL_FLAG 탈퇴일자와 기능 중복
-------IMG 프로필 이미지를 DBMS를 사용해 처리할 것이 아니라면 필요 없음
+
 create sequence MEMBER_SEQ start with 1 increment by 1; 
-
-
+/
 create or replace trigger MEMBER_IDX_TRG
 	before insert on MEMBER
     referencing
@@ -115,12 +76,6 @@ comment on column MEMBER.LEFT_DATE is '탈퇴일자';
 comment on column MEMBER.DEL_FLAG is '삭제플래그';
 
 comment on column MEMBER.IMG is '프로필이미지';
-------프로필 이미지를 DBMS를 사용해 처리할 것이 아니라면 필요 없음#2
-
---drop trigger MEMBER_IDX_TRG;
---drop sequence MEMBER_SEQ;
---drop table MEMBER cascade constraints;
-------------------------------------------------------------------------------
 
 create table MOVIE
 (
@@ -132,7 +87,7 @@ create table MOVIE
     COUNTRY			varchar2(100)     not null, 
     RELEASEDATE		date              not null, 
     RATING			varchar2(50)      not null, 
-    PLAYTIME		varchar2(50)      not null, 
+    PLAYTIME		varchar2(50)      not null,
     GERNE			varchar2(100)     not null, 
     VIEWCOUNT		int               default 0, 
     OUTLINE			clob              not null, 
@@ -140,9 +95,8 @@ create table MOVIE
     PRICE			int               default 0, 
     constraint MOVIE_PK primary key (IDX)
 );
--- 시간을 처리할 때는 다른 데이터 타입도 가능 할 듯?
-create sequence MOVIE_SEQ start with 1 increment by 1;
 
+create sequence MOVIE_SEQ start with 1 increment by 1;
 
 create or replace trigger MOVIE_IDX_TRG	
     before insert on MOVIE 
@@ -154,7 +108,6 @@ begin
     into:new.IDX
     from DUAL;
 end;
-/
 
 comment on table MOVIE is '영화 테이블';
 
@@ -187,11 +140,6 @@ comment on column MOVIE.TICKETSOLD is '관람객수';
 comment on column MOVIE.PRICE is '가격';
 
 
---drop trigger MOVIE_IDX_TRG;
---drop sequence MOVIE_SEQ;
---drop table MOVIE cascade constraints;
-----------------------------------------------------------------------------
-
 create table WAZPOINT
 (
     IDX			int              not null, 
@@ -206,7 +154,6 @@ create table WAZPOINT
 
 create sequence WAZPOINT_SEQ start with 1 increment by 1;
 
-
 create or replace trigger WAZPOINT_IDX_TRG
 	before insert on WAZPOINT 
 	referencing new as new
@@ -216,7 +163,6 @@ begin
     into:new.IDX
     from DUAL;
 end;
-/
 
 comment on table WAZPOINT is '보유포인트 테이블';
 
@@ -237,11 +183,6 @@ comment on column WAZPOINT.EXP_DATE is '만료일자';
 alter table WAZPOINT add constraint FK_WAZPOINT_MEM_IDX_MEMBER foreign key (MEM_IDX) references MEMBER (IDX);
 
 
---drop trigger WAZPOINT_IDX_TRG;
---drop sequence WAZPOINT_SEQ;
---drop table WAZPOINT cascade constraints;
-----------------------------------------------------------------------------
-
 create table WAZLEVEL
 (
     MEM_IDX			int              not null, 
@@ -257,10 +198,6 @@ comment on column WAZLEVEL.LEV_NAME is '회원등급';
 
 alter table WAZLEVEL add constraint FK_WAZLEVEL_MEM_IDX_MEMBER_ID foreign key (MEM_IDX) references MEMBER (IDX);
 
-
---drop table WAZLEVEL cascade constraints;
-----------------------------------------------------------------------------
-
 create table COMMENTS
 (
     IDX				int              not null, 
@@ -274,7 +211,6 @@ create table COMMENTS
 
 create sequence COMMENTS_SEQ start with 1 increment by 1;
 
-
 create or replace trigger COMMENTS_IDX_TRG
 before insert on COMMENTS
 referencing new as new for each row 
@@ -283,7 +219,6 @@ begin
     into:new.IDX
     from DUAL;
 end;
-/
 
 comment on table COMMENTS is '코멘트 테이블';
 
@@ -304,11 +239,6 @@ alter table COMMENTS add constraint FK_COMMENT_MEM_IDX_MEMBER foreign key (MEM_I
 alter table COMMENTS add constraint FK_COMMENT_MOVIE_IDX_MOVIE foreign key (MOVIE_IDX) references MOVIE (IDX);
 
 
---drop trigger COMMENTS_IDX_TRG;
---drop sequence COMMENTS_SEQ;
---drop table COMMENTS cascade constraints;
-----------------------------------------------------------------------------
-
 create table REPORT
 (
     IDX					int              not null, 
@@ -318,10 +248,8 @@ create table REPORT
     DEALT				varchar2(200)    not null,
     constraint REPORT_PK primary key (IDX)
 );
--- 신고가 들어오면 == 바로 신고 테이블에 올라온다 ? NULL 필요 : 신고가 들어오는 것들을 모아 볼 테이블이 따로 필요하다;
 
 create sequence REPORT_SEQ start with 1 increment by 1;
-
 
 create or replace trigger REPORT_IDX_TRG
 	before insert on REPORT 
@@ -331,7 +259,6 @@ begin
     into:new.IDX
     from DUAL;
 end;
-/
 
 comment on table REPORT is '신고접수 테이블';
 
@@ -349,13 +276,6 @@ alter table REPORT add constraint FK_REPORT_MEM_IDX_MEMBER foreign key (MEM_IDX)
 
 alter table REPORT add constraint FK_REPORT_COMM_IDX_COMMENT_T foreign key (COMM_IDX) references COMMENTS (IDX);
 
-
---drop trigger REPORT_IDX_TRG;
---drop sequence REPORT_SEQ;
---drop table REPORT cascade constraints;
--------------------------------------------------------------------------------------------------------
-
---이미지 매핑을 DBMS에서 한다면 필요.(종류 및 갯수에 제한을 받게 됨) 이미 이미지를 저장해야할 위치가 정해진 상태에서 꼭 필요하지는 않음.
 create table MOVIE_IMG
 (
     MOVIE_IDX    int              not null, 
@@ -389,9 +309,6 @@ comment on column MOVIE_IMG.SC5 is '스틸컷5';
 
 alter table MOVIE_IMG add constraint FK_MOVIE_IMG_MOVIE_IDX_MOVI foreign key (MOVIE_IDX) references MOVIE (IDX);
 
-	
---drop table MOVIE_IMG cascade constraints;
------------------------------------------------------------------------------
 
 create table WISH_LIST
 (
@@ -408,14 +325,10 @@ comment on column WISH_LIST.MEM_IDX is '회원번호(참초키)';
 comment on column WISH_LIST.MOVIE_IDX is '영화번호(참조키)';
 
 comment on column WISH_LIST.FLAG is'플래그';
------------------ 어디에 쓰는 플래그?
+
 alter table WISH_LIST add constraint FK_WISH_LIST_MEM_IDX_MEMBER foreign key (MEM_IDX) references MEMBER (IDX);
 
 alter table WISH_LIST add constraint FK_WISH_LIST_MOVIE_IDX_MOVI foreign key (MOVIE_IDX) references MOVIE (IDX);
-
-
---drop table WISH_LIST cascade constraints;
------------------------------------------------------------------------------
 
 create table INQUIRE
 (
@@ -430,7 +343,6 @@ create table INQUIRE
 
 create sequence INQUIRE_SEQ start with 1 increment by 1;
 
-
 create or replace trigger INQUIRE_IDX_TRG
 before insert on INQUIRE 
 referencing new as new for each row 
@@ -439,7 +351,6 @@ begin
     into:new.IDX
     from DUAL;
 end;
-/
 
 comment on table INQUIRE is '문의내역';
 
@@ -457,12 +368,6 @@ comment on column INQUIRE.RES_DATE is '답변일자';
 
 alter table INQUIRE add constraint FK_INQUIRE_MEM_IDX_MEMBER_ID foreign key (MEM_IDX) references MEMBER (IDX);
 
-
---drop trigger INQUIRE_IDX_TRG;
---drop sequence INQUIRE_SEQ;
---drop table INQUIRE cascade constraints;
------------------------------------------------------------------------------
-
 create table TRAILERS
 (
     IDX					int              not null, 
@@ -471,10 +376,8 @@ create table TRAILERS
     TRAILER_TITLE		varchar2(200)    not null,
     constraint TRAILERS_PK primary key (IDX)
 );
---트레일러 영상을 어떻게 송출할 것인가에 따라 필요 없을 수 있음. 
 
 create sequence TRAILERS_SEQ start with 1 increment by 1;
-
 
 create or replace trigger TRAILERS_IDX_TRG
 before insert on TRAILERS 
@@ -484,7 +387,6 @@ begin
     into:new.IDX
     from DUAL;
 end;
-/
 
 comment on table TRAILERS is '트레일러(영상) 테이블';
 
@@ -497,10 +399,5 @@ comment on column TRAILERS.TRAILER_FILE is '파일이름';
 comment on column TRAILERS.TRAILER_TITLE is '영상제목';
 
 alter table TRAILERS add constraint FK_TRAILERS_MOVIE_IDX_MOVIE foreign key ( MOVIE_IDX ) references MOVIE ( IDX );
-
-
---drop trigger TRAILERS_IDX_TRG;
---drop sequence TRAILERS_SEQ;
---drop table TRAILERS cascade constraints;
 
 disc;
