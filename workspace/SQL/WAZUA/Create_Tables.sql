@@ -9,9 +9,9 @@
 					평점 관리용 테이블 추가 (영화에 댓글은 여러번 쓸 수 있으므로 구현과 관리의 용이성을 위해 따로 두기로 했음.)
 					MOVIE :  -> 무결성 유지하기 위한 트리거 추가(평점 등록/변경시 MOVIE 테이블의 정보 또한 변경).
 			todo.
-				인덱스 추가 고려
-				외래키 on delete 옵션 설정 고려
-				각종 REGDATE 같은 TIMESTAMP 들에 TRIGGER 를 만들기
+				인덱스 추가 고려 --별로 중요하지 않음
+				외래키 on delete 옵션 설정 고려 --별로 중요하지 않음
+				각종 REGDATE 같은 TIMESTAMP 들에 TRIGGER 를 만들기 --편의성
 				
 TABLE LIST:	ACCOUNT
 			MOVGUYS
