@@ -1,7 +1,8 @@
 
 /*
 		+ 추가사항:
-					약간의 오타 수정
+					+영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
+					+영화관련 인물들과 영화들의 매핑 테이블 추가. (MOVGUYS_MAPPING)
 					MEMBER->ACCOUNT  MEM_ -> ACC_
 					외래키 지정위치 변경 (가독성)
 					MOVIE 테이블에 총 평가 점수와 평가 수 추가. (저어어번 회의때 상원이 형 아이디어)
@@ -10,11 +11,12 @@
 			todo.
 				인덱스 추가 고려
 				외래키 on delete 옵션 설정 고려
-				
 				각종 REGDATE 같은 TIMESTAMP 들에 TRIGGER 를 만들기
 				
 TABLE LIST:	ACCOUNT
+			MOVGUYS
 			MOVIE
+			MOVGUYS_MAPPING
 			WAZPOINT
 			WAZLEVEL
 			COMMENTS
@@ -23,9 +25,11 @@ TABLE LIST:	ACCOUNT
 			WISH_LIST
 			INQUIRE
 			TRAILERS
-
+			MVSCORE
+			
 SequenceList:
 			ACCOUNT_SEQ
+			MOVGUYS_SEQ
 			MOVIE_SEQ
 			WAZPOINT_SEQ
 			COMMENTS_SEQ
@@ -36,12 +40,14 @@ SequenceList:
 
 TriggerList:
 			ACCOUNT_IDX_TRG
+			MOVGUYS_IDX_TRG
 			MOVIE_IDX_TRG
 			WAZPOINT_IDX_TRG
 			COMMENTS_IDX_TRG
 			REPORT_SEQ
 			INQUIRE_SEQ
 			TRAILERS_IDX_TRG
+			MVSCORE_MANAGER
 
 
 */
@@ -67,9 +73,13 @@ drop table WAZLEVEL cascade constraints;
 drop trigger WAZPOINT_IDX_TRG;
 drop sequence WAZPOINT_SEQ;
 drop table WAZPOINT cascade constraints;
+drop table MOVGUYS_MAPPING cascade constraints;
 drop trigger MOVIE_IDX_TRG;
 drop sequence MOVIE_SEQ;
 drop table MOVIE cascade constraints;
+drop trigger MOVGUYS_IDX_TRG;
+drop sequence MOVGUYS_SEQ;
+drop table MOVGUYS cascade constraints;
 drop trigger ACCOUNT_IDX_TRG;
 drop sequence ACCOUNT_SEQ;
 drop table ACCOUNT cascade constraints;
@@ -97,7 +107,6 @@ create sequence ACCOUNT_SEQ start with 1 increment by 1;
 
 create or replace trigger ACCOUNT_IDX_TRG
 	before insert on ACCOUNT
-    referencing NEW as NEW
 	for each row
 	when (NEW.IDX is null)
 begin
@@ -131,7 +140,39 @@ comment on column ACCOUNT.IMG is '프로필이미지';
 --drop trigger ACCOUNT_IDX_TRG;
 --drop sequence ACCOUNT_SEQ;
 --drop table ACCOUNT cascade constraints;
-------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+
+create table MOVGUYS (
+	IDX			int not null
+	,NAME		varchar2(50) not null
+	,constraint MOVGUY_PK primary key (IDX)
+);
+
+create sequence MOVGUYS_SEQ start with 1 increment by 1;
+
+create or replace trigger MOVGUYS_IDX_TRG
+	before insert on MOVGUYS
+	for each row 
+	when (NEW.IDX is null)
+begin 
+	select MOVGUYS_SEQ.nextval
+	into:NEW.IDX
+	from DUAL;
+end;
+/
+
+comment on table MOVGUYS is '영화 감독 및 배우 등등';
+
+comment on column MOVGUYS.IDX is '식별번호';
+
+comment on column MOVGUYS.NAME is '이름';
+
+
+--drop trigger MOVGUYS_IDX_TRG;
+--drop sequence MOVGUYS_SEQ;
+--drop table MOVGUYS cascade constraints;
+------------------------------------------------------------------------------------------------------------
 
 create table MOVIE
 (
@@ -153,7 +194,7 @@ create table MOVIE
 	,SCORE_COUNT	int				default 0
 	,constraint MOVIE_PK primary key (IDX)
 );
---배우랑 감독은 따로 관리하기로 했었던 것 같은데.. 일단 있는대로 둠.
+
 create sequence MOVIE_SEQ start with 1 increment by 1;
 
 create or replace trigger MOVIE_IDX_TRG	
@@ -201,10 +242,36 @@ comment on column MOVIE.TOT_SCORE is '총점';
 
 comment on column MOVIE.SCORE_COUNT is '총 평가 갯수';
 
+
 --drop trigger MOVIE_IDX_TRG;
 --drop sequence MOVIE_SEQ;
 --drop table MOVIE cascade constraints;
-----------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+create table MOVGUYS_MAPPING
+(
+	MOV_IDX				int				not null
+	,MOVGUYS_IDX		int 			not null
+	,ROLE				varchar2(50)	not null
+	,CHARACTER			varchar2(50)	default ''
+	,constraint MOVMAP_PK primary key(MOV_IDX,MOVGUYS_IDX)
+	,constraint FK_MOVMAP_MOVIE foreign key (MOV_IDX) references MOVIE (IDX)
+	,constraint FK_MOVMAP_MOVGUYS foreign key (MOVGUYS_IDX) references MOVGUYS (IDX)
+);
+
+comment on table MOVGUYS_MAPPING is '영화관련 인물들 테이블';
+
+comment on column MOVGUYS_MAPPING.MOV_IDX is '영화 식별 코드 - 외래키 + 복합 주 키';
+
+comment on column MOVGUYS_MAPPING.MOVGUYS_IDX is '인물 식별 코드 - 외래키 + 복합 주 키';
+
+comment on column MOVGUYS_MAPPING.ROLE is '역할, 감독이냐 배우냐 등등';
+
+comment on column MOVGUYS_MAPPING.CHARACTER is '배역';
+
+
+--drop table MOVGUYS_MAPPING cascade constraints;
+------------------------------------------------------------------------------------------------------------
 
 create table WAZPOINT
 (
@@ -541,6 +608,14 @@ begin
 	end case;
 end;
 /
+
+comment on table MVSCORE is '영화 평점 테이블';
+
+comment on column MVSCORE.ACC_IDX is '계정식별 번호 - 참조키 + 복합 주 키';
+
+comment on column MVSCORE.MOVIE_IDX is '영화식별 번호 - 참조키 + 복합 주 키';
+
+comment on column MVSCORE.SCORE is '점수';
 
 
 /*
