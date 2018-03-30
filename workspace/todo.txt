@@ -135,7 +135,24 @@ header-search
 
 
 
+월결제 tb
+	상품 TB -월결제 영화
+	소유 상품 TB - 월결제 계정 *영화 가격 삭제
 
+공지사항 - 관리자 계정
+이벤트페이지 - 관리자 계정?
+
+시청여부 TB - 계정 영화 상품
+
+
+SUBSCRIPTION:	IDX(pk)	int			Duration			PRICE
+PRODUCT:		IDX(pk)	int			MOV_IDX(fk)			SUB_IDX(fk)
+POSSESION:		IDX(pk)	int			ACC_IDX(fk)			PRODUCT_IDX(fk)		REGDATE		EXPDATE		ISVIEWED
+
+ANNOUNCE:	IDX(PK)	int		ACC_IDX(fk)		TITLE	CONTENTS	REGDATE
+EVENT:		IDX(PK)	int		ACC_IDX(fk)		TITLE	CONTENTS	REGDATE
+
+--date -> timestamp
 
 ----------------- Stream API Ex -------------------------
 
