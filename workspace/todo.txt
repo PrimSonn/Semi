@@ -143,16 +143,22 @@ header-search
 이벤트페이지 - 관리자 계정?
 
 시청여부 TB - 계정 영화 상품
+++시청목록
 
 
-SUBSCRIPTION:	IDX(pk)	int			Duration			PRICE
-PRODUCT:		IDX(pk)	int			MOV_IDX(fk)			SUB_IDX(fk)
-POSSESION:		IDX(pk)	int			ACC_IDX(fk)			PRODUCT_IDX(fk)		REGDATE		EXPDATE		ISVIEWED
+SUBSCRIPTION:	IDX(pk)	int			Duration timestamp			PRICE int
+PRODUCT:		IDX(pk)	int			MOV_IDX(fk) int			SUB_IDX(fk) int
+POSSESION:		IDX(pk)	int			ACC_IDX(fk)	int			PRODUCT_IDX(fk) int		REGDATE timestamp	EXPDATE	timestamp	ISUSED timestamp		MOV_IDX(fk)	int
+
+WATCHEDLIST:	IDX(pk) int			ACC_IDX(fk) int		MOVIE_IDX(fk) int	TIME timestamp
 
 ANNOUNCE:	IDX(PK)	int		ACC_IDX(fk)		TITLE	CONTENTS	REGDATE
 EVENT:		IDX(PK)	int		ACC_IDX(fk)		TITLE	CONTENTS	REGDATE
 
 --date -> timestamp
+
+
+
 
 ----------------- Stream API Ex -------------------------
 

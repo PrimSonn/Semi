@@ -114,8 +114,8 @@ create table ACCOUNT (
 	,NAME		varchar2(50) not null
 	,BIRTH		date not null
 	,WAZLEVEL	char(25)	
-	,REG_DATE	date not null
-	,LEFT_DATE	date default null
+	,REG_DATE	timestamp not null
+	,LEFT_DATE	timestamp default null
 	,DEL_FLAG	varchar2(100) default 'N'
 	,IMG		varchar2(255) default '-'
 	,constraint ACCOUNT_PK primary key ( IDX )
@@ -336,8 +336,8 @@ create table WAZPOINT
 	,INIT_POINTS	int				not null
 	,LEFT_POINTS	int				not null
 	,GIVEN_FOR		varchar2(200)	not null
-	,GIVEN_DATE		date			not null
-	,EXP_DATE		date			not null
+	,GIVEN_DATE		timestamp			not null
+	,EXP_DATE		timestamp			not null
 	,constraint WAZPOINT_PK primary key(IDX)
 	,constraint FK_WAZPOINT_ACC_IDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
 );
@@ -382,7 +382,7 @@ create table COMMENTS
 	IDX				int			not null
 	,ACC_IDX		int			not null
 	,MOVIE_IDX		int			not null
-	,REG_DATE		date		not null
+	,REG_DATE		timestamp		not null
 	,CONTENTS		clob		not null
 	,ISBLIND			varchar2(100)
 	,constraint COMMENT_PK primary key (IDX)
@@ -428,7 +428,7 @@ create table REPORT
 	IDX				int				not null
 	,ACC_IDX		int				not null
 	,COMM_IDX		int				not null
-	,REPORT_DATE	date			not null
+	,REPORT_DATE	timestamp			not null
 	,DEALT			varchar2(200)	not null
 	,constraint REPORT_PK primary key (IDX)
 	,constraint FK_REPORT_ACC_IDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
@@ -531,8 +531,8 @@ create table INQUIRE
 	,ACC_IDX	int		not null
 	,CONTENTS	clob	not null
 	,RESPONSE	clob	null
-	,REG_DATE	date	not null
-	,RES_DATE	date	null
+	,REG_DATE	timestamp	not null
+	,RES_DATE	timestamp	null
 	,constraint INQUIRE_PK primary key (IDX)
 	,constraint FK_INQUIRE_ACC_IDX_ACCOUNT_ID foreign key (ACC_IDX) references ACCOUNT (IDX)
 );
