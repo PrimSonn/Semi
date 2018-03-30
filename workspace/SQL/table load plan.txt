@@ -6,17 +6,19 @@ Selected_Movie:	Title + KorTitle
 				ReleaseDate
 				Length
 				Rating
-				Genre(from TAG table)
 				TOT_SCORE
 				SCORE_COUNT
 				Outline
 				price
-				Comments count
-				wish count.
+				Genre(from TAG table)
+				Comments count (from COMENT)
+				wish count. (from COMENT)
 				
-MV_GUYS name + role + character (list
+MOVGUYSMAPPING 		role
+					character
+					name (from MOVGUYS table)
 
-similar movie list:	List from...??
+similar movie list:	(like using GENRE from Selected_Movie)
 					title
 					length
 					rating

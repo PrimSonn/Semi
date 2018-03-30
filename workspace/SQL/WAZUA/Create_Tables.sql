@@ -1,6 +1,6 @@
 
 /*
-		+ 추가사항:
+		+ 추가사항: +회원등급 테이블 참조형태 약간 수정.
 					+영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리)
 					+영화와 태그의 매핑 테이블 추가.
 					영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
@@ -15,14 +15,14 @@
 				외래키 on delete 옵션 설정 고려 --별로 중요하지 않음
 				각종 REGDATE 같은 TIMESTAMP 들에 TRIGGER 를 만들기 --편의성
 				
-TABLE LIST:	ACCOUNT
+TABLE LIST:	WAZLEVEL
+			ACCOUNT
 			MOVGUYS
 			MOVIE
 			MOVGUYS_MAPPING
 			MOV_GENRE
 			MOVGENRE_MAP
 			WAZPOINT
-			WAZLEVEL
 			COMMENTS
 			REPORT
 			MOVIE_IMG
@@ -73,11 +73,10 @@ drop table REPORT cascade constraints;
 drop trigger COMMENTS_IDX_TRG;
 drop sequence COMMENTS_SEQ;
 drop table COMMENTS cascade constraints;
-drop table WAZLEVEL cascade constraints;
 drop trigger WAZPOINT_IDX_TRG;
 drop sequence WAZPOINT_SEQ;
 drop table WAZPOINT cascade constraints;
-drop table MOVGUYS_MAPPING cascade constraints;
+drop table MOVGENRE_MAP cascade constraints;
 drop table MOV_GENRE;
 drop table MOVGUYS_MAPPING cascade constraints;
 drop trigger MOVIE_IDX_TRG;
@@ -89,22 +88,38 @@ drop table MOVGUYS cascade constraints;
 drop trigger ACCOUNT_IDX_TRG;
 drop sequence ACCOUNT_SEQ;
 drop table ACCOUNT cascade constraints;
+drop table WAZLEVEL cascade constraints;
 
 ------------------------------------------------------------------------------------------------------------------
 
 ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
+------------------------------------------------------------------------------------------------------------------
+
+create table WAZLEVEL
+(
+	WAZLEVEL	varchar(25)
+	,constraint WAZLEVEL_PK primary key (WAZLEVEL)
+);
+
+comment on table WAZLEVEL is '회원등급 테이블';
+
+
+--drop table WAZLEVEL cascade constraints;
+------------------------------------------------------------------------------------------------------------------
 create table ACCOUNT (
 	IDX			int not null
 	,EMAIL		varchar2(50) not null
 	,PW   		varchar2(50) not null
 	,NAME		varchar2(50) not null
 	,BIRTH		date not null
+	,WAZLEVEL	varchar(25)	
 	,REG_DATE	date not null
 	,LEFT_DATE	date default null
 	,DEL_FLAG	varchar2(100) default 'N'
 	,IMG		varchar2(255) default '-'
 	,constraint ACCOUNT_PK primary key ( IDX )
+	,constraint ACCOUNT_LEV_FK foreign key (WAZLEVEL) references WAZLEVEL (WAZLEVEL)
 );
 ------DEL_FLAG 탈퇴일자와 기능 중복
 ------IMG 프로필 이미지를 DBMS를 사용해 처리할 것이 아니라면 필요 없음 -- 더 진행하여 기능들이 수정하기 어려워지기 전에 분명히 해야 할 부분(이미지의 처리)! 게다가 관리자 페이지의 구현과 직결되어있음
@@ -133,6 +148,8 @@ comment on column ACCOUNT.PW is '비밀번호';
 comment on column ACCOUNT.NAME is '이름';
 
 comment on column ACCOUNT.BIRTH is '생년월일';
+
+comment on column ACCOUNT.WAZLEVEL is '회원등급 - 참조';
 
 comment on column ACCOUNT.REG_DATE is '가입일자';
 
@@ -281,7 +298,7 @@ comment on column MOVGUYS_MAPPING.CHARACTER is '배역';
 
 create table MOV_GENRE
 (
-	GENRE		varchar2(24)
+	GENRE		varchar(24)
 	,constraint MOVGENRE_PK primary key (GENRE)
 );
 --태그의 개념을 장르와 분리하려면 비슷한 테이블을 추가.
@@ -297,7 +314,7 @@ comment on column MOV_GENRE.GENRE is '영화 장르(태그) + 주 키';
 create table MOVGENRE_MAP
 (
 	MOV_IDX			int
-	,GENRE			varchar2(24)
+	,GENRE			varchar(24)
 	,constraint MOVGENREMAP_PK primary key (MOV_IDX,GENRE)
 	,constraint FK_MOVGENREMAP_MOVIE foreign key (MOV_IDX) references MOVIE (IDX)
 	,constraint FK_MOVGENREMAP_GENRE foreign key (GENRE) references MOV_GENRE (GENRE)
@@ -358,24 +375,6 @@ comment on column WAZPOINT.EXP_DATE is '만료일자';
 --drop trigger WAZPOINT_IDX_TRG;
 --drop sequence WAZPOINT_SEQ;
 --drop table WAZPOINT cascade constraints;
-----------------------------------------------------------------------------
-
-create table WAZLEVEL
-(
-	ACC_IDX		int				not null
-	,LEV_NAME	varchar2(100)	not null
-	,constraint WAZLEVEL_PK primary key (ACC_IDX)
-	,constraint FK_WAZLEVEL_ACC_IDX_ACCOUNT_ID foreign key (ACC_IDX) references ACCOUNT (IDX)
-);
-
-comment on table WAZLEVEL is '회원등급 테이블';
-
-comment on column WAZLEVEL.ACC_IDX is '회원번호(참조키)';
-
-comment on column WAZLEVEL.LEV_NAME is '회원등급';
-
-
---drop table WAZLEVEL cascade constraints;
 ----------------------------------------------------------------------------
 
 create table COMMENTS
