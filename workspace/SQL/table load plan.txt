@@ -2,20 +2,36 @@
 
 ========== Movie Specific Page ===========
 
-Movies: selected, similar movie list
+Selected_Movie: Title + KorTitle
+				Length
+				Rating
+				Genre
+				TOT_SCORE
+				SCORE_COUNT
+				Outline
+				price
+				(MV GUYS name + role + character)
 
-Accounts: selected(from Session), 
-	MyMovies(paid)
-	WishList
+similar movie list:	List from...??
+					title
+					length
+					rating
+					overvies
+					isWishList
+
+Selected_Accounts: 	selected(from Session)
+					isPossed?(PossesedMovie + Subscription w/selected MV) 100
+					isWishList (w/selected MV) 10
+					isScored (w/selected MV) 1
 
 Comments: Selected movie's comments
+			(+compare to logged id later)
+			ACCOUNTS IDX(only IDX from comments)
 
-PossesedMovie
-Subscription
 
-
-+MVSCORE:
++MVSCORE: -DONE!
 MV_SCORE: IDX__(sequence), IDX(refers MOVIE), IDX(refers ACCOUNTS), SCORE number.
 
 +MOVIE	-DONE!!
 +attribute: TOT_SCORE default 0, SCORE_COUNT default 0
+

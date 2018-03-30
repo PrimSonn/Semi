@@ -1,8 +1,9 @@
 
 /*
 		+ 추가사항:
-					+영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
-					+영화관련 인물들과 영화들의 매핑 테이블 추가. (MOVGUYS_MAPPING)
+					+영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리)
+					영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
+					영화관련 인물들과 영화들의 매핑 테이블 추가. (MOVGUYS_MAPPING)
 					MEMBER->ACCOUNT  MEM_ -> ACC_
 					외래키 지정위치 변경 (가독성)
 					MOVIE 테이블에 총 평가 점수와 평가 수 추가. (저어어번 회의때 상원이 형 아이디어)
@@ -16,6 +17,7 @@
 TABLE LIST:	ACCOUNT
 			MOVGUYS
 			MOVIE
+			MOV_GENRE
 			MOVGUYS_MAPPING
 			WAZPOINT
 			WAZLEVEL
@@ -74,6 +76,7 @@ drop trigger WAZPOINT_IDX_TRG;
 drop sequence WAZPOINT_SEQ;
 drop table WAZPOINT cascade constraints;
 drop table MOVGUYS_MAPPING cascade constraints;
+drop table MOV_GENRE;
 drop trigger MOVIE_IDX_TRG;
 drop sequence MOVIE_SEQ;
 drop table MOVIE cascade constraints;
@@ -185,7 +188,7 @@ create table MOVIE
 	,RELEASEDATE	date			not null
 	,RATING			varchar2(50)	not null
 	,PLAYTIME		varchar2(50)	not null
-	,GENRE			varchar2(100)	not null
+--	,GENRE			varchar2(100)	not null
 	,VIEWCOUNT		int				default 0
 	,OUTLINE		clob			not null
 	,TICKETSOLD		int				default 0
@@ -228,7 +231,7 @@ comment on column MOVIE.RATING is '연령등급';
 
 comment on column MOVIE.PLAYTIME is '영화의 길이';
 
-comment on column MOVIE.GENRE is '장르';
+--comment on column MOVIE.GENRE is '장르';
 
 comment on column MOVIE.VIEWCOUNT is '시청(평가)수';
 
@@ -248,6 +251,23 @@ comment on column MOVIE.SCORE_COUNT is '총 평가 갯수';
 --drop table MOVIE cascade constraints;
 ------------------------------------------------------------------------------------------------------------
 
+create table MOV_GENRE
+(
+	MOV_IDX			int
+	,TAG			varchar2(24)	not null
+	,constraint MOVGENRE_PK primary key (MOV_IDX)
+	,constraint FK_MOVGENRE_MOVIS foreign key (MOV_IDX) references MOVIE (IDX)
+);
+--장르와 태그를 분리해야 된다면 이 테이블에 열을 추가.
+comment on table MOV_GENRE is '영화 태그(장르) 테이블';
+
+comment on column MOV_GENRE.MOV_IDX is '영화 식별 코드 - 외래키';
+
+comment on column MOV_GENRE.TAG is '영화 태그(장르)';
+
+
+--drop table MOV_GENRE;
+------------------------------------------------------------------------------------------------------------
 create table MOVGUYS_MAPPING
 (
 	MOV_IDX				int				not null
