@@ -2,6 +2,7 @@
 /*
 		+ 추가사항:
 					+영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리)
+					+영화와 태그의 매핑 테이블 추가.
 					영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
 					영화관련 인물들과 영화들의 매핑 테이블 추가. (MOVGUYS_MAPPING)
 					MEMBER->ACCOUNT  MEM_ -> ACC_
@@ -17,8 +18,9 @@
 TABLE LIST:	ACCOUNT
 			MOVGUYS
 			MOVIE
-			MOV_GENRE
 			MOVGUYS_MAPPING
+			MOV_GENRE
+			MOVGENRE_MAP
 			WAZPOINT
 			WAZLEVEL
 			COMMENTS
@@ -77,6 +79,7 @@ drop sequence WAZPOINT_SEQ;
 drop table WAZPOINT cascade constraints;
 drop table MOVGUYS_MAPPING cascade constraints;
 drop table MOV_GENRE;
+drop table MOVGUYS_MAPPING cascade constraints;
 drop trigger MOVIE_IDX_TRG;
 drop sequence MOVIE_SEQ;
 drop table MOVIE cascade constraints;
@@ -251,23 +254,6 @@ comment on column MOVIE.SCORE_COUNT is '총 평가 갯수';
 --drop table MOVIE cascade constraints;
 ------------------------------------------------------------------------------------------------------------
 
-create table MOV_GENRE
-(
-	MOV_IDX			int
-	,TAG			varchar2(24)	not null
-	,constraint MOVGENRE_PK primary key (MOV_IDX)
-	,constraint FK_MOVGENRE_MOVIS foreign key (MOV_IDX) references MOVIE (IDX)
-);
---장르와 태그를 분리해야 된다면 이 테이블에 열을 추가.
-comment on table MOV_GENRE is '영화 태그(장르) 테이블';
-
-comment on column MOV_GENRE.MOV_IDX is '영화 식별 코드 - 외래키';
-
-comment on column MOV_GENRE.TAG is '영화 태그(장르)';
-
-
---drop table MOV_GENRE;
-------------------------------------------------------------------------------------------------------------
 create table MOVGUYS_MAPPING
 (
 	MOV_IDX				int				not null
@@ -291,6 +277,39 @@ comment on column MOVGUYS_MAPPING.CHARACTER is '배역';
 
 
 --drop table MOVGUYS_MAPPING cascade constraints;
+------------------------------------------------------------------------------------------------------------
+
+create table MOV_GENRE
+(
+	GENRE		varchar2(24)
+	,constraint MOVGENRE_PK primary key (GENRE)
+);
+--태그의 개념을 장르와 분리하려면 비슷한 테이블을 추가.
+
+comment on table MOV_GENRE is '영화 장르(태그) 테이블';
+
+comment on column MOV_GENRE.GENRE is '영화 장르(태그) + 주 키';
+
+
+--drop table MOV_GENRE;
+------------------------------------------------------------------------------------------------------------
+
+create table MOVGENRE_MAP
+(
+	MOV_IDX			int
+	,GENRE			varchar2(24)
+	,constraint MOVGENREMAP_PK primary key (MOV_IDX,GENRE)
+	,constraint FK_MOVGENREMAP_MOVIE foreign key (MOV_IDX) references MOVIE (IDX)
+	,constraint FK_MOVGENREMAP_GENRE foreign key (GENRE) references MOV_GENRE (GENRE)
+);
+
+comment on table MOVGENRE_MAP is '영화-장르(태그) 매핑 테이블';
+
+comment on column MOVGENRE_MAP.MOV_IDX is '영화 식별 코드 - 외래키';
+
+comment on column MOVGENRE_MAP.GENRE is '장르(태그) - 외래키';
+
+--drop table MOVGENRE_MAP;
 ------------------------------------------------------------------------------------------------------------
 
 create table WAZPOINT

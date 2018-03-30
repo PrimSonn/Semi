@@ -1,1 +1,1 @@
-sqlplus scott/tiger @"%~dp0\PIPELINED_SELECT.sql"
+--sqlplus scott/tiger @"%~dp0\PIPELINED_SELECT.sql"
