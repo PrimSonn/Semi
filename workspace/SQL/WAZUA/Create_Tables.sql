@@ -98,7 +98,7 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 create table WAZLEVEL
 (
-	WAZLEVEL	varchar(25)
+	WAZLEVEL	char(25)
 	,constraint WAZLEVEL_PK primary key (WAZLEVEL)
 );
 
@@ -113,7 +113,7 @@ create table ACCOUNT (
 	,PW   		varchar2(50) not null
 	,NAME		varchar2(50) not null
 	,BIRTH		date not null
-	,WAZLEVEL	varchar(25)	
+	,WAZLEVEL	char(25)	
 	,REG_DATE	date not null
 	,LEFT_DATE	date default null
 	,DEL_FLAG	varchar2(100) default 'N'
@@ -298,7 +298,7 @@ comment on column MOVGUYS_MAPPING.CHARACTER is '배역';
 
 create table MOV_GENRE
 (
-	GENRE		varchar(24)
+	GENRE		char(30)
 	,constraint MOVGENRE_PK primary key (GENRE)
 );
 --태그의 개념을 장르와 분리하려면 비슷한 테이블을 추가.
@@ -314,7 +314,7 @@ comment on column MOV_GENRE.GENRE is '영화 장르(태그) + 주 키';
 create table MOVGENRE_MAP
 (
 	MOV_IDX			int
-	,GENRE			varchar(24)
+	,GENRE			char(30)
 	,constraint MOVGENREMAP_PK primary key (MOV_IDX,GENRE)
 	,constraint FK_MOVGENREMAP_MOVIE foreign key (MOV_IDX) references MOVIE (IDX)
 	,constraint FK_MOVGENREMAP_GENRE foreign key (GENRE) references MOV_GENRE (GENRE)
