@@ -1,17 +1,19 @@
 
 /*
 		+ 추가사항:	
-					+소유상품 테이블 추가
+					+공지사항(+이벤트) 테이블 추가.
+					+시청목록 테이블 추가.
+					+소유상품 테이블 추가.
 					+상품목록 테이블 추가.
 					회원등급 테이블 참조형태 약간 수정.
-					영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리)
+					영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리).
 					영화와 태그의 매핑 테이블 추가.
-					영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
+					영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요.
 					영화관련 인물들과 영화들의 매핑 테이블 추가. (MOVGUYS_MAPPING)
 					MEMBER->ACCOUNT  MEM_ -> ACC_
-					외래키 지정위치 변경 (가독성)
-					MOVIE 테이블에 총 평가 점수와 평가 수 추가. (저어어번 회의때 상원이 형 아이디어)
-					평점 관리용 테이블 추가 (영화에 댓글은 여러번 쓸 수 있으므로 구현과 관리의 용이성을 위해 따로 두기로 했음.)
+					외래키 지정위치 변경 (가독성).
+					MOVIE 테이블에 총 평가 점수와 평가 수 추가.
+					평점 관리용 테이블 추가 (영화에 댓글은 여러번 쓸 수 있으므로 구현과 관리의 용이성을 위해 따로 두기로 했음.).
 					MOVIE :  -> 무결성 유지하기 위한 트리거 추가(평점 등록/변경시 MOVIE 테이블의 정보 또한 변경).
 			todo.
 				인덱스 추가 고려 --별로 중요하지 않음
@@ -35,6 +37,8 @@ TABLE LIST:	WAZLEVEL
 			MVSCORE
 			PRODUCTS
 			POSSESION
+			WATCHEDLIST
+			ANNOUNCE
 			
 SequenceList:
 			ACCOUNT_SEQ
@@ -61,10 +65,16 @@ TriggerList:
 			PRODUCTS_IDX_TRG
 			PRODUCTS_MV_MGR
 			POSSESION_IDX_TRG
+			WATCHEDLIST_TIME_TRG
+			ANNOUNCE_TIME_TRG
 
 */
 -------------------------------------------Clear ALL-----------------------------------------------------------------------
 
+drop trigger ANNOUNCE_TIME_TRG;
+drop table ANNOUNCE cascade constraints;
+drop trigger WATCHEDLIST_TIME_TRG;
+drop table WATCHEDLIST cascade constraints;
 drop trigger POSSESION_IDX_TRG;
 drop sequence POSSESION_SEQ;
 drop table POSSESION cascade constraints;
@@ -423,7 +433,7 @@ comment on table COMMENTS is '코멘트 테이블';
 
 comment on column COMMENTS.IDX is '코멘트식별번호';
 
-comment on column COMMENTS.ACC_IDX is '회원번호(참초키)';
+comment on column COMMENTS.ACC_IDX is '회원번호(참조키)';
 
 comment on column COMMENTS.MOVIE_IDX is '영화번호(참조키)';
 
@@ -469,7 +479,7 @@ comment on table REPORT is '신고접수 테이블';
 
 comment on column REPORT.IDX is '신고식별번호';
 
-comment on column REPORT.ACC_IDX is '회원번호(참초키)';
+comment on column REPORT.ACC_IDX is '회원번호(참조키)';
 
 comment on column REPORT.COMM_IDX is '코멘트번호(참조키)';
 
@@ -531,7 +541,7 @@ create table WISH_LIST
 
 comment on table WISH_LIST is '찜목록 테이블';
 
-comment on column WISH_LIST.ACC_IDX is '회원번호(참초키)';
+comment on column WISH_LIST.ACC_IDX is '회원번호(참조키)';
 
 comment on column WISH_LIST.MOVIE_IDX is '영화번호(참조키)';
 
@@ -751,7 +761,7 @@ create table POSSESION
 	,PRODUCTS_IDX	number(8,0)
 	,REGEDATE		timestamp
 	,EXPDATE		timestamp
-	,isused			number(1,0)
+	,isused			timestamp
 	,constraint POSSESION_PK primary key (IDX)
 	,constraint FK_POSSACCIDX_ACCIDX_ACC foreign key (ACC_IDX) references ACCOUNT (IDX)
 	,constraint FK_POSSPRODUCT_PRODUCT foreign key (PRODUCTS_IDX) references PRODUCTS (IDX)
@@ -783,22 +793,86 @@ comment on column POSSESION.REGEDATE is '등록일자 - 트리거로 관리';
 
 comment on column POSSESION.EXPDATE is '기간이 있는 제품의 경우 만료일 등록';
 
-comment on column POSSESION.isused is '사용여부 1=사용됨 0=사용되지 않음';
+comment on column POSSESION.isused is '사용여부 처음 이 상품이 사용된 시간 기록';
 
 --drop trigger POSSESION_IDX_TRG;
 --drop sequence POSSESION_SEQ;
 --drop table POSSESION cascade constraints;
 -----------------------------------------------------------------------------
 
+create table WATCHEDLIST
+(
+	TIMEWHEN		timestamp		not null
+	,ACC_IDX		number(9,0)		not null
+	,MOVIE_IDX		number(8,0)		not null
+	,constraint WATCHEDLIST_PK primary key (TIMEWHEN, ACC_IDX)
+	,constraint FK_WATCHLIST_ACCIDX foreign key (ACC_IDX) references ACCOUNT (IDX)
+	,constraint FK_WATCHLIST_MOVIDX foreign key (MOVIE_IDX) references MOVIE (IDX)
+);
+--마지막 시청시각만 기록한다면 WISH LIST 와 합치는 것도 가능하지만 너무 관리가 지저분해 져서 그냥 분리
+
+create or replace trigger WATCHEDLIST_TIME_TRG
+	before insert on WATCHEDLIST
+	for each row
+	when (NEW.TIMEWHEN is null)
+begin
+	:NEW.TIMEWHEN:=SYSDATE;
+end;
+/
+
+comment on table WATCHEDLIST is '시청목록 (마지막 시청시각만 기록)';
+
+comment on column WATCHEDLIST.TIMEWHEN is '마지막으로 본 시간 기록 + 복합 주 키';
+
+comment on column WATCHEDLIST.ACC_IDX is '계정 + 복합 주 키 +외래키 ';
+
+comment on column WATCHEDLIST.MOVIE_IDX is '계정 +외래키';
+
+--drop trigger WATCHEDLIST_TIME_TRG;
+--drop table WATCHEDLIST cascade constraints;
+-----------------------------------------------------------------------------
+
+create table ANNOUNCE
+(
+	REGDATE 		timestamp
+	,ISEVENT		number(1,0)			not null
+	,TITLE			varchar2(200)		default ''
+	,ACC_IDX		number(9,0)			not null
+	,VIEWCOUNT		number(11,0)		default 0
+	,CONTENTS		clob				default ''
+	,constraint ANNOUNCE_PK primary key (REGDATE,ACC_IDX)
+	,constraint FK_ANNOUNCE_ACCIDX	foreign key (ACC_IDX) references ACCOUNT (IDX)
+);
+--만일 관리자 계정을 ACCOUNT 테이블이 아닌 다른 테이블에서 관리하게 된다면 수정해야함!!!!
+create or replace trigger ANNOUNCE_TIME_TRG
+	before insert on ANNOUNCE
+	for each row
+	when (NEW.REGDATE is null)
+begin
+	:NEW.REGDATE:=SYSDATE;
+end;
+/
+
+comment on table ANNOUNCE is '공지사항 계시판';
+
+comment on column ANNOUNCE.ISEVENT is '공지사항과 이벤트 구분 0=공지사항 1=이벤트';
+
+comment on column ANNOUNCE.REGDATE is '등록시간 +복합 주 키';
+
+comment on column ANNOUNCE.TITLE is '제목';
+
+comment on column ANNOUNCE.ACC_IDX is '등록한 계정 +복합 주 키 + 외래키 (관리자 계정도 ACCOUNT 테이블에 있다고 일단 가정함';
+
+comment on column ANNOUNCE.VIEWCOUNT is '조회수';
+
+comment on column ANNOUNCE.CONTENTS is '내용';
 
 
-
-
-
-
+--drop trigger ANNOUNCE_TIME_TRG;
+--drop table ANNOUNCE cascade constraints;
+-----------------------------------------------------------------------------
 
 
 
 -----------------------------------------------------------------------------
-
 disc;
