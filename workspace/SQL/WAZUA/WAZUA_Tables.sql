@@ -1,6 +1,8 @@
 
 /*
 		+ 추가사항:	
+					+오타수정 REGEDATE, REGDATE -> REG_DATE
+					+timestamp 용 트리거 추가(기존 트리거 수정)
 					+공지사항(+이벤트) 테이블 추가.
 					+시청목록 테이블 추가.
 					+소유상품 테이블 추가.
@@ -18,7 +20,7 @@
 			todo.
 				인덱스 추가 고려 --별로 중요하지 않음
 				외래키 on delete 옵션 설정 고려 --별로 중요하지 않음
-				각종 REGDATE 같은 TIMESTAMP 들에 TRIGGER 를 만들기 --편의성
+				각종 REG_DATE 같은 TIMESTAMP 들에 TRIGGER 를 만들기 --편의성
 				
 TABLE LIST:	WAZLEVEL
 			ACCOUNT
@@ -135,15 +137,15 @@ comment on table WAZLEVEL is '회원등급 테이블';
 ------------------------------------------------------------------------------------------------------------------
 create table ACCOUNT (
 	IDX			number(9,0)
-	,EMAIL		varchar2(50) not null
-	,PW   		varchar2(50) not null
-	,NAME		varchar2(50) not null
-	,BIRTH		date not null
-	,WAZLEVEL	char(25)	
-	,REG_DATE	timestamp not null
-	,LEFT_DATE	timestamp default null
-	,DEL_FLAG	varchar2(100) default 'N'
-	,IMG		varchar2(255) default '-'
+	,EMAIL		varchar2(50)	not null
+	,PW   		varchar2(50) 	not null
+	,NAME		varchar2(50)	not null
+	,BIRTH		date 			not null
+	,WAZLEVEL	char(25)
+	,REG_DATE	timestamp		not null
+	,LEFT_DATE	timestamp
+	,DEL_FLAG	varchar2(100)	default 'N'
+	,IMG		varchar2(255)	default '-'
 	,constraint ACCOUNT_PK primary key ( IDX )
 	,constraint ACCOUNT_LEV_FK foreign key (WAZLEVEL) references WAZLEVEL (WAZLEVEL)
 );
@@ -155,13 +157,18 @@ create sequence ACCOUNT_SEQ start with 1 increment by 1;
 create or replace trigger ACCOUNT_IDX_TRG
 	before insert on ACCOUNT
 	for each row
-	when (NEW.IDX is null)
 begin
-	select ACCOUNT_SEQ.nextval
-	into :NEW.IDX
-	from DUAL;
+	if :NEW.IDX is null 
+		then select ACCOUNT_SEQ.nextval into :NEW.IDX from DUAL;
+	end if;
+	if :NEW.REG_DATE is null
+		then :NEW.REG_DATE := SYSDATE;
+	end if;
 end;
 /
+
+--	trigger test
+--	insert into ACCOUNT (EMAIL, PW, NAME, BIRTH) values ('Email@aa.com','pw','name',TO_DATE('2018/04/01 00:01:23', 'yyyy/mm/dd hh24:mi:ss'));
 
 comment on table ACCOUNT is '회원테이블';
 
@@ -205,9 +212,7 @@ create or replace trigger MOVGUYS_IDX_TRG
 	for each row 
 	when (NEW.IDX is null)
 begin 
-	select MOVGUYS_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	select MOVGUYS_SEQ.nextval into :NEW.IDX from DUAL;
 end;
 /
 
@@ -251,9 +256,7 @@ create or replace trigger MOVIE_IDX_TRG
 	for each row 
 	when (NEW.IDX is null)
 begin 
-	select MOVIE_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	select MOVIE_SEQ.nextval into :NEW.IDX from DUAL;
 end;
 /
 
@@ -358,10 +361,10 @@ comment on column MOVGENRE_MAP.GENRE is '장르(태그) - 외래키';
 create table WAZPOINT
 (
 	IDX				number(11,0)
-	,ACC_IDX		number(9,0)		not null
-	,INIT_POINTS	number(8,0)		not null
-	,LEFT_POINTS	number(8,0)		not null
-	,GIVEN_FOR		varchar2(200)	not null
+	,ACC_IDX		number(9,0)			not null
+	,INIT_POINTS	number(8,0)			not null
+	,LEFT_POINTS	number(8,0)			not null
+	,GIVEN_FOR		varchar2(200)		not null
 	,GIVEN_DATE		timestamp			not null
 	,EXP_DATE		timestamp			not null
 	,constraint WAZPOINT_PK primary key(IDX)
@@ -373,11 +376,13 @@ create sequence WAZPOINT_SEQ start with 1 increment by 1;
 create or replace trigger WAZPOINT_IDX_TRG
 	before insert on WAZPOINT
 	for each row
-	when (NEW.IDX is null)
 begin
-	select WAZPOINT_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	if :NEW.IDX is null
+		then select WAZPOINT_SEQ.nextval into :NEW.IDX from DUAL;
+	end if;
+	if :NEW.GIVEN_DATE is null
+		then :NEW.GIVEN_DATE := SYSDATE;
+	end if;
 end;
 /
 
@@ -421,11 +426,13 @@ create sequence COMMENTS_SEQ start with 1 increment by 1;
 create or replace trigger COMMENTS_IDX_TRG
 	before insert on COMMENTS
 	for each row
-	when (NEW.IDX is null)
 begin
-	select COMMENTS_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	if :NEW.IDX is null
+		then select COMMENTS_SEQ.nextval into :NEW.IDX from DUAL;
+	end if;
+	if :NEW.REG_DATE is null
+		then :NEW.REG_DATE := SYSDATE;
+	end if;
 end;
 /
 
@@ -455,7 +462,7 @@ create table REPORT
 	,ACC_IDX		number(9,0)			not null
 	,COMM_IDX		number(12,0)		not null
 	,REPORT_DATE	timestamp			not null
-	,DEALT			varchar2(200)	not null
+	,DEALT			varchar2(200)		not null
 	,constraint REPORT_PK primary key (IDX)
 	,constraint FK_REPORT_ACC_IDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
 	,constraint FK_REPORT_COMM_IDX_COMMENT_T foreign key (COMM_IDX) references COMMENTS (IDX)
@@ -467,11 +474,13 @@ create sequence REPORT_SEQ start with 1 increment by 1;
 create or replace trigger REPORT_IDX_TRG
 	before insert on REPORT 
 	for each row
-	when (NEW.IDX is null)
 begin 
-	select REPORT_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	if :NEW.IDX is null
+		then select REPORT_SEQ.nextval into :NEW.IDX from DUAL;
+	end if;
+	if :NEW.REPORT_DATE is null
+		then :NEW.REPORT_DATE := SYSDATE;
+	end if;
 end;
 /
 
@@ -568,11 +577,13 @@ create sequence INQUIRE_SEQ start with 1 increment by 1;
 create or replace trigger INQUIRE_IDX_TRG
 	before insert on INQUIRE
 	for each row
-	when (NEW.IDX is null)
 begin
-	select INQUIRE_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	if :NEW.IDX is null 
+		then select INQUIRE_SEQ.nextval into :NEW.IDX from DUAL;
+	end if;
+	if :NEW.REG_DATE is null
+		then :NEW.REG_DATE := SYSDATE;
+	end if;
 end;
 /
 
@@ -614,9 +625,7 @@ create or replace trigger TRAILERS_IDX_TRG
 	for each row
 	when (NEW.IDX is null)
 begin
-	select TRAILERS_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	select TRAILERS_SEQ.nextval into :NEW.IDX from DUAL;
 end;
 /
 
@@ -724,9 +733,7 @@ create or replace trigger PRODUCTS_IDX_TRG
 	for each row
 	when (NEW.IDX is null)
 begin 
-	select PRODUCTS_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
+	select PRODUCTS_SEQ.nextval into :NEW.IDX from DUAL;
 end;
 /
 
@@ -759,7 +766,7 @@ create table POSSESION
 	IDX				number(10,0)
 	,ACC_IDX		number(9,0)
 	,PRODUCTS_IDX	number(8,0)
-	,REGEDATE		timestamp
+	,REG_DATE		timestamp
 	,EXPDATE		timestamp
 	,isused			timestamp
 	,constraint POSSESION_PK primary key (IDX)
@@ -772,15 +779,16 @@ create sequence POSSESION_SEQ start with 1 increment by 1;
 create or replace trigger POSSESION_IDX_TRG
 	before insert on POSSESION
 	for each row
-	when (NEW.IDX is null)
 begin
-	select POSSESION_SEQ.nextval
-	into:NEW.IDX
-	from DUAL;
-	:NEW.REGEDATE:=SYSDATE;
+	if :NEW.IDX is null 
+		then select POSSESION_SEQ.nextval into :NEW.IDX from DUAL;
+	end if;
+	if :NEW.REG_DATE is null
+		then :NEW.REG_DATE := SYSDATE;
+	end if;
 end;
 /
--- 만료일자도 넣어주는 트리거 필요
+
 comment on table POSSESION is '상품 소유 테이블';
 
 comment on column POSSESION.IDX is '인덱스 +주 키';
@@ -789,7 +797,7 @@ comment on column POSSESION.ACC_IDX is '계정번호 + 외래키';
 
 comment on column POSSESION.PRODUCTS_IDX is '상품번호 + 외래키';
 
-comment on column POSSESION.REGEDATE is '등록일자 - 트리거로 관리';
+comment on column POSSESION.REG_DATE is '등록일자 - 트리거로 관리';
 
 comment on column POSSESION.EXPDATE is '기간이 있는 제품의 경우 만료일 등록';
 
@@ -816,7 +824,7 @@ create or replace trigger WATCHEDLIST_TIME_TRG
 	for each row
 	when (NEW.TIMEWHEN is null)
 begin
-	:NEW.TIMEWHEN:=SYSDATE;
+	:NEW.TIMEWHEN := SYSDATE;
 end;
 /
 
@@ -834,22 +842,22 @@ comment on column WATCHEDLIST.MOVIE_IDX is '계정 +외래키';
 
 create table ANNOUNCE
 (
-	REGDATE 		timestamp
+	REG_DATE 		timestamp
 	,ISEVENT		number(1,0)			not null
 	,TITLE			varchar2(200)		default ''
 	,ACC_IDX		number(9,0)			not null
 	,VIEWCOUNT		number(11,0)		default 0
 	,CONTENTS		clob				default ''
-	,constraint ANNOUNCE_PK primary key (REGDATE,ACC_IDX)
+	,constraint ANNOUNCE_PK primary key (REG_DATE,ACC_IDX)
 	,constraint FK_ANNOUNCE_ACCIDX	foreign key (ACC_IDX) references ACCOUNT (IDX)
 );
 --만일 관리자 계정을 ACCOUNT 테이블이 아닌 다른 테이블에서 관리하게 된다면 수정해야함!!!!
 create or replace trigger ANNOUNCE_TIME_TRG
 	before insert on ANNOUNCE
 	for each row
-	when (NEW.REGDATE is null)
+	when (NEW.REG_DATE is null)
 begin
-	:NEW.REGDATE:=SYSDATE;
+	:NEW.REG_DATE := SYSDATE;
 end;
 /
 
@@ -857,7 +865,7 @@ comment on table ANNOUNCE is '공지사항 계시판';
 
 comment on column ANNOUNCE.ISEVENT is '공지사항과 이벤트 구분 0=공지사항 1=이벤트';
 
-comment on column ANNOUNCE.REGDATE is '등록시간 +복합 주 키';
+comment on column ANNOUNCE.REG_DATE is '등록시간 +복합 주 키';
 
 comment on column ANNOUNCE.TITLE is '제목';
 
