@@ -155,10 +155,8 @@ WATCHEDLIST:	IDX(pk) int			ACC_IDX(fk) int		MOVIE_IDX(fk) int	TIME timestamp
 ANNOUNCE:	IDX(PK)	int		ACC_IDX(fk)		TITLE	CONTENTS	REGDATE
 EVENT:		IDX(PK)	int		ACC_IDX(fk)		TITLE	CONTENTS	REGDATE
 
---date -> timestamp
-
-
-
+영화가격 옮기기
+시퀀스 버퍼 조정,시퀀스 한계값 설정
 
 ----------------- Stream API Ex -------------------------
 

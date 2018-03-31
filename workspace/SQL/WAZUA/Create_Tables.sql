@@ -1,8 +1,11 @@
 
 /*
-		+ 추가사항: +회원등급 테이블 참조형태 약간 수정.
-					+영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리)
-					+영화와 태그의 매핑 테이블 추가.
+		+ 추가사항:	
+					+소유상품 테이블 추가
+					+상품목록 테이블 추가.
+					회원등급 테이블 참조형태 약간 수정.
+					영화 태그(장르) 테이블 추가. +영화 테이블의 장르 열 삭제(일단 코멘트 처리)
+					영화와 태그의 매핑 테이블 추가.
 					영화 감독 및 배우 (영화관련 인물들의)테이블 추가. (MOVGUYS) .---감독 및 배우들의 이미지 파일 을 매핑 하기위해 필요
 					영화관련 인물들과 영화들의 매핑 테이블 추가. (MOVGUYS_MAPPING)
 					MEMBER->ACCOUNT  MEM_ -> ACC_
@@ -30,6 +33,8 @@ TABLE LIST:	WAZLEVEL
 			INQUIRE
 			TRAILERS
 			MVSCORE
+			PRODUCTS
+			POSSESION
 			
 SequenceList:
 			ACCOUNT_SEQ
@@ -40,8 +45,9 @@ SequenceList:
 			REPORT_SEQ
 			INQUIRE_SEQ
 			TRAILERS_SEQ
-
-
+			PRODUCTS_SEQ
+			POSSESION_SEQ
+			
 TriggerList:
 			ACCOUNT_IDX_TRG
 			MOVGUYS_IDX_TRG
@@ -52,11 +58,20 @@ TriggerList:
 			INQUIRE_SEQ
 			TRAILERS_IDX_TRG
 			MVSCORE_MANAGER
-
+			PRODUCTS_IDX_TRG
+			PRODUCTS_MV_MGR
+			POSSESION_IDX_TRG
 
 */
 -------------------------------------------Clear ALL-----------------------------------------------------------------------
 
+drop trigger POSSESION_IDX_TRG;
+drop sequence POSSESION_SEQ;
+drop table POSSESION cascade constraints;
+drop trigger PRODUCTS_MV_MGR;
+drop trigger PRODUCTS_IDX_TRG;
+drop sequence PRODUCTS_SEQ;
+drop table PRODUCTS cascade constraints;
 drop trigger MVSCORE_MANAGER;
 drop table MVSCORE cascade constraints;
 drop trigger TRAILERS_IDX_TRG;
@@ -96,6 +111,7 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 ------------------------------------------------------------------------------------------------------------------
 
+
 create table WAZLEVEL
 (
 	WAZLEVEL	char(25)
@@ -108,7 +124,7 @@ comment on table WAZLEVEL is '회원등급 테이블';
 --drop table WAZLEVEL cascade constraints;
 ------------------------------------------------------------------------------------------------------------------
 create table ACCOUNT (
-	IDX			int not null
+	IDX			number(9,0)
 	,EMAIL		varchar2(50) not null
 	,PW   		varchar2(50) not null
 	,NAME		varchar2(50) not null
@@ -167,7 +183,7 @@ comment on column ACCOUNT.IMG is '프로필이미지';
 
 
 create table MOVGUYS (
-	IDX			int not null
+	IDX			number(7,0)
 	,NAME		varchar2(50) not null
 	,constraint MOVGUY_PK primary key (IDX)
 );
@@ -199,7 +215,7 @@ comment on column MOVGUYS.NAME is '이름';
 
 create table MOVIE
 (
-	IDX				int				not null
+	IDX				number(8,0)
 	,KORTITLE		varchar2(500)	not null
 	,TITLE			varchar2(500)	not null
 	,DIRECTOR		varchar2(200)	not null
@@ -209,12 +225,12 @@ create table MOVIE
 	,RATING			varchar2(50)	not null
 	,PLAYTIME		varchar2(50)	not null
 --	,GENRE			varchar2(100)	not null
-	,VIEWCOUNT		int				default 0
-	,OUTLINE		clob			not null
-	,TICKETSOLD		int				default 0
-	,PRICE			int				default 0
-	,TOT_SCORE		int				default 0
-	,SCORE_COUNT	int				default 0
+	,VIEWCOUNT		number(9,0)		default 0
+	,OUTLINE		clob			default ''
+	,TICKETSOLD		number(8,0)		default 0
+	,PRICE			number(7,0)		default 0
+	,TOT_SCORE		binary_double	default 0
+	,SCORE_COUNT	number(9,0)		default 0
 	,constraint MOVIE_PK primary key (IDX)
 );
 
@@ -273,8 +289,8 @@ comment on column MOVIE.SCORE_COUNT is '총 평가 갯수';
 
 create table MOVGUYS_MAPPING
 (
-	MOV_IDX				int				not null
-	,MOVGUYS_IDX		int 			not null
+	MOV_IDX				number(8,0)
+	,MOVGUYS_IDX		number(7,0) 	not null
 	,ROLE				varchar2(50)	not null
 	,CHARACTER			varchar2(50)	default ''
 	,constraint MOVMAP_PK primary key(MOV_IDX,MOVGUYS_IDX)
@@ -313,7 +329,7 @@ comment on column MOV_GENRE.GENRE is '영화 장르(태그) + 주 키';
 
 create table MOVGENRE_MAP
 (
-	MOV_IDX			int
+	MOV_IDX			number(8,0)
 	,GENRE			char(30)
 	,constraint MOVGENREMAP_PK primary key (MOV_IDX,GENRE)
 	,constraint FK_MOVGENREMAP_MOVIE foreign key (MOV_IDX) references MOVIE (IDX)
@@ -331,10 +347,10 @@ comment on column MOVGENRE_MAP.GENRE is '장르(태그) - 외래키';
 
 create table WAZPOINT
 (
-	IDX				int				not null
-	,ACC_IDX		int				not null
-	,INIT_POINTS	int				not null
-	,LEFT_POINTS	int				not null
+	IDX				number(11,0)
+	,ACC_IDX		number(9,0)		not null
+	,INIT_POINTS	number(8,0)		not null
+	,LEFT_POINTS	number(8,0)		not null
 	,GIVEN_FOR		varchar2(200)	not null
 	,GIVEN_DATE		timestamp			not null
 	,EXP_DATE		timestamp			not null
@@ -379,12 +395,12 @@ comment on column WAZPOINT.EXP_DATE is '만료일자';
 
 create table COMMENTS
 (
-	IDX				int			not null
-	,ACC_IDX		int			not null
-	,MOVIE_IDX		int			not null
-	,REG_DATE		timestamp		not null
-	,CONTENTS		clob		not null
-	,ISBLIND			varchar2(100)
+	IDX				number(12,0)
+	,ACC_IDX		number(9,0)			not null
+	,MOVIE_IDX		number(8,0)			not null
+	,REG_DATE		timestamp			not null
+	,CONTENTS		clob				not null
+	,ISBLIND		varchar2(100)
 	,constraint COMMENT_PK primary key (IDX)
 	,constraint FK_COMMENT_ACC_IDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
 	,constraint FK_COMMENT_MOVIE_IDX_MOVIE foreign key (MOVIE_IDX) references MOVIE (IDX)
@@ -425,9 +441,9 @@ comment on column COMMENTS.ISBLIND is '블라인드';
 
 create table REPORT
 (
-	IDX				int				not null
-	,ACC_IDX		int				not null
-	,COMM_IDX		int				not null
+	IDX				number(12,0)
+	,ACC_IDX		number(9,0)			not null
+	,COMM_IDX		number(12,0)		not null
 	,REPORT_DATE	timestamp			not null
 	,DEALT			varchar2(200)	not null
 	,constraint REPORT_PK primary key (IDX)
@@ -470,7 +486,7 @@ comment on column REPORT.DEALT is '조치내용';
 --이미지 매핑을 DBMS에서 한다면 필요.(종류 및 갯수에 제한을 받게 됨) 이미 이미지를 저장해야할 위치가 정해진 상태에서 꼭 필요하지는 않음.
 create table MOVIE_IMG
 (
-	MOVIE_IDX		int				not null
+	MOVIE_IDX		number(8,0)
 	,POSTER			varchar2(255)	not null
 	,THUM			varchar2(255)	not null
 	,SC1			varchar2(255)	not null
@@ -505,12 +521,12 @@ comment on column MOVIE_IMG.SC5 is '스틸컷5';
 
 create table WISH_LIST
 (
-	ACC_IDX		int				not null
-	,MOVIE_IDX	int				not null
-	,FLAG		varchar2(200)	not null
+	ACC_IDX		number(9,0)
+	,MOVIE_IDX	number(8,0)				not null
+	,FLAG		varchar2(200)			not null
 	,constraint WISH_LIST_PK primary key (ACC_IDX, MOVIE_IDX)
-	,constraint FK_WISH_LIST_ACC_IDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
-	,constraint FK_WISH_LIST_MOVIE_IDX_MOVI foreign key (MOVIE_IDX) references MOVIE (IDX)
+	,constraint FK_WISHLIST_ACCIDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
+	,constraint FK_WISHLIST_MOVIEIDX_MOVI foreign key (MOVIE_IDX) references MOVIE (IDX)
 );
 
 comment on table WISH_LIST is '찜목록 테이블';
@@ -527,12 +543,12 @@ comment on column WISH_LIST.FLAG is'플래그';
 
 create table INQUIRE
 (
-	IDX			int		not null
-	,ACC_IDX	int		not null
-	,CONTENTS	clob	not null
-	,RESPONSE	clob	null
-	,REG_DATE	timestamp	not null
-	,RES_DATE	timestamp	null
+	IDX			number(9,0)
+	,ACC_IDX	number(9,0)		not null
+	,CONTENTS	clob			not null
+	,RESPONSE	clob			null
+	,REG_DATE	timestamp		not null
+	,RES_DATE	timestamp		null
 	,constraint INQUIRE_PK primary key (IDX)
 	,constraint FK_INQUIRE_ACC_IDX_ACCOUNT_ID foreign key (ACC_IDX) references ACCOUNT (IDX)
 );
@@ -572,8 +588,8 @@ comment on column INQUIRE.RES_DATE is '답변일자';
 
 create table TRAILERS
 (
-	IDX				int				not null
-	,MOVIE_IDX		int				not null
+	IDX				number(9,0)
+	,MOVIE_IDX		number(8,0)		not null
 	,TRAILER_FILE	varchar2(200)	not null
 	,TRAILER_TITLE	varchar2(200)	not null
 	,constraint TRAILERS_PK primary key (IDX)
@@ -611,15 +627,14 @@ comment on column TRAILERS.TRAILER_TITLE is '영상제목';
 
 create table MVSCORE
 (
-	ACC_IDX		int		not null
-	,MOVIE_IDX		int		not null
-	,SCORE			int		not null
+	ACC_IDX			number(9,0)	
+	,MOVIE_IDX		number(8,0)			not null
+	,SCORE			binary_double		not null
 	,constraint MVSCORE_PK primary key (ACC_IDX, MOVIE_IDX)
 	,constraint FK_MVSCORE_ACCIDX_ACCOUNT_IDX foreign key (ACC_IDX) references ACCOUNT (IDX)
 	,constraint FK_MVSCORE_MOVIDX_MOVIE_IDX foreign key (MOVIE_IDX)  references MOVIE (IDX)
 );
-
-
+--평점은 1자리 정수 + 1자리 소수
 create or replace trigger MVSCORE_MANAGER
 	before
 		insert
@@ -680,6 +695,110 @@ select * from MOVIE;
 
 --drop trigger MVSCORE_MANAGER;
 --drop table MVSCORE cascade constraints;
+-----------------------------------------------------------------------------
+
+create table PRODUCTS
+(
+	IDX				number(8,0)
+	,MOV_IDX		number(8,0)
+	,DURATION		timestamp
+	,PRICE			number(7,0)			not null
+	,constraint PRODUCTS_PK primary key (IDX)
+	,constraint FK_PRODUCTS_MOVIDX_MOVI foreign key (MOV_IDX) references MOVIE (IDX)
+);
+
+create sequence PRODUCTS_SEQ start with 1 increment by 1;
+
+create or replace trigger PRODUCTS_IDX_TRG
+	before insert on PRODUCTS
+	for each row
+	when (NEW.IDX is null)
+begin 
+	select PRODUCTS_SEQ.nextval
+	into:NEW.IDX
+	from DUAL;
+end;
+/
+
+create or replace trigger PRODUCTS_MV_MGR
+	after insert on MOVIE
+	for each row
+begin
+	insert into PRODUCTS (MOV_IDX,PRICE) values (:NEW.IDX, :NEW.PRICE);
+end;
+/
+
+comment on table PRODUCTS is '상품 테이블 (월결제와 개별 구매를 같이 관리)';
+
+comment on column PRODUCTS.IDX is '상품번호(식별) +주 키';
+
+comment on column PRODUCTS.MOV_IDX is '영화번호(개별구매영화) +외래키, 월결제시 null, 혹시 나중에 개별영화를 기간을 두고 구매 가능하게 할 때에도 사용 가능';
+
+comment on column PRODUCTS.DURATION is '유효기간, 일단 월결제 용';
+
+comment on column PRODUCTS.PRICE is '가격';
+
+--drop trigger PRODUCTS_MV_MGR;
+--drop trigger PRODUCTS_IDX_TRG;
+--drop sequence PRODUCTS_SEQ;
+--drop table PRODUCTS cascade constraints;
+-----------------------------------------------------------------------------
+
+create table POSSESION
+(
+	IDX				number(10,0)
+	,ACC_IDX		number(9,0)
+	,PRODUCTS_IDX	number(8,0)
+	,REGEDATE		timestamp
+	,EXPDATE		timestamp
+	,isused			number(1,0)
+	,constraint POSSESION_PK primary key (IDX)
+	,constraint FK_POSSACCIDX_ACCIDX_ACC foreign key (ACC_IDX) references ACCOUNT (IDX)
+	,constraint FK_POSSPRODUCT_PRODUCT foreign key (PRODUCTS_IDX) references PRODUCTS (IDX)
+);
+
+create sequence POSSESION_SEQ start with 1 increment by 1;
+
+create or replace trigger POSSESION_IDX_TRG
+	before insert on POSSESION
+	for each row
+	when (NEW.IDX is null)
+begin
+	select POSSESION_SEQ.nextval
+	into:NEW.IDX
+	from DUAL;
+	:NEW.REGEDATE:=SYSDATE;
+end;
+/
+-- 만료일자도 넣어주는 트리거 필요
+comment on table POSSESION is '상품 소유 테이블';
+
+comment on column POSSESION.IDX is '인덱스 +주 키';
+
+comment on column POSSESION.ACC_IDX is '계정번호 + 외래키';
+
+comment on column POSSESION.PRODUCTS_IDX is '상품번호 + 외래키';
+
+comment on column POSSESION.REGEDATE is '등록일자 - 트리거로 관리';
+
+comment on column POSSESION.EXPDATE is '기간이 있는 제품의 경우 만료일 등록';
+
+comment on column POSSESION.isused is '사용여부 1=사용됨 0=사용되지 않음';
+
+--drop trigger POSSESION_IDX_TRG;
+--drop sequence POSSESION_SEQ;
+--drop table POSSESION cascade constraints;
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 -----------------------------------------------------------------------------
 
 disc;
