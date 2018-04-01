@@ -15,11 +15,16 @@ import moviePage.dto.entities.Entity;
 
 public class Packer extends Pack{
 	
-	private static final String ADDRESS = "http://192.168.30.52:8001";
+	private static String ADDRESS = null;
 	
 	
-//	public Packer() {
-//	}
+	public Packer() {
+	}
+	
+	public void init (String address) {
+		ADDRESS=address;
+	}
+	
 	
 	public Packer (ResultSet rs,String contextPath, String realPath){
 		
