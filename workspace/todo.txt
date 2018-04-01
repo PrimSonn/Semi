@@ -99,11 +99,15 @@ https://docs.oracle.com/javase/6/docs/api/javax/sql/rowset/RowSetMetaDataImpl.ht
 https://stackoverflow.com/questions/25621497/get-attribute-from-servletcontext-on-jsp-page
 https://stackoverflow.com/questions/28392888/init-param-and-context-param
 http://tomcat.apache.org/tomcat-4.0-doc/servletapi/javax/servlet/ServletConfig.html
+
+
 servelet context listener..
 https://www.roseindia.net/servlets/ServletContextListener-example.shtml
 https://stackoverflow.com/questions/18891903/how-do-i-put-listener-in-web-xml-java
+
 filter
 https://docs.oracle.com/cd/B14099_19/web.1012/b14017/filters.htm
+https://stackoverflow.com/questions/3125296/can-i-exclude-some-concrete-urls-from-url-pattern-inside-filter-mapping?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
 java mail (smtp server)
 https://www.tutorialspoint.com/java/java_sending_email.htm
@@ -134,7 +138,7 @@ header-search
 
 
 
-
+WAZLEVEL 참조형태
 시퀀스 버퍼 조정,시퀀스 한계값 설정
 -- 만료일자도 넣어주는 트리거 필요
 
@@ -151,3 +155,19 @@ Collections.sort(names, new Comparator<String>() {
 Collections.sort(names, (a, b) -> b.compareTo(a));
 
 
+-------------------- a-z duplictate-----------------------
+a-z
+
+function findFirdtDupChar(s)
+{
+	var mask, bitFileds = 0, letterACharCode = 'A'.charCodeAt(0);
+	
+	for(var i =0 ; i<s.length; i++)
+	{
+		mask = 1<<(s.charCodeAt(i) = letterACharCode);
+		if(bitFileds & mask) //check if bit representing occurrence of current character already found
+			return s[i];//if so, return the character
+		bitFileds |= mask; //set the bit representing an occurrence of the current character
+	}
+	return null;//No duplicate characters found.
+}

@@ -12,7 +12,7 @@ public class Gatherer {
 	
 	private static final String JDBCNAME = "oracle.jdbc.driver.OracleDriver";
 	private static final String URL= "jdbc:oracle:thin:@localhost:1521:xe";
-	private static final String USER = "scott", PASS = "tiger";
+	private static String USER = "scott", PASS = "tiger";
 	
 	private Connection conn = null;
 	private PreparedStatement pst = null;

@@ -1,0 +1,54 @@
+
+========== Movie Specific Page ===========
+
+Selected_Movie:	KorTitle
+				ENGTitle
+				ReleaseDate
+				Length
+				Rating
+				TOT_SCORE
+				SCORE_COUNT
+				Outline
+				price
+				(Genre) <- MOVGENRE_MAP -> MOV_GENRE
+				(Comments count) <- COMMENTS
+				(wish count) <- WISH_LIST
+				
+MOVGUYSMAPPING(MOV_IDX)	(name) -> MOVGUYS
+						ROLE
+						CHARACTER
+
+Selected_Accounts: 	_selected (id from Session)
+					isPossed?(PossesedMovie + Subscription w/selected MV) 100
+					isWishList (w/selected MV) 10
+					isScored (w/selected MV) 1
+
+Comments: (MOVIE_IDX)
+			(+compare to logged id later)
+			ACCOUNTS_IDX (only IDX from comments) COMMENTS_ACCIDX
+			ACCOUNTS_NAME
+			ACCOUNTS_SCORE
+			REG_DATE
+			CONTENTS
+
+similar movie list:	(like using GENRE from Selected_Movie)
+					title
+					length
+					rating
+					overvies
+					isWishList
+
+MOVIE( KORTITLE varchar2(500), ENGTITLE varchar2(500), COUNTRY varchar2(100), RELEASEDATE date, RATING varchar2(50), PLAYTIME varchar2(50), VIEWCOUNT number(9), OUTLINE clob, TICKETSOLD number(8), PRICE number(7), TOT_SCORE binary_double, SCORE_COUNT number(9)
+MOVGENRE_MAP
+MOV_GENRE
+COMMENTS
+WISH_LIST
+
+MOVGUYSMAPPING
+MOVGUYS
+
+ACCOUNT
+MVSCORE
+
+COMMENTS
+	more accounts..

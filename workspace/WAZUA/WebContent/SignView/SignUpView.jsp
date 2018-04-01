@@ -7,10 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action='/LogTest/SignIn' method='post'>
-	ID: <input type='text' name='id'><br>
-	PW: <input type='text' name='pw'><br>
-	<input type='submit' value='Submit'>
-	</form> 
+
 </body>
 </html>

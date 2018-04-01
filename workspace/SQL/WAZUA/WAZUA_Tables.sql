@@ -232,9 +232,7 @@ create table MOVIE
 (
 	IDX				number(8,0)
 	,KORTITLE		varchar2(500)	not null
-	,TITLE			varchar2(500)	not null
-	,DIRECTOR		varchar2(200)	not null
-	,ACTOR			varchar2(1000)	not null
+	,ENGTITLE		varchar2(500)	not null
 	,COUNTRY		varchar2(100)	not null
 	,RELEASEDATE	date			not null
 	,RATING			varchar2(50)	not null
@@ -266,11 +264,7 @@ comment on column MOVIE.IDX is '영화번호';
 
 comment on column MOVIE.KORTITLE is '영화제목(한글)';
 
-comment on column MOVIE.TITLE is '원제';
-
-comment on column MOVIE.DIRECTOR is '감독';
-
-comment on column MOVIE.ACTOR is '배우';
+comment on column MOVIE.ENGTITLE is '원제';
 
 comment on column MOVIE.COUNTRY is '제작국가';
 
@@ -708,7 +702,6 @@ delete MVSCORE where ACC_IDX=1 and MOVIE_IDX = 1;
 select * from MVSCORE;
 select * from MOVIE;
 select * from ACCOUNT;
-select * from MOVIE;
 */
 
 

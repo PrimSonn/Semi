@@ -6,15 +6,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <script>
-	window.onload = function(){ 
+	window.onload = function(){
+		document.getElementById("signUp").onclick = function() {
+			window.location.href = "<%= application.getContextPath() + application.getInitParameter("SignUp")%>";
+		}
 		document.getElementById("signIn").onclick = function() {
-			window.location.href = "http://localhost:8001/WAZUA/SignIn";
+			window.location.href = "<%=	application.getContextPath() + application.getInitParameter("SignIn")%>";
 		}
 	}
 </script>
 </head>
 <body>
-	<p>Door</p>
+	<p>DoorDriverView</p>
+	<hr>
 	<button id='signUp'>SignUp</button>
 	<button id='signIn'>SignIn</button>
 </body>

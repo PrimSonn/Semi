@@ -1,23 +1,22 @@
 package listener;
 
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 
-import listener.bouncerModule.Bouncer;
+import bouncer.Bouncer;
 
-
-@WebListener
-public class WazuaListener implements ServletContextListener {
-	
-    public WazuaListener() {
-    }
-    public void contextDestroyed(ServletContextEvent sce)  { 
-    }
-    
-    public void contextInitialized(ServletContextEvent sce)  {
-    	System.out.println("LISTENER:conetxt initialized");//-----------------------------------------------------------testcode
-    	sce.getServletContext().setAttribute("Bouncer", new Bouncer());
-    	System.out.println("Bouncer created");//-----------------------------------------------------------testcode
-    }
+public class WazuaListener implements ServletContextListener{
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		
+		ServletContext context = sce.getServletContext();
+		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"));
+		context.setAttribute("bouncer", bouncer);
+	}
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		
+	}
 }
