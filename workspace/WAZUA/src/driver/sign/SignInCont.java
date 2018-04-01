@@ -20,7 +20,7 @@ public class SignInCont extends HttpServlet {
 		
 		//---------------test driver..need proper signin
 		System.out.println(request.getParameter("id"));
-		int id = Integer.parseInt(request.getParameter("id"));
+		String id = request.getParameter("id");
 		request.getSession().setAttribute("id", id);
 		response.sendRedirect(this.getServletContext().getContextPath()+this.getServletContext().getInitParameter("Main"));
 	}
