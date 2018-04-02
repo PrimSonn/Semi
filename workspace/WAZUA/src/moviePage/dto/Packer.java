@@ -91,7 +91,7 @@ public class Packer extends Pack{
 //				System.out.println("propset: " +propset);//-----------------------------------------test
 				for(Integer i : propset.keySet() ) {
 					String prop = propset.get(i);
-					String val = rs.getString(i);//------!!!!!!!!!!!!!!!!!!!!!!!!! something's wrong here!!
+					String val = rs.getString(i);//------!!!!!!!!!!!!!!!!!!!!!!!!! something's wrong here??
 					if(prop!=null&val!=null)
 					entity.setProperty(propset.get(i), rs.getString(i) );
 				}
@@ -106,7 +106,6 @@ public class Packer extends Pack{
 				}
 				
 				curator(tag ,realPath, contextPath, entity);
-				
 				super.putList(tag, entity);
 			}
 					
@@ -156,15 +155,23 @@ public class Packer extends Pack{
 				char[] p_refix = prefix.toCharArray();
 				
 				for(int i = key.length()-1; prefix.length()>i; i++) {
-					if(p_refix[i]=='_' && prefix.substring(0,i).contentEquals(key)) {
+					if(p_refix[i]=='_' & prefix.substring(0,i).contentEquals(key)) {
 //						System.out.println("in! prefix: "+ prefix +"  key: "+key);//--------------------------------------------test
 						if(!columMap.containsKey(prefix)) {
 //							System.out.println("no prefix found but prefixFrag match. prefix: "+prefix+"  key: "+key);//---------------------------test
-							temp = (Hashtable<Integer, String>) keyMap.clone();
-							temp.put(colnum, property);
-							mod = 2;
+							if(mod!=2) {
+								temp = (Hashtable<Integer, String>) keyMap.clone();
+								temp.put(colnum, property);
+								mod = 2;
+							}else {
+								for(int keyMapCol: keyMap.keySet()) {
+									temp.put(keyMapCol, keyMap.get(keyMapCol) );
+								}
+							}
 						}
-						mod = mod==2?2:1;
+						if(mod!=0) {
+							mod = mod==2?2:1;
+						}
 						break;
 					}//prefix parsing '_' + compare to key if-else ends
 				}//prefix parsing for ends
@@ -178,24 +185,30 @@ public class Packer extends Pack{
 			temp.put(colnum, property);
 			columMap.put(prefix, temp);
 		}else if(mod==2) {
-			columMap.put(prefix, temp);
+			for(int tempInt :temp.keySet()) {
+				columMap.get(prefix).put(tempInt, temp.get(tempInt));
+			}
 		}
 		
+//		System.out.println("columMap :" +columMap);//----------------------------------------------------------------test
 	}//cartographer() ends
 	
 	
 	private void curator(String tag,String realPath, String contextPath, Entity entity) {
 		
 		Stack<File> stack = new Stack<File>();
+		tag = tag.substring(0, 1).toUpperCase()+ tag.substring(1).toLowerCase();
 		String mask = realPath+"\\"+"Imgs\\"+tag+"\\"+ entity.getIdx()+"\\";
 		File file = new File(mask);
-		int cutter = realPath.length();
+		int cutter = realPath.length()-1;
 		
 		for(;;) {
 			
 			if(file.isFile()) {
 //				System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//------------------------------------------test code
 //				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));//------------------------------test code
+				
+				
 				entity.setImgs ( file.getAbsoluteFile().getParentFile().getName()
 						, ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/') );
 			}else if(file.isDirectory()) {

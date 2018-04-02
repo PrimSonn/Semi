@@ -12,23 +12,42 @@
 <body>
 <%Pack pack = (Pack)request.getAttribute("pack");
 
-for(String key : pack.getKeys()) {
-	%><Div><%=key %>
-	<%
-	for(Entity e :pack.getList(key)){
-		%>
+ArrayList<Entity> movList = pack.getList("MOVIE");
+ArrayList<Entity> accList = pack.getList("ACCOUNT");
+ArrayList<Entity> movGuyList = pack.getList("MOVIEGUYS");
+
+for(String key : pack.getKeys()) { %>
+	<Div><%=key %>
+	<% for(Entity e :pack.getList(key)){ %>
 		<div>
-			Properties: <%= e.getPropertiesTable()%>
+			Properties: <%= e.getPropertiesTable() %>
 		</div>
 		<div>
 			Images: <%= e.getImgsTable()%>
 		</div>
-		<%
-	}
-	%>
+	<% }%>
 	</Div>
+	<br><hr><br><hr><br>
+<%}%>
+
+<div id = MoviePoster><img src ='<%=pack.getMvImg("poster").get(0)%>'/></div>
+<hr>
+<%
+for(String stealcuts : pack.getMvImg("stealcuts")){%>
+	<div id = MovieStealcuts><img src ='<%=stealcuts%>'/></div><br>
+<%
+}%>
+<hr>
+
+<%
+for(Entity ent: movGuyList){
+	%>
+	<div id = 'movGuyThumb'><img src = '<%=ent.getImgs("thumb").get(0)%>'/></div>
 	<%
 }
 %>
+
+
+
 </body>
 </html>

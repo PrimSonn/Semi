@@ -42,5 +42,11 @@ public class Pack {
 		return uniList.keySet();
 	}
 	
-
+	public ArrayList<String> getMvImg(String type) {
+		return uniList.get("MOVIE").get(0).getImgs(type);
+	}
+	
+	public ArrayList<String> getAccImg(String type) {
+		return uniList.get("ACCOUNT").get(0).getImgs(type);
+	}
 }
