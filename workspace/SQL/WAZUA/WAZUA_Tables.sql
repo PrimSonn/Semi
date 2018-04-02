@@ -1,6 +1,7 @@
 
 /*
 		+ 추가사항:	
+					+WAZLEVEL 참조형태 변경 (인덱스를 거치도록).
 					+오타수정 REGEDATE, REGDATE -> REG_DATE
 					+timestamp 용 트리거 추가(기존 트리거 수정)
 					+공지사항(+이벤트) 테이블 추가.
@@ -43,6 +44,7 @@ TABLE LIST:	WAZLEVEL
 			ANNOUNCE
 			
 SequenceList:
+			WAZLEVEL_SEQ
 			ACCOUNT_SEQ
 			MOVGUYS_SEQ
 			MOVIE_SEQ
@@ -55,6 +57,7 @@ SequenceList:
 			POSSESION_SEQ
 			
 TriggerList:
+			WAZLEVEL_IDX_TRG
 			ACCOUNT_IDX_TRG
 			MOVGUYS_IDX_TRG
 			MOVIE_IDX_TRG
@@ -115,6 +118,8 @@ drop table MOVGUYS cascade constraints;
 drop trigger ACCOUNT_IDX_TRG;
 drop sequence ACCOUNT_SEQ;
 drop table ACCOUNT cascade constraints;
+drop sequence WAZLEVEL_SEQ;
+drop trigger WAZLEVEL_IDX_TRG;
 drop table WAZLEVEL cascade constraints;
 
 ------------------------------------------------------------------------------------------------------------------
@@ -126,13 +131,31 @@ ALTER SESSION SET PLSCOPE_SETTINGS = 'IDENTIFIERS:NONE';
 
 create table WAZLEVEL
 (
-	WAZLEVEL	char(25)
-	,constraint WAZLEVEL_PK primary key (WAZLEVEL)
+	IDX			number(3,0)
+	,LEVEL_NAME	char(25)
+	,constraint WAZLEVEL_PK primary key (IDX)
 );
+
+create sequence WAZLEVEL_SEQ start with 1 increment by 1;
+
+create or replace trigger WAZLEVEL_IDX_TRG
+	before insert on WAZLEVEL
+	for each row
+	when (NEW.IDX is null)
+begin
+	select WAZLEVEL_SEQ.nextval into :NEW.IDX from DUAL;
+end;
+/
 
 comment on table WAZLEVEL is '회원등급 테이블';
 
+comment on column WAZLEVEL.IDX is '인덱스';
 
+comment on column WAZLEVEL.LEVEL_NAME is '레벨명';
+
+
+--drop sequence WAZLEVEL_SEQ;
+--drop trigger WAZLEVEL_IDX_TRG;
 --drop table WAZLEVEL cascade constraints;
 ------------------------------------------------------------------------------------------------------------------
 create table ACCOUNT (
@@ -141,13 +164,13 @@ create table ACCOUNT (
 	,PW   		varchar2(50) 	not null
 	,NAME		varchar2(50)	not null
 	,BIRTH		date 			not null
-	,WAZLEVEL	char(25)
+	,WAZLV_IDX	number(3,0)
 	,REG_DATE	timestamp		not null
 	,LEFT_DATE	timestamp
 	,DEL_FLAG	varchar2(100)	default 'N'
 	,IMG		varchar2(255)	default '-'
 	,constraint ACCOUNT_PK primary key ( IDX )
-	,constraint ACCOUNT_LEV_FK foreign key (WAZLEVEL) references WAZLEVEL (WAZLEVEL)
+	,constraint ACCOUNT_LEV_FK foreign key (WAZLV_IDX) references WAZLEVEL (IDX)
 );
 ------DEL_FLAG 탈퇴일자와 기능 중복
 ------IMG 프로필 이미지를 DBMS를 사용해 처리할 것이 아니라면 필요 없음 -- 더 진행하여 기능들이 수정하기 어려워지기 전에 분명히 해야 할 부분(이미지의 처리)! 게다가 관리자 페이지의 구현과 직결되어있음
@@ -182,7 +205,7 @@ comment on column ACCOUNT.NAME is '이름';
 
 comment on column ACCOUNT.BIRTH is '생년월일';
 
-comment on column ACCOUNT.WAZLEVEL is '회원등급 - 참조';
+comment on column ACCOUNT.WAZLV_IDX is '회원등급 - 참조';
 
 comment on column ACCOUNT.REG_DATE is '가입일자';
 
