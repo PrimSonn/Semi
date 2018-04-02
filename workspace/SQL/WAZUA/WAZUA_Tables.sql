@@ -1,6 +1,7 @@
 
 /*
 		+ 추가사항:	
+					+MOV_GENRE 도 참조형태 변경.
 					+WAZLEVEL 참조형태 변경 (인덱스를 거치도록).
 					+오타수정 REGEDATE, REGDATE -> REG_DATE
 					+timestamp 용 트리거 추가(기존 트리거 수정)
@@ -48,6 +49,7 @@ SequenceList:
 			ACCOUNT_SEQ
 			MOVGUYS_SEQ
 			MOVIE_SEQ
+			MOV_GENRE_SEQ
 			WAZPOINT_SEQ
 			COMMENTS_SEQ
 			REPORT_SEQ
@@ -61,6 +63,7 @@ TriggerList:
 			ACCOUNT_IDX_TRG
 			MOVGUYS_IDX_TRG
 			MOVIE_IDX_TRG
+			MOVGENRE_IDX_TRG
 			WAZPOINT_IDX_TRG
 			COMMENTS_IDX_TRG
 			REPORT_SEQ
@@ -107,7 +110,9 @@ drop trigger WAZPOINT_IDX_TRG;
 drop sequence WAZPOINT_SEQ;
 drop table WAZPOINT cascade constraints;
 drop table MOVGENRE_MAP cascade constraints;
-drop table MOV_GENRE;
+drop trigger MOVGENRE_IDX_TRG;
+drop sequence MOV_GENRE_SEQ;
+drop table MOV_GENRE cascade constraints;
 drop table MOVGUYS_MAPPING cascade constraints;
 drop trigger MOVIE_IDX_TRG;
 drop sequence MOVIE_SEQ;
@@ -149,7 +154,7 @@ end;
 
 comment on table WAZLEVEL is '회원등급 테이블';
 
-comment on column WAZLEVEL.IDX is '인덱스';
+comment on column WAZLEVEL.IDX is '인덱스 + 주 키';
 
 comment on column WAZLEVEL.LEVEL_NAME is '레벨명';
 
@@ -343,34 +348,49 @@ comment on column MOVGUYS_MAPPING.CHARACTER is '배역';
 ------------------------------------------------------------------------------------------------------------
 
 create table MOV_GENRE
-(
-	GENRE		char(30)
-	,constraint MOVGENRE_PK primary key (GENRE)
+(	
+	IDX			number(3,0)
+	,GENRE		char(30)		not null
+	,constraint MOVGENRE_PK primary key (IDX)
 );
 --태그의 개념을 장르와 분리하려면 비슷한 테이블을 추가.
+create sequence MOV_GENRE_SEQ start with 1 increment by 1;
+
+create or replace trigger MOVGENRE_IDX_TRG
+	before insert on MOV_GENRE 
+	for each row 
+	when (NEW.IDX is null)
+begin 
+	select MOV_GENRE_SEQ.nextval into :NEW.IDX from DUAL;
+end;
+/
 
 comment on table MOV_GENRE is '영화 장르(태그) 테이블';
 
-comment on column MOV_GENRE.GENRE is '영화 장르(태그) + 주 키';
+comment on column MOV_GENRE.IDX is '인덱스 + 주 키';
+
+comment on column MOV_GENRE.GENRE is '영화 장르(태그)';
 
 
---drop table MOV_GENRE;
+--drop trigger MOVGENRE_IDX_TRG;
+--drop sequence MOV_GENRE_SEQ;
+--drop table MOV_GENRE cascade constraints;
 ------------------------------------------------------------------------------------------------------------
 
 create table MOVGENRE_MAP
 (
-	MOV_IDX			number(8,0)
-	,GENRE			char(30)
-	,constraint MOVGENREMAP_PK primary key (MOV_IDX,GENRE)
+	MOV_IDX				number(8,0)
+	,GENRE_IDX			number(3,0)
+	,constraint MOVGENREMAP_PK primary key (MOV_IDX,GENRE_IDX)
 	,constraint FK_MOVGENREMAP_MOVIE foreign key (MOV_IDX) references MOVIE (IDX)
-	,constraint FK_MOVGENREMAP_GENRE foreign key (GENRE) references MOV_GENRE (GENRE)
+	,constraint FK_MOVGENREMAP_GENRE foreign key (GENRE_IDX) references MOV_GENRE (IDX)
 );
 
 comment on table MOVGENRE_MAP is '영화-장르(태그) 매핑 테이블';
 
 comment on column MOVGENRE_MAP.MOV_IDX is '영화 식별 코드 - 외래키';
 
-comment on column MOVGENRE_MAP.GENRE is '장르(태그) - 외래키';
+comment on column MOVGENRE_MAP.GENRE_IDX is '장르 키 - 외래키';
 
 --drop table MOVGENRE_MAP;
 ------------------------------------------------------------------------------------------------------------

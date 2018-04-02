@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<style>
+		ul#nav{padding:0;}
+		ul#nav ul{border:1px dotted blue;padding:0;position:absolute;display:none;background:#ccc;}
+		ul#nav a{text-decoration:none;}
+		ul#nav li{list-style:none;float:left;}
+		ul#nav li li{float:none;}
+		ul#nav li:hover ul{display:block;}
+		#content{clear:both;}
+	</style>
+</head>
+<body>
+	<ul id='nav'>
+		<li>
+			<a href='#'>Menu 01</a>
+			<ul>
+				<li><a href='#'>Menu 01, Item 01</a></li>
+				<li><a href='#'>Menu 01, Item 02</a></li>
+			</ul>
+		</li>
+		<li style='font-size:18px;'>&nbsp;|&nbsp;</li>
+		<li>
+			<a href='#'>Menu 02</a>
+			<ul>
+				<li><a href='#'>Menu 02, Item 01</a></li>
+				<li><a href='#'>Menu 02, Item 02</a></li>
+				<li><a href='#'>Menu 02, Item 03</a></li>
+			</ul>
+		</li>
+	</ul>
+	<div id='content'>
+		<h1>Title</h1>
+		<p>Sed iaculis dui at ante aliquam mattis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Aenean at est id augue varius auctor ac vitae lacus. Nulla luctus nisi eget tristique volutpat. Fusce quis consectetur nulla, eu semper odio. Duis viverra lobortis tortor, et pulvinar purus gravida luctus. Pellentesque in velit luctus, malesuada augue vitae, tristique ipsum. Morbi et pulvinar mi, quis suscipit ipsum. Donec leo est, rhoncus ac congue id, malesuada in magna. Phasellus lobortis tempor tempor. Nulla in auctor nibh. Pellentesque ullamcorper eros vehicula elit pretium fringilla. Nunc feugiat mauris dui. </p>
+		<p>Proin blandit sagittis erat id euismod. Praesent et elit ac magna dignissim tincidunt ac a tortor. Mauris fringilla bibendum elit, id faucibus nisi pellentesque a. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec tincidunt eu mauris eget rhoncus. Curabitur dapibus eros at interdum eleifend. Nunc non aliquam arcu. Aenean ac odio in mi vestibulum tincidunt sed a ex. Phasellus orci lectus, rutrum ac arcu non, hendrerit vehicula elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum erat nec nisl mattis, a rutrum est placerat. Morbi pretium tellus nec neque varius pharetra. Nulla ornare blandit ante in volutpat. Nullam congue ipsum urna, eget consectetur neque elementum quis. Donec pellentesque sit amet nisi id fringilla. Curabitur at aliquam nibh.</p>
+		<p>Suspendisse tortor ex, eleifend a rhoncus ut, interdum eget diam. Vivamus eu leo non nibh laoreet pellentesque non vitae quam. Fusce pharetra eleifend diam eget molestie. Curabitur vel gravida tortor. Aliquam imperdiet volutpat odio non euismod. Etiam odio odio, consectetur nec lectus vel, egestas tristique lacus. Nam eget massa eleifend, cursus velit vitae, rhoncus nunc. Duis quis tincidunt metus. Aliquam porttitor ipsum ac augue ultrices rhoncus. Fusce gravida eu arcu ac placerat. Aliquam erat volutpat.</p>
+	</div>
+</body>
+</html>
