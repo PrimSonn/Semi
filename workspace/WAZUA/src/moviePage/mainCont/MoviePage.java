@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import moviePage.dao.Gatherer;
 import moviePage.dto.Pack;
-import moviePage.dto.entities.Entity;
 
 
 @WebServlet("/MoviePage")
@@ -25,18 +24,13 @@ public class MoviePage extends HttpServlet {
 		
 		Pack pack = (new Gatherer()).getThings(this.getServletContext().getContextPath(),realPath,id,mvIdx);
 		
-		for(String key :pack.getKeys()) {
-			System.out.println(key);
-			for(Entity e :pack.getList(key)){
-				System.out.println("\tProperties: "+e.getPropertiesTable());
-				System.out.println("\tImgs: "+e.getImgsTable());
-			}
-		}
 		request.setAttribute("pack", pack);
+		request.getRequestDispatcher(this.getServletContext().getInitParameter("MoviePageView")).forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("\'movie\' param: "+request.getParameter("movie"));
+//		System.out.println("\'movie\' param: "+request.getParameter("movie"));
+		doGet(request,response);
 	}
 
 }

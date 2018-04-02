@@ -64,7 +64,9 @@ public class DummyMaker {
 			}
 		}
 		sql += " select 1 from DUAL;";
-		System.out.println(sql);
+//		System.out.println(sql);
+		
+		
 //		try {
 //			conn.createStatement().executeUpdate(sql);
 //		} catch (SQLException e) {

@@ -17,6 +17,7 @@ public class Gatherer {
 	
 	private static Connection conn = null;
 	private static PreparedStatement pst = null;
+	private static final int COMMENTNUM = 3;
 	
 	public void init(String user, String pass) {
 		USER=user;
@@ -32,22 +33,24 @@ public class Gatherer {
 	public Pack getThings(String contextPath, String realPath, String AccountIdx, String MovieIdx) {
 		
 		
-		String sql = "select C.IDX COMMENT_IDX, C.TITLE COMMENT_TITLE, MOVIE_IDX MOVIE_IDX, MOVIE_TITLE MOVIE_SELECTED_TITLE, ACCOUNT_IDX, ACCOUNT_ID ACCOUNT_SELECTED_ID," + 
-						" case" + 
-							" when T.ACCOUNT_IDX =1 then 'ACCOUNT_SELECTED'" + 
-							" when T.ACCOUNT_IDX is not null then 'ACCOUNT'" + 
-							" when T.MOVIE_IDX =1 then 'MOVIE_SELECTED'" + 
-							" when T.MOVIE_IDX is not null then 'MOVIE'" + 
-							" when C.IDX is not null then 'COMMENT'" + 
-						" end as TAG" + 
-					" from MOVIE_COMMENTS C full outer join (" + 
-						" select M.IDX MOVIE_IDX , A.IDX ACCOUNT_IDX, M.TITLE MOVIE_TITLE , A.ID ACCOUNT_ID from MOVIES M full outer join ACCOUNTS A on 1=2) T" + 
-					" on 1=2";
+		String sql = "select case when M.IDX is not null then 'MOVIE' when MOVIEGUYS_IDX is not null then 'MOVIEGUYS' when COMMENT_IDX is not null then 'ACCOUNT' end as TAG, M.IDX MOVIE_IDX, M.KORTITLE MOVIE_KORTITLE, M.ENGTITLE MOVIE_ENGTITLE, M.RELEASEDATE MOVIE_RELEASEDATE, M.PLAYTIME MOVIE_PLAYTIME, M.RATING MOVIE_RATING,SCORE_COUNT MOVIE_SCORECOUNT, M.OUTLINE MOVIE_OUTLINE, M.PRICE MOVIE_PRICE, M.TOT_SCORE/M.SCORE_COUNT MOVIE_AVGSCORE, J.GENRE MOVIE_GENRE,C.C_COUNT MOVIE_COMMENTCOUNT, MOVIEGUYS_IDX, MOVIEGUYS_NAME, MOVIEGUYS_ROLE, MOVIEGUYS_CHARACTER, COMMENT_IDX ACCOUNT_COMMENTIDX, ACCOUNT_IDX, COMMENT_REGDATE ACCOUNT_REGDATE, COMMENT_CONTENTS ACCOUNT_CONTENTS, COMMENT_ISBLIND ACCOUNT_ISBLIND, ACCOUNT_EMAIL, ACCOUNT_NAME" 
+				+" from MOVIE M"
+				+" inner join (select MM.MOV_IDX MIDX, MG.GENRE from MOVGENRE_MAP MM inner join MOV_GENRE MG on MM.GENRE_IDX = MG.IDX" 
+				+" where MM.MOV_IDX = "+MovieIdx+")"
+				+" J on M.IDX = J.MIDX"
+				+" inner join (select MOVIE_IDX, count(MOVIE_IDX) as C_COUNT from COMMENTS group by MOVIE_IDX"
+				+" having MOVIE_IDX ="+MovieIdx+")"
+				+" C on M.IDX = C.MOVIE_IDX"
+				+" full outer join (select MGMP.MOVGUYS_IDX MOVIEGUYS_IDX, MGYS.NAME MOVIEGUYS_NAME, MGMP.ROLE MOVIEGUYS_ROLE, MGMP.CHARACTER MOVIEGUYS_CHARACTER from MOVGUYS MGYS"
+				+" inner join (select MOVGUYS_IDX, ROLE,CHARACTER from MOVGUYS_MAPPING"
+				+" where MOV_IDX ="+MovieIdx+") MGMP on MGMP.MOVGUYS_IDX = MGYS.IDX) on 1=2"
+				+" full outer join (select A.COMMENT_IDX, A.ACCOUNT_IDX, A.COMMENT_REGDATE, A.COMMENT_CONTENTS, A.COMMENT_ISBLIND, B.ACCOUNT_EMAIL, B.ACCOUNT_NAME"
+					+" from (select CMT.IDX COMMENT_IDX, CMT.ACC_IDX ACCOUNT_IDX, CMT.REG_DATE COMMENT_REGDATE, CMT.CONTENTS COMMENT_CONTENTS, CMT.ISBLIND COMMENT_ISBLIND"
+						+" from (select * from COMMENTS where MOVIE_IDX ="+MovieIdx+" order by REG_DATE) CMT where ROWNUM<="+COMMENTNUM+") A inner join (select IDX ACCOUNT_IDX, EMAIL ACCOUNT_EMAIL, NAME ACCOUNT_NAME from ACCOUNT where DEL_FLAG = 'N') B on A.ACCOUNT_IDX = B.ACCOUNT_IDX) on 1=2"
+				;
 		
 		try {
 			pst = conn.prepareStatement(sql);
-//			pst.setString(1, AccountIdx);
-//			pst.setString(2, MovieIdx);
 			return new Packer(pst.executeQuery(), contextPath, realPath) ;
 			
 		} catch (SQLException e) {

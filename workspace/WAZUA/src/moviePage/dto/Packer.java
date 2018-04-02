@@ -90,6 +90,9 @@ public class Packer extends Pack{
 //				System.out.print("tag: "+tag+"\t");//---------------------------------------------test
 //				System.out.println("propset: " +propset);//-----------------------------------------test
 				for(Integer i : propset.keySet() ) {
+					String prop = propset.get(i);
+					String val = rs.getString(i);//------!!!!!!!!!!!!!!!!!!!!!!!!! something's wrong here!!
+					if(prop!=null&val!=null)
 					entity.setProperty(propset.get(i), rs.getString(i) );
 				}
 				
@@ -192,13 +195,13 @@ public class Packer extends Pack{
 			
 			if(file.isFile()) {
 //				System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//------------------------------------------test code
-//				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));------------------------------test code
+//				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));//------------------------------test code
 				entity.setImgs ( file.getAbsoluteFile().getParentFile().getName()
 						, ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/') );
 			}else if(file.isDirectory()) {
 				for(File f : file.listFiles()) stack.push(f);
 				
-//			} else { System.out.println("Something's wrong here: "+ file);------------------------------------------------------------------test code
+//			} else { System.out.println("Something's wrong here: "+ file);//------------------------------------------------------------------test code
 			}
 			
 			try { file=stack.pop(); }
