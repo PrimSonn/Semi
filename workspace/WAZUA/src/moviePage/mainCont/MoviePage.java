@@ -25,6 +25,7 @@ public class MoviePage extends HttpServlet {
 		Pack pack = (new Gatherer()).getThings(this.getServletContext().getContextPath(),realPath,id,mvIdx);
 		
 		request.setAttribute("pack", pack);
+		request.setAttribute("mvIdx", mvIdx);
 		request.getRequestDispatcher(this.getServletContext().getInitParameter("MoviePageView")).forward(request, response);
 	}
 

@@ -43,10 +43,18 @@ public class Pack {
 	}
 	
 	public ArrayList<String> getMvImg(String type) {
-		return uniList.get("MOVIE").get(0).getImgs(type);
+		if(uniList.get("MOVIE")!=null) {
+			return uniList.get("MOVIE").get(0).getImgs(type);
+		} else {
+			return null;
+		}
+		
 	}
 	
 	public ArrayList<String> getAccImg(String type) {
-		return uniList.get("ACCOUNT").get(0).getImgs(type);
+		if(uniList.get("ACCOUNT")!=null) {
+			return uniList.get("ACCOUNT").get(0).getImgs(type);
+		}
+		return null;
 	}
 }

@@ -202,25 +202,21 @@ public class Packer extends Pack{
 		File file = new File(mask);
 		int cutter = realPath.length()-1;
 		
-		for(;;) {
-			
-			if(file.isFile()) {
-//				System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//------------------------------------------test code
-//				System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));//------------------------------test code
-				
-				
-				entity.setImgs ( file.getAbsoluteFile().getParentFile().getName()
-						, ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/') );
-			}else if(file.isDirectory()) {
-				for(File f : file.listFiles()) stack.push(f);
-				
-//			} else { System.out.println("Something's wrong here: "+ file);//------------------------------------------------------------------test code
-			}
-			
-			try { file=stack.pop(); }
-			catch(EmptyStackException e) {break;}
-		}//for loop ends
-		
+		if(file.isDirectory()) {
+			for(File f : file.listFiles()) stack.push(f);
+			while(!stack.isEmpty()) {
+				if(file.isFile()) {
+//					System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//------------------------------------------test code
+//					System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));//------------------------------test code
+					entity.setImgs ( file.getAbsoluteFile().getParentFile().getName()
+							, ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/') );
+				}else if(file.isDirectory()) {
+					for(File f : file.listFiles()) stack.push(f);
+//				} else { System.out.println("Something's wrong here: "+ file);//------------------------------------------------------------------test code
+				}
+				file=stack.pop();
+			}//file search for ends
+		}//file check if ends
 		
 	}//curator() ends
 	

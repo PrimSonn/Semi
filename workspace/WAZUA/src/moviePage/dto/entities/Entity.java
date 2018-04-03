@@ -27,9 +27,7 @@ public class Entity {
 		String s = properties.get("IDX");
 		if(s!=null) {
 			idx=null;
-//			return true;
-		} 
-//		else return false;
+		}
 	}
 	
 	public void setIdx(String idx) {
@@ -38,7 +36,12 @@ public class Entity {
 	}
 	
 	public String getProperty(String column) {
-		return properties.get(column);
+		if(properties.containsKey(column)) {
+			return properties.get(column);
+		} else {
+			return null;
+		}
+		
 	}
 
 	public void setProperty(String property, String value) {
@@ -46,13 +49,15 @@ public class Entity {
 			properties.put(property, value);
 		}catch (NullPointerException e){
 			e.printStackTrace();
-//			return false;
 		}
-//		return true;
 	}
 
 	public ArrayList<String> getImgs(String type) {
-		return imgs.get(type);
+		if(imgs.containsKey(type)) {
+			return imgs.get(type);
+		}else {
+			return null;
+		}
 	}
 
 	public void setImgs(String type, String file) {
@@ -66,9 +71,7 @@ public class Entity {
 			
 		} catch(NullPointerException e) {
 			e.printStackTrace();
-//			return false;
 		}
-//		return true;
 	}
 	
 	public Hashtable<String,String> getPropertiesTable(){
