@@ -116,10 +116,7 @@ http://www.softstack.com/freesmtp.html
 
 
 1.DB creation.
-real DB--sql
-DB specific name rule
-sequence
-automated prefixed column!!!maybeNot?
+detailed sequence
 procedure --no
 
 2.more function
@@ -137,10 +134,34 @@ header-footer
 header-search
 
 
-
 WAZLEVEL 참조형태
 시퀀스 버퍼 조정,시퀀스 한계값 설정
 -- 만료일자도 넣어주는 트리거 필요
+
+
+영화덧글쓰기
+get post 구분
+
+get
+id/mv 확인 (post도 마찬가지, 영화 페이지 컨트롤러에도)
+이미 매긴 평점 가져옴.
+본인 썸네일 + 영화 썸네일이나 뭐 이미지 가져오기
+view로 보냄
+
+post
+id mv 확인후
+평점 + 내용 가져오기 (평점 default값 적용여부 먼저 콘솔로 확인후 db 적용하기)
+id+mv+글내용 코멘트로, 평점 평점테이블로 보내기
+원래 영화 페이지로.
+
+영화페이지도 checker.
+
+전체글 보기
+
+자기글 수정
+
+
+
 
 
 ----------------- Stream API Ex -------------------------

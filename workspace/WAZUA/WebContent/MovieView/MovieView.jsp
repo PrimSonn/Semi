@@ -11,6 +11,24 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WazuaMovie</title>
+<script>
+	window.onload = function(){ 
+		document.getElementById("WriteComment").onclick = function(){
+			var form = document.createElement('form');
+			form.setAttribute('method', 'post');
+			form.setAttribute('action', '<%= application.getContextPath() + application.getInitParameter("WriteComment")%>');
+			
+			var hiddenField = document.createElement('input');
+            hiddenField.setAttribute('type', 'hidden');
+            hiddenField.setAttribute('name', 'movie');
+            hiddenField.setAttribute('value', <%=request.getAttribute("mvIdx")%>);
+            form.appendChild(hiddenField);
+            
+		    document.body.appendChild(form);
+		    form.submit();
+		}
+	}
+</script>
 </head>
 <body>
 <%
@@ -155,6 +173,8 @@ if(movList!=null){
 		%><hr><h4>COMMENT</h4><%
 		//COMMENTCOUNT
 		putProp("COMMENTCOUNT");
+		
+		%><p id='WriteComment'></p><%
 		
 		//Comments
 		if(accList!=null){

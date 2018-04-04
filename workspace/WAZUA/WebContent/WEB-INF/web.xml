@@ -66,6 +66,10 @@
   </context-param>
   <context-param>
     <param-name>MoviePageView</param-name>
-    <param-value>/MovieView/MovieView2.jsp</param-value>
+    <param-value>/MovieView/MovieView.jsp</param-value>
+  </context-param>
+  <context-param>
+    <param-name>WriteComment</param-name>
+    <param-value>/WriteComment</param-value>
   </context-param>
 </web-app>
