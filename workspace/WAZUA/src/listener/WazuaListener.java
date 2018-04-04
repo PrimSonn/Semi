@@ -2,7 +2,6 @@ package listener;
 
 
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Stack;
 
 import javax.servlet.ServletContext;
@@ -19,6 +18,9 @@ public class WazuaListener implements ServletContextListener{
 		
 		ServletContext context = sce.getServletContext();
 		
+		context.setRequestCharacterEncoding("utf-8");
+		context.setResponseCharacterEncoding("utf-8");
+		
 		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"));
 		context.setAttribute("bouncer", bouncer);
 		context.setAttribute("RealPath", context.getRealPath("/"));
@@ -30,6 +32,7 @@ public class WazuaListener implements ServletContextListener{
 		pack.init(context.getInitParameter("Address"));
 		
 		nullThumbInit(sce,context.getRealPath("/"),context.getContextPath());
+		
 	}
 	
 	@Override

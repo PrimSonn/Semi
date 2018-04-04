@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.EmptyStackException;
 import java.util.Hashtable;
 import java.util.Stack;
 
@@ -117,6 +116,7 @@ public class Packer extends Pack{
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	private void cartographer(Hashtable<String,Hashtable<Integer,String>> columMap, int colnum, String prefix, String property){
 		
 //		System.out.println("prefix: "+prefix);//----------------------------------------------------------test
@@ -205,6 +205,7 @@ public class Packer extends Pack{
 		if(file.isDirectory()) {
 			for(File f : file.listFiles()) stack.push(f);
 			while(!stack.isEmpty()) {
+				file=stack.pop();
 				if(file.isFile()) {
 //					System.out.println("-----------"+ADDRESS+contextPath+"/"+file.toString());//------------------------------------------test code
 //					System.out.println(ADDRESS+contextPath+file.toString().substring(cutter).replace('\\', '/'));//------------------------------test code
@@ -214,7 +215,6 @@ public class Packer extends Pack{
 					for(File f : file.listFiles()) stack.push(f);
 //				} else { System.out.println("Something's wrong here: "+ file);//------------------------------------------------------------------test code
 				}
-				file=stack.pop();
 			}//file search for ends
 		}//file check if ends
 		

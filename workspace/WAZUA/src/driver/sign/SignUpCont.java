@@ -32,7 +32,7 @@ public class SignUpCont extends HttpServlet {
 				) {
 			request.getRequestDispatcher(this.getInitParameter("SignUpView")).forward(request, response);
 		} else {
-			
+			request.getRequestDispatcher(this.getInitParameter("SignUpView")).forward(request, response);//--stub
 		}
 	}	
 

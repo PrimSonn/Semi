@@ -22,7 +22,7 @@
   </context-param>
   <context-param>
     <param-name>Address</param-name>
-    <param-value>http://192.168.30.52:8001</param-value>
+    <param-value>http://192.168.0.22:8001</param-value>
   </context-param>
   <context-param>
     <param-name>Door</param-name>
@@ -66,6 +66,6 @@
   </context-param>
   <context-param>
     <param-name>MoviePageView</param-name>
-    <param-value>/MovieView/MovieView.jsp</param-value>
+    <param-value>/MovieView/MovieView2.jsp</param-value>
   </context-param>
 </web-app>

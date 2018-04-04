@@ -1,4 +1,3 @@
-<%@page import="java.io.IOException"%>
 <%@page import="java.util.Stack"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Hashtable" %>
@@ -15,9 +14,8 @@
 <body>
 <%
 Pack pack = (Pack)request.getAttribute("pack");
-
-//============================== print pack ==================================================
 /*
+//============================== print pack ==================================================
 for(String key : pack.getKeys()) { %>
 	<Div><%=key %>
 	<% for(Entity e :pack.getList(key)){ %>
@@ -31,46 +29,13 @@ for(String key : pack.getKeys()) { %>
 	</Div>
 	<br><hr><br><hr><br>
 <%}
-*/
 //================================================================================
-
+*/
 ArrayList<Entity> movList = pack.getList("MOVIE");
 ArrayList<Entity> accList = pack.getList("ACCOUNT");
 ArrayList<Entity> movGuyList = pack.getList("MOVIEGUYS");
-%><%! 
-String propHolder=null, propHolder2=null;
-JspWriter writer = null;
+
 Entity movie=null;
-
-public String capital(String s){
-	return s=s.substring(0, 1).toUpperCase()+s.substring(1).toLowerCase();
-}
-
-public void write (String s)throws IOException {
-		writer.print(s);
-}
-
-public void putProp (String tag) {	
-	try{
-		propHolder = movie.getProperty(tag);
-		if(propHolder!=null){
-			write("<div id=\'"+capital(tag)+"\'>");
-				write("<p id=\'"+capital(tag)+" Ptag\'>");
-					write(capital(tag)+": "+propHolder);
-				write("</p>");
-			write("</div>");
-		}else{
-			System.out.println(tag+"==null");
-			write("<div id=\'"+capital(tag)+"\'>");
-			write("<p id=\'"+capital(tag)+" Ptag\'></p>");
-			write("</div>");
-		}
-	} catch(IOException o_0){
-	}
-}
-%><%
-writer = out;
-
 if(movList!=null){
 	for(Entity movies: movList){
 		if(movies.getIdx().matches((String)request.getAttribute("mvIdx"))){
@@ -81,6 +46,7 @@ if(movList!=null){
 	if(movie!=null){
 		
 		ArrayList<String> imgListHolder = null;
+		String propHolder=null, propHolder2=null;
 		
 		//poster
 		imgListHolder= movie.getImgs("poster");
@@ -128,16 +94,75 @@ if(movList!=null){
 		}
 		
 		//COUNTRY
-		putProp("COUNTRY");
+		propHolder = movie.getProperty("COUNTRY");
+		if(propHolder!=null){
+			%>
+			<div id='Country'>
+			<p id='Country Ptag'><%=propHolder%></p>
+			</div>
+			<%
+		}else{
+			System.out.println("COUNTRY==null");//----------------------------------test
+			%>
+			<div id='Country'>
+			<p id='Country Ptag'></p>
+			</div>
+			<%
+		}
+		
 		//GENRE
-		putProp("GENRE");
+		propHolder = movie.getProperty("GENRE");
+		if(propHolder!=null){
+			%>
+			<div id='Genre'>
+			<p id='Genre Ptag'><%=propHolder%></p>
+			</div>
+			<%
+		}else{
+			System.out.println("GENRE==null");//-------------------------------------test
+			%>
+			<div id='Genre'>
+			<p id='Genre Ptag'></p>
+			</div>
+			<%
+		}
+		
 		//RATING
-		putProp("RATING");
+		propHolder = movie.getProperty("RATING");
+		if(propHolder!=null){
+			%>
+			<div id='Rating'>
+			<p id='Rating Ptag'><%=propHolder%></p>
+			</div>
+			<%
+		}else{
+			System.out.println("RATING==null");//------------------------------test
+			%>
+			<div id='Rating'>
+			<p id='Rating Ptag'></p>
+			</div>
+			<%
+		}
+		
 		//PLAYTIME
-		putProp("PLAYTIME");
+		propHolder = movie.getProperty("PLAYTIME");
+		if(propHolder!=null){
+			%>
+			<div id='PlayTime'>
+			<p id='PlayTime Ptag'><%=propHolder%></p>
+			</div>
+			<%
+		}else{
+			System.out.println("PLAYTIME==null");//------------------------------test
+			%>
+			<div id='PlayTime'>
+			<p id='PlayTime Ptag'></p>
+			</div>
+			<%
+		}
+		
 		//WISHCOUNT.......
 		//----------------
-		
 		%>
 		<hr>
 		<%
@@ -152,9 +177,23 @@ if(movList!=null){
 			%><div id = MovieStealcuts></div><br><%
 		}
 		
-		%><hr><h4>COMMENT</h4><%
+		%><hr><%
 		//COMMENTCOUNT
-		putProp("COMMENTCOUNT");
+		propHolder = movie.getProperty("COMMENTCOUNT");
+		if(propHolder!=null){
+			%>
+			<div id='CommentCount'>
+			<p id='CommentCount Ptag'><h4>COMMENT</h4> (<%=propHolder%>)</p>
+			</div>	
+			<%
+		}else{
+			System.out.println("COMMENTCOUNT==null");//------------------------------test
+			%>
+			<div id='CommentCount'>
+			<p id='CommentCount Ptag'></p>
+			</div>
+			<%
+		}
 		
 		//Comments
 		if(accList!=null){
@@ -222,13 +261,26 @@ if(movList!=null){
 		}else{
 			//when there's no comments
 		}
-		%>
-		<hr>
-		<h3>Information</h3>
-		<h5>summary</h5>
-		<%
+		
 		//COMMENTCOUNT
-		putProp("COMMENTCOUNT");
+		propHolder = movie.getProperty("OUTLINE");
+		if(propHolder!=null){
+			%>
+			<hr>
+			<h3>Information</h3>
+			<h5>summary</h5>
+			<div id='OutLine'>
+			<p id='OutLine Ptag'>(<%=propHolder%>)</p>
+			</div>
+			<%
+		}else{
+			System.out.println("COMMENTCOUNT==null");//------------------------------test
+			%>
+			<div id='OutLine'>
+			<p id='OutLine Ptag'></p>
+			</div>
+			<%
+		}
 		
 		
 		//--------actors and such guys ...
