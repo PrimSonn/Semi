@@ -16,7 +16,7 @@
 
             var hiddenField = document.createElement('input');
             hiddenField.setAttribute('type', 'hidden');
-            hiddenField.setAttribute('name', 'movie');
+            hiddenField.setAttribute('name', 'mvIdx');
             hiddenField.setAttribute('value', <%=i%>);
             form.appendChild(hiddenField);
             

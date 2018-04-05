@@ -2,19 +2,21 @@ package bouncer;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class Bouncer {
 	
-	private static String DoorView;//DoorView address
+	private static String DoorView;//DoorViewView address
+	private static String ContextPath;
 	
-	public Bouncer(String DoorView) {
-		Bouncer.DoorView = DoorView;
+	public Bouncer(String DoorViewView,String ContextPath) {
+		Bouncer.DoorView = DoorViewView;
+		Bouncer.ContextPath = ContextPath;
 	}
 	
+	@SuppressWarnings("finally")
 	public boolean check(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		if(session !=null) {
@@ -23,12 +25,12 @@ public class Bouncer {
 			}
 		}
 		try {
-			request.setCharacterEncoding("utf-8");
-			request.getRequestDispatcher(DoorView).forward(request, response);
-			return false;
-		} catch (ServletException | IOException e) {
+			response.sendRedirect(ContextPath+DoorView);
+		} catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			return false;
 		}
-		return false;
+		
 	}
 }

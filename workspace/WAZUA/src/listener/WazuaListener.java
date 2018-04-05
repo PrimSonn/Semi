@@ -21,7 +21,7 @@ public class WazuaListener implements ServletContextListener{
 		context.setRequestCharacterEncoding("utf-8");
 		context.setResponseCharacterEncoding("utf-8");
 		
-		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"));
+		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"),context.getContextPath());
 		context.setAttribute("bouncer", bouncer);
 		context.setAttribute("RealPath", context.getRealPath("/"));
 		

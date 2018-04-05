@@ -22,7 +22,7 @@
   </context-param>
   <context-param>
     <param-name>Address</param-name>
-    <param-value>http://192.168.0.22:8001</param-value>
+    <param-value>http://192.168.30.52:8001</param-value>
   </context-param>
   <context-param>
     <param-name>Door</param-name>
@@ -69,7 +69,15 @@
     <param-value>/MovieView/MovieView.jsp</param-value>
   </context-param>
   <context-param>
+    <param-name>MaxScore</param-name>
+    <param-value>5</param-value>
+  </context-param>
+  <context-param>
     <param-name>WriteComment</param-name>
     <param-value>/WriteComment</param-value>
+  </context-param>
+   <context-param>
+    <param-name>WriteCommentView</param-name>
+    <param-value>/MovieView/WriteCommentView.jsp</param-value>
   </context-param>
 </web-app>

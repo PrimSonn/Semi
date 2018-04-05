@@ -2,6 +2,7 @@ package moviePage.mainCont;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,16 +18,19 @@ public class MoviePage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		
+		ServletContext context = this.getServletContext();
 		String id = (String) request.getSession().getAttribute("id");
-		String mvIdx = request.getParameter("movie");
-		String realPath = (String) this.getServletContext().getAttribute("RealPath");
+		String mvIdx = request.getParameter("mvIdx");
+		String realPath = (String) context.getAttribute("RealPath");
 		
-		Pack pack = (new Gatherer()).getThings(this.getServletContext().getContextPath(),realPath,id,mvIdx);
+		
+		Pack pack = (new Gatherer()).getThings(context.getContextPath(),realPath,id,mvIdx);
 		
 		request.setAttribute("pack", pack);
 		request.setAttribute("mvIdx", mvIdx);
-		request.getRequestDispatcher(this.getServletContext().getInitParameter("MoviePageView")).forward(request, response);
+		request.getRequestDispatcher(context.getInitParameter("MoviePageView")).forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

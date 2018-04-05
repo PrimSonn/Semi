@@ -1,5 +1,6 @@
 package moviePage.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -35,7 +36,7 @@ public class Gatherer {
 		
 		String sql = "select"
 						+ " case when M.IDX is not null then 'MOVIE' when MOVIEGUYS_IDX is not null then 'MOVIEGUYS' when COMMENT_IDX is not null then 'ACCOUNT_COMMENT' end as TAG"
-						+", M.COUNTRY MOVIE_COUNTRY, M.IDX MOVIE_IDX, M.KORTITLE MOVIE_KORTITLE, M.ENGTITLE MOVIE_ENGTITLE, TO_CHAR(M.RELEASEDATE, 'YYYY-MM-DD') MOVIE_RELEASEDATE, M.PLAYTIME MOVIE_PLAYTIME, M.RATING MOVIE_RATING,SCORE_COUNT MOVIE_SCORECOUNT, M.OUTLINE MOVIE_OUTLINE, M.PRICE MOVIE_PRICE, M.TOT_SCORE/M.SCORE_COUNT MOVIE_AVGSCORE, J.GENRE MOVIE_GENRE,C.C_COUNT MOVIE_COMMENTCOUNT"
+						+", M.COUNTRY MOVIE_COUNTRY, M.IDX MOVIE_IDX, M.KORTITLE MOVIE_KORTITLE, M.ENGTITLE MOVIE_ENGTITLE, TO_CHAR(M.RELEASEDATE, 'YYYY-MM-DD') MOVIE_RELEASEDATE, M.PLAYTIME MOVIE_PLAYTIME, M.RATING MOVIE_RATING,SCORE_COUNT MOVIE_SCORECOUNT, M.OUTLINE MOVIE_OUTLINE, M.PRICE MOVIE_PRICE, round(M.TOT_SCORE/M.SCORE_COUNT,2) MOVIE_AVGSCORE, J.GENRE MOVIE_GENRE,C.C_COUNT MOVIE_COMMENTCOUNT"
 						+", MOVIEGUYS_IDX, MOVIEGUYS_NAME, MOVIEGUYS_ROLE, MOVIEGUYS_CHARACTER"
 						+", COMMENT_IDX ACCOUNT_COMMENT_COMMENTIDX, ACCOUNT_IDX , TO_CHAR(COMMENT_REGDATE , 'YYYY.MM.DD') ACCOUNT_COMMENT_REGDATE, COMMENT_CONTENTS ACCOUNT_COMMENT_CONTENTS, COMMENT_ISBLIND ACCOUNT_COMMENT_ISBLIND, ACCOUNT_EMAIL ACCOUNT_COMMENT_EMAIL, ACCOUNT_NAME ACCOUNT_COMMENT_NAME" 
 					+" from MOVIE M"
@@ -49,7 +50,7 @@ public class Gatherer {
 					+" where MOV_IDX ="+movieIdx+") MGMP on MGMP.MOVGUYS_IDX = MGYS.IDX) on 1=2"
 					+" full outer join (select A.COMMENT_IDX, A.ACCOUNT_IDX, A.COMMENT_REGDATE, A.COMMENT_CONTENTS, A.COMMENT_ISBLIND, B.ACCOUNT_EMAIL, B.ACCOUNT_NAME"
 						+" from (select CMT.IDX COMMENT_IDX, CMT.ACC_IDX ACCOUNT_IDX, CMT.REG_DATE COMMENT_REGDATE, CMT.CONTENTS COMMENT_CONTENTS, CMT.ISBLIND COMMENT_ISBLIND"
-							+" from (select * from COMMENTS where MOVIE_IDX ="+movieIdx+" order by REG_DATE) CMT where ROWNUM<="+COMMENTNUM+") A inner join (select IDX ACCOUNT_IDX, EMAIL ACCOUNT_EMAIL, NAME ACCOUNT_NAME from ACCOUNT where DEL_FLAG = 'N') B on A.ACCOUNT_IDX = B.ACCOUNT_IDX) on 1=2"
+							+" from (select * from COMMENTS where MOVIE_IDX ="+movieIdx+" order by REG_DATE desc) CMT where ROWNUM<="+COMMENTNUM+") A inner join (select IDX ACCOUNT_IDX, EMAIL ACCOUNT_EMAIL, NAME ACCOUNT_NAME from ACCOUNT where DEL_FLAG = 'N') B on A.ACCOUNT_IDX = B.ACCOUNT_IDX) on 1=2"
 					;
 		
 		try {
@@ -59,7 +60,62 @@ public class Gatherer {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
+	
+	public Pack mvCmtInit(String contextPath, String realPath, String AccountIdx, String movieIdx) {
+		
+		String sql = "select"
+						+ " case when ACC.IDX is not null then 'ACCOUNT' when IDX is not null then 'MOVIE' end as TAG"
+						+ ", ACC.IDX ACCOUNT_IDX, NAME ACCOUNT_NAME, SCORE ACCOUNT_SCORE"
+						+ ", IDX MOVIE_IDX, KORTITLE MOVIE_KORTITLE, ENGTITLE MOVIE_ENGTITLE"
+					+ " from ACCOUNT ACC"
+					+" inner join (select ACC_IDX, SCORE from MVSCORE where ACC_IDX = "+AccountIdx+" and MOVIE_IDX = "+movieIdx+") MVS on ACC.IDX = MVS.ACC_IDX"
+					+" full outer join (select IDX, KORTITLE, ENGTITLE from MOVIE where IDX = "+movieIdx+") on 1=2";
+		
+		try {
+			pst = conn.prepareStatement(sql);
+			return new Packer(pst.executeQuery(), contextPath, realPath) ;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+	public boolean mvCmtCommit(String id, String mvIdx, boolean nullscore, double doubleScore, String comment) {
+		
+		
+		String plsql = 
+						"declare"
+								+" cnt number(1);"
+						+" begin"
+							+" insert into COMMENTS (ACC_IDX, MOVIE_IDX, CONTENTS) values("+id+","+mvIdx+",to_clob('"+comment+"'));"
+						;
+		if(!nullscore) {
+			plsql+=" select count(1)into cnt from MVSCORE where ACC_IDX ="+id+" and MOVIE_IDX ="+mvIdx+";"
+					+" if(cnt=0)"
+						+" then insert into MVSCORE(ACC_IDX,MOVIE_IDX,SCORE)values("+id+","+mvIdx+","+doubleScore+");"
+						+" else update MVSCORE set SCORE="+doubleScore+" where ACC_IDX="+id+" and MOVIE_IDX="+mvIdx+";"
+					+" end if;";
+		}
+		plsql+= " end;";
+		
+		
+		 try {
+			CallableStatement cs = conn.prepareCall(plsql);
+			cs.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		};
+		
+		
+		return true;
+	}
+	
+	
+	
+	
 }

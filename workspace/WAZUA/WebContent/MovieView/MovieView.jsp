@@ -10,17 +10,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>WazuaMovie</title>
+<title>WazuaMovie</title>	
 <script>
 	window.onload = function(){ 
 		document.getElementById("WriteComment").onclick = function(){
 			var form = document.createElement('form');
-			form.setAttribute('method', 'post');
+			form.setAttribute('method', 'get');
 			form.setAttribute('action', '<%= application.getContextPath() + application.getInitParameter("WriteComment")%>');
 			
 			var hiddenField = document.createElement('input');
             hiddenField.setAttribute('type', 'hidden');
-            hiddenField.setAttribute('name', 'movie');
+            hiddenField.setAttribute('name', 'mvIdx');
             hiddenField.setAttribute('value', <%=request.getAttribute("mvIdx")%>);
             form.appendChild(hiddenField);
             
@@ -35,7 +35,7 @@
 Pack pack = (Pack)request.getAttribute("pack");
 
 //============================== print pack ==================================================
-/*
+
 for(String key : pack.getKeys()) { %>
 	<Div><%=key %>
 	<% for(Entity e :pack.getList(key)){ %>
@@ -49,12 +49,13 @@ for(String key : pack.getKeys()) { %>
 	</Div>
 	<br><hr><br><hr><br>
 <%}
-*/
+
 //================================================================================
 
 ArrayList<Entity> movList = pack.getList("MOVIE");
 ArrayList<Entity> accList = pack.getList("ACCOUNT");
 ArrayList<Entity> movGuyList = pack.getList("MOVIEGUYS");
+ArrayList<String> imgListHolder = null;
 %><%! 
 String propHolder=null, propHolder2=null;
 JspWriter writer = null;
@@ -68,9 +69,9 @@ public void write (String s)throws IOException {
 		writer.print(s);
 }
 
-public void putProp (String tag) {	
+public void putProp (Entity ent,String tag) {	
 	try{
-		propHolder = movie.getProperty(tag);
+		propHolder = ent.getProperty(tag);
 		if(propHolder!=null){
 			write("<div id=\'"+capital(tag)+"\'>");
 				write("<p id=\'"+capital(tag)+" Ptag\'>");
@@ -86,6 +87,26 @@ public void putProp (String tag) {
 	} catch(IOException o_0){
 	}
 }
+
+public void putPropNoName (Entity ent,String tag) {	
+	try{
+		propHolder = ent.getProperty(tag);
+		if(propHolder!=null){
+			write("<div id=\'"+capital(tag)+"\'>");
+				write("<p id=\'"+capital(tag)+" Ptag\'>");
+					write(propHolder);
+				write("</p>");
+			write("</div>");
+		}else{
+			System.out.println(tag+"==null");
+			write("<div id=\'"+capital(tag)+"\'>");
+			write("<p id=\'"+capital(tag)+" Ptag\'></p>");
+			write("</div>");
+		}
+	} catch(IOException o_0){
+	}
+}
+
 %><%
 writer = out;
 
@@ -98,8 +119,6 @@ if(movList!=null){
 	}
 	if(movie!=null){
 		
-		ArrayList<String> imgListHolder = null;
-		
 		//poster
 		imgListHolder= movie.getImgs("poster");
 		propHolder = (String)application.getAttribute("Nullposter");
@@ -109,7 +128,7 @@ if(movList!=null){
 			%><div id = MoviePoster><img src ='<%=propHolder%>'></div><%
 		}else{
 			System.out.println("movie poster null!");//------------------------------------------test
-			%><div id = MoviePoster><h4>Sorry, no poster found</h4></div><%
+			%><div id = MoviePoster><h4>Sorry, found no poster</h4></div><%
 		}
 		
 		//ENGTITLE + KORTITLE
@@ -145,14 +164,15 @@ if(movList!=null){
 			<%
 		}
 		
+		
 		//COUNTRY
-		putProp("COUNTRY");
+		putPropNoName(movie,"COUNTRY");
 		//GENRE
-		putProp("GENRE");
+		putPropNoName(movie,"GENRE");
 		//RATING
-		putProp("RATING");
+		putPropNoName(movie,"RATING");
 		//PLAYTIME
-		putProp("PLAYTIME");
+		putProp(movie,"PLAYTIME");
 		//WISHCOUNT.......
 		//----------------
 		
@@ -160,6 +180,7 @@ if(movList!=null){
 		<hr>
 		<%
 		//play screen
+		
 		//stealcuts
 		imgListHolder= movie.getImgs("stealcuts");
 		if(imgListHolder!=null){
@@ -171,15 +192,27 @@ if(movList!=null){
 		}
 		
 		%><hr><h4>COMMENT</h4><%
-		//COMMENTCOUNT
-		putProp("COMMENTCOUNT");
 		
-		%><p id='WriteComment'></p><%
+		//COMMENTCOUNT
+		propHolder = movie.getProperty("COMMENTCOUNT");
+		if(propHolder!=null){
+			%><div id='<%=capital("COMMENTCOUNT")%>'>
+				<p id='<%=capital("COMMENTCOUNT")%> Ptag'>
+					(<%=propHolder%>)
+				</p>
+			</div><%
+		}else{
+			System.out.println("COMMENTCOUNT"+"==null");
+			write("<div id=\'"+capital("COMMENTCOUNT")+"\'>");
+			write("<p id=\'"+capital("COMMENTCOUNT")+" Ptag\'></p>");
+			write("</div>");
+		}
+		
+		%><p id='WriteComment'>Write Comment</p><%
 		
 		//Comments
 		if(accList!=null){
 			for(Entity comEnt: accList){//listing comments
-				
 				
 				////show commenter's thumbnail
 				if(comEnt.getImgs("thumb")!=null){
@@ -198,44 +231,17 @@ if(movList!=null){
 					<%
 				}//show commenter's thumbnail ends
 				
-				//show commenter's name
-				propHolder = comEnt.getProperty("NAME");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Name'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Name'></div>
-					<%
-				}//show commenter's name ends
+				//show commenter's NAME
+				putPropNoName(comEnt,"NAME");
 				
 				//commenter's score
 				//-----------------
 				
 				//comment's REGDATE
-				propHolder = comEnt.getProperty("REGDATE");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Regdate'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Regdate'></div>
-					<%
-				}//show commenter's name end
+				putPropNoName(comEnt,"REGDATE");
 				
-				//comment contents
-				propHolder = comEnt.getProperty("CONTENTS");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Contents'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Contents'></div>
-					<%
-				}//comment contents end
+				//comment CONTENTS
+				putPropNoName(comEnt,"CONTENTS");
 				
 				
 			}//comment listing for ends
@@ -248,7 +254,7 @@ if(movList!=null){
 		<h5>summary</h5>
 		<%
 		//COMMENTCOUNT
-		putProp("COMMENTCOUNT");
+		putPropNoName(movie,"COMMENTCOUNT");
 		
 		
 		//--------actors and such guys ...
@@ -285,11 +291,13 @@ if(movList!=null){
 						<div id = 'movGuyThumb'>
 						<%
 					}
+					//guy.NAME
 					if(guy.getProperty("NAME")!=null){
 						%>
 						<p><%=guy.getProperty("NAME")%>
 						<%
 					}
+					//guy.CHARACTER
 					if(guy.getProperty("CHARACTER")!=null){
 						%>
 						(<%=guy.getProperty("CHARACTER")%> 역)</p></div>
@@ -309,6 +317,7 @@ if(movList!=null){
 		%>
 		<div>
 		<h2>Oops!sorry, can't find that movie.</h2>
+		<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
 		</div>
 		<%
 	}
@@ -316,6 +325,7 @@ if(movList!=null){
 	%>
 	<div>
 	<h2>Oops!sorry, No movie found.</h2>
+	<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
 	</div>
 	<%
 }

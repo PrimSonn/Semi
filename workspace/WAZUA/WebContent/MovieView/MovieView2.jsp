@@ -14,12 +14,12 @@
 	window.onload = function(){ 
 		document.getElementById("WriteComment").onclick = function(){
 			var form = document.createElement('form');
-			form.setAttribute('method', 'post');
-			form.setAttribute('action', '<%= application.getContextPath() + application.getInitParameter("WriteComment")%>');
+			form.setAttribute('method', 'get');
+			form.setAttribute('action', '<%=application.getContextPath() + application.getInitParameter("WriteComment")%>');
 			
 			var hiddenField = document.createElement('input');
             hiddenField.setAttribute('type', 'hidden');
-            hiddenField.setAttribute('name', 'movie');
+            hiddenField.setAttribute('name', 'mvIdx');
             hiddenField.setAttribute('value', <%=request.getAttribute("mvIdx")%>);
             form.appendChild(hiddenField);
             
@@ -52,6 +52,8 @@ for(String key : pack.getKeys()) { %>
 ArrayList<Entity> movList = pack.getList("MOVIE");
 ArrayList<Entity> accList = pack.getList("ACCOUNT");
 ArrayList<Entity> movGuyList = pack.getList("MOVIEGUYS");
+ArrayList<String> imgListHolder = null;
+String propHolder=null, propHolder2=null;
 
 Entity movie=null;
 if(movList!=null){
@@ -62,10 +64,7 @@ if(movList!=null){
 		}
 	}
 	if(movie!=null){
-		
-		ArrayList<String> imgListHolder = null;
-		String propHolder=null, propHolder2=null;
-		
+
 		//poster
 		imgListHolder= movie.getImgs("poster");
 		propHolder = (String)application.getAttribute("Nullposter");
@@ -214,7 +213,7 @@ if(movList!=null){
 		}
 		
 		
-		%><p id='WriteComment'></p><%
+		%><p id='WriteComment'>WriteComment</p><%
 		
 		//Comments
 		if(accList!=null){
@@ -362,6 +361,7 @@ if(movList!=null){
 		%>
 		<div>
 		<h2>Oops!sorry, can't find that movie.</h2>
+		<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
 		</div>
 		<%
 	}
@@ -369,6 +369,7 @@ if(movList!=null){
 	%>
 	<div>
 	<h2>Oops!sorry, No movie found.</h2>
+	<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
 	</div>
 	<%
 }
