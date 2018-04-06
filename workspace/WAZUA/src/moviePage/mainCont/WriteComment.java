@@ -72,7 +72,7 @@ public class WriteComment extends HttpServlet {
 		
 		if(func.isInt(mvIdx)) {
 			
-			if(!nullscore|func.isNumber(score)) {
+			if(!nullscore&func.isNumber(score)) {
 				try {
 					doubleMaxScore = Double.parseDouble(maxScore);
 					doubleScore = Double.parseDouble(score);

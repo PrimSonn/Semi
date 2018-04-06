@@ -22,23 +22,27 @@
   </context-param>
   <context-param>
     <param-name>Address</param-name>
-    <param-value>http://192.168.30.52:8001</param-value>
+    <param-value>http://192.168.0.22:8001</param-value>
   </context-param>
   <context-param>
     <param-name>sessionCheckAttr</param-name>
     <param-value>id</param-value>
   </context-param>
   <context-param>
-    <param-name>commentNum</param-name>
+    <param-name>commentNum</param-name><!-- max comment showed on movie page -->
     <param-value>3</param-value>
   </context-param>
   <context-param>
-    <param-name>pageCommNum</param-name>
+    <param-name>pageCommNum</param-name><!-- moreCommentPage Comment count -->
     <param-value>5</param-value>
   </context-param>
   <context-param>
-    <param-name>pageNum</param-name>
+    <param-name>pageAmount</param-name><!-- max page showed on more comment view -->
     <param-value>8</param-value>
+  </context-param>
+  <context-param>
+    <param-name>MaxScore</param-name>
+    <param-value>5</param-value>
   </context-param>
   <context-param>
     <param-name>Door</param-name>
@@ -85,16 +89,12 @@
     <param-value>/MovieView/MovieView.jsp</param-value>
   </context-param>
   <context-param>
-    <param-name>MaxScore</param-name>
-    <param-value>5</param-value>
-  </context-param>
-  <context-param>
     <param-name>WriteComment</param-name>
     <param-value>/WriteComment</param-value>
   </context-param>
   <context-param>
     <param-name>WriteCommentView</param-name>
-    <param-value>/MovieView/WriteCommentView.jsp</param-value>
+    <param-value>/WriteCommentView/WriteCommentView.jsp</param-value>
   </context-param>
   <context-param>
     <param-name>MoreComments</param-name>

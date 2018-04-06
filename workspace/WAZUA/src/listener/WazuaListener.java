@@ -69,20 +69,24 @@ public class WazuaListener implements ServletContextListener{
 		MoreComments moreComm = new MoreComments();
 		moreComm.initMoreComments(pageCommNum);
 		
-		int pageNum;
+		int pageAmount;
 		try {
-			String stPageNum = context.getInitParameter("pageNum");
-			if(func.isInt(stPageNum)) {
-				pageNum = Integer.parseInt(stPageNum);
+			String stPageAmount = context.getInitParameter("pageAmount");
+			if(func.isInt(stPageAmount)) {
+				pageAmount = Integer.parseInt(stPageAmount);
+				if(pageAmount<0) {
+					System.err.println("PageAmount should be bigger than 0! set to: 8 for now");
+					pageAmount=8;
+				}
 			}else {
-				System.err.println("pageNum Number format exception! set to: 8 for now");
-				pageNum=8;
+				System.err.println("pageAmount Number format exception! set to: 8 for now");
+				pageAmount=8;
 			}
 		}catch(NumberFormatException n) {
-			System.err.println("pageNum Number format exception! set to: 8 for now");
-			pageNum=8;
+			System.err.println("pageAmount Number format exception! set to: 8 for now");
+			pageAmount=8;
 		}
-		context.setAttribute("pageNum", pageNum);
+		context.setAttribute("pageAmount", pageAmount);
 		
 		Packer pack = new Packer();
 		pack.init(context.getInitParameter("Address"));

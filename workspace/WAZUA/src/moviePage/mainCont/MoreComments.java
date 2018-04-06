@@ -12,16 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 import bouncer.Bouncer;
 import moviePage.dao.Gatherer;
 import moviePage.dto.Pack;
+import moviePage.dto.entities.Entity;
 import moviePage.func.Func;
 
 @WebServlet("/MoreComments")
 public class MoreComments extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static int PAGECOMMNUM;
+	private static int PAGECOMMAMOUNT;
 	
-	public void initMoreComments(int pageCommNum) {
-		PAGECOMMNUM = pageCommNum;
+	public void initMoreComments(int PAGECOMMAMOUNT) {
+		MoreComments.PAGECOMMAMOUNT = PAGECOMMAMOUNT;
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,35 +40,40 @@ public class MoreComments extends HttpServlet {
 		if(((Bouncer)context.getAttribute("bouncer")).check(request, response)){
 			
 			if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)&func.isInt(id)) {
-				int intMvIdx =0;
-				boolean isMvIdxParsable = false;
-				try {
-					intMvIdx=Integer.parseInt(mvIdx);
-					isMvIdxParsable=true;
-				}catch(NumberFormatException e) {
-					System.out.println("mvIdx parsing error!!!!!");
-					isMvIdxParsable=false;
-				}
 				
-				if(page!=null&&isMvIdxParsable&page!=""&func.isNumber(page)) {
+				if(page!=null&&page!=""&func.isNumber(page)) {
+					
 					int pageNumber;
 					
 					try {
 						pageNumber = Integer.parseInt(page);
-						int minCommNum = (pageNumber-1)*PAGECOMMNUM;
-						int maxCommNum = pageNumber*PAGECOMMNUM;
+						int minCommNum = (pageNumber-1)*PAGECOMMAMOUNT+1;
+						int maxCommNum = pageNumber*PAGECOMMAMOUNT;
 						
 						Pack pack = (new Gatherer()).moreComments(context.getContextPath(), realPath,mvIdx,minCommNum,maxCommNum);
 						
-						String comCount = pack.getList("MOVIE").get(intMvIdx).getProperty("COMMCOUNT");
-						int intComCount = Integer.parseInt(comCount);
-						request.setAttribute("COMMCOUNT", intComCount);
-						
-						request.setAttribute("pageNumber", pageNumber);
-						request.setAttribute("pack", pack);
-						request.setAttribute("mvIdx", mvIdx);
-						
-						request.getRequestDispatcher(context.getInitParameter("MoreCommentsView")).forward(request, response);
+						String comCount = null;
+						for(Entity mv: pack.getList("MOVIE")) {
+							if( mvIdx.matches(mv.getIdx()) ) {
+								comCount= mv.getProperty("COMMCOUNT");
+								break;
+							}
+						}
+						if(comCount!=null) {
+							
+							int intComCount = Integer.parseInt(comCount);
+							request.setAttribute("COMMCOUNT", intComCount);
+							request.setAttribute("PAGECOMMAMOUNT", PAGECOMMAMOUNT);
+							request.setAttribute("pageNumber", pageNumber);
+							request.setAttribute("pack", pack);
+							request.setAttribute("mvIdx", mvIdx);
+							
+							request.getRequestDispatcher(context.getInitParameter("MoreCommentsView")).forward(request, response);
+							
+						}else {
+							System.out.println("No CommCount!!!!!");
+							//send back to moviepage
+						}
 						
 					} catch(NumberFormatException e) {
 						System.out.println("Wrong Page Number or CommCount, parsing failed");

@@ -453,12 +453,14 @@ comment on column WAZPOINT.EXP_DATE is '만료일자';
 create table COMMENTS
 (
 	IDX				number(12,0)
+	,REF_IDX		number(12,0)
 	,ACC_IDX		number(9,0)			not null
 	,MOVIE_IDX		number(8,0)			not null
 	,REG_DATE		timestamp			not null
 	,CONTENTS		clob				not null
 	,ISBLIND		varchar2(100)
 	,constraint COMMENT_PK primary key (IDX)
+	,constraint FK_REF_SELF_IDX foreign key (REF_IDX) references COMMENTS (IDX)
 	,constraint FK_COMMENT_ACC_IDX_ACCOUNT foreign key (ACC_IDX) references ACCOUNT (IDX)
 	,constraint FK_COMMENT_MOVIE_IDX_MOVIE foreign key (MOVIE_IDX) references MOVIE (IDX)
 );

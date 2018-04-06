@@ -222,11 +222,10 @@ if(movList!=null){
 		if(accList!=null){
 			for(Entity comEnt: accList){//listing comments
 				
-				
+				propHolder2=(String)application.getAttribute("Nullthumb");
 				////show commenter's thumbnail
 				if(comEnt.getImgs("thumb")!=null){
 					propHolder=comEnt.getImgs("thumb").get(0);
-					propHolder2=(String)application.getAttribute("Nullthumb");
 					%>
 					<div id='Comment Thumb'><img src='<%=propHolder%>'/></div>
 					<%

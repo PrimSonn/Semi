@@ -39,9 +39,11 @@ ArrayList<String> imgListHolder = null;
 String propHolder=null, propHolder2=null;
 Entity movie=null;
 
+
+
 if(movList!=null){
 	for(Entity movies: movList){
-		if(movies.getIdx().matches((String)request.getAttribute("mvIdx"))){
+		if(movies.getIdx().matches(request.getParameter("mvIdx"))){
 			movie = movies;
 			break;
 		}
@@ -75,10 +77,10 @@ if(movList!=null){
 		if(accList!=null){
 			for(Entity comEnt: accList){//listing comments
 				
+				propHolder2=(String)application.getAttribute("Nullthumb");
 				////show commenter's thumbnail
 				if(comEnt.getImgs("thumb")!=null){
 					propHolder=comEnt.getImgs("thumb").get(0);
-					propHolder2=(String)application.getAttribute("Nullthumb");
 					%>
 					<div id='Comment Thumb'><img src='<%=propHolder%>'/></div>
 					<%
@@ -146,15 +148,42 @@ if(movList!=null){
 				
 			}//comment listing for ends
 			
-			int pageNum =(int)request.getAttribute("pageNumber");
-			int commNum =(int)request.getAttribute("COMMCOUNT");
 			
-			
-			
-			
+			try{
+				int pageAmount = (int)application.getAttribute("pageAmount");
+				int pageNum =(int)request.getAttribute("pageNumber");
+				int commCnt =(int)request.getAttribute("COMMCOUNT");
+				int pageCommAmount = (int)request.getAttribute("PAGECOMMAMOUNT");
+				int maxPage = (int)Math.ceil((double)commCnt/(double)pageCommAmount);
+				int startPageNum;
+				int endPageNum;
+				
+				if(pageNum>pageAmount/2){
+					startPageNum = pageNum - pageAmount/2;
+				}else{
+					startPageNum = 1;
+				}
+				if(pageNum<maxPage-pageAmount/2){
+					endPageNum = pageNum+pageAmount/2;
+				}else{
+					endPageNum = maxPage;
+				}
+				for( ; startPageNum <= endPageNum ; startPageNum++ ){
+					
+					if(startPageNum==pageNum){
+						%><p id='MoreComments'style="color:purple;"><%=startPageNum%></p><%
+					}else{
+						%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=<%=startPageNum%>'><%=startPageNum%></a></p><%
+					}
+					
+				}
+			}catch(NullPointerException e){
+				System.out.println("Null pointer while setting page number setting on more comment view!");
+			}
 			
 			
 		}else{
+			System.err.println("No Comment found!");
 			//no comment found?
 		}
 	}else{
