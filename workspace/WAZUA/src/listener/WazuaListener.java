@@ -11,6 +11,8 @@ import javax.servlet.ServletContextListener;
 import bouncer.Bouncer;
 import moviePage.dao.Gatherer;
 import moviePage.dto.Packer;
+import moviePage.func.Func;
+import moviePage.mainCont.MoreComments;
 
 public class WazuaListener implements ServletContextListener{
 	@Override
@@ -21,12 +23,66 @@ public class WazuaListener implements ServletContextListener{
 		context.setRequestCharacterEncoding("utf-8");
 		context.setResponseCharacterEncoding("utf-8");
 		
-		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"),context.getContextPath());
+		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"),context.getContextPath(),context.getInitParameter("sessionCheckAttr"));
 		context.setAttribute("bouncer", bouncer);
 		context.setAttribute("RealPath", context.getRealPath("/"));
 		
+		String maxScore = context.getInitParameter("MaxScore");
+		Func func = new Func();
+		if(!func.isNumber(maxScore)) {
+			System.out.println("Wrong Number format on MaxScore!!!!!!!");
+			System.out.println("Setting MaxScore to: 5");
+			context.setInitParameter("MaxScore", "5");
+		}
+		
+		int commNum;
+		try {
+			String commentNum=context.getInitParameter("commentNum");
+			if(func.isInt(commentNum)) {
+				commNum = Integer.parseInt(commentNum);
+			}else {
+				System.err.println("CommNum Number format exception! set to: 3 for now");
+				commNum = 3;
+			}
+		}catch(NumberFormatException Nooo) {
+			System.err.println("CommNum Number format exception! set to: 3 for now");
+			commNum = 3;
+		}
+		
 		Gatherer get = new Gatherer();
-		get.init(context.getInitParameter("OracleUser"),context.getInitParameter("OraclePW"));
+		get.init(context.getInitParameter("OracleUser"), context.getInitParameter("OraclePW"), commNum);
+		
+		
+		int pageCommNum;
+		try {
+			String stPageCommNum = context.getInitParameter("pageCommNum");
+			if(func.isInt(stPageCommNum)) {
+				pageCommNum = Integer.parseInt(stPageCommNum);
+			}else {
+				System.err.println("PageCommNum Number format exception! set to: 5 for now");
+				pageCommNum=5;
+			}
+		}catch(NumberFormatException Nooo) {
+			System.err.println("PageCommNum Number format exception! set to: 5 for now");
+			pageCommNum=5;
+		}
+		MoreComments moreComm = new MoreComments();
+		moreComm.initMoreComments(pageCommNum);
+		
+		int pageNum;
+		try {
+			String stPageNum = context.getInitParameter("pageNum");
+			if(func.isInt(stPageNum)) {
+				pageNum = Integer.parseInt(stPageNum);
+			}else {
+				System.err.println("pageNum Number format exception! set to: 8 for now");
+				pageNum=8;
+			}
+		}catch(NumberFormatException n) {
+			System.err.println("pageNum Number format exception! set to: 8 for now");
+			pageNum=8;
+		}
+		context.setAttribute("pageNum", pageNum);
 		
 		Packer pack = new Packer();
 		pack.init(context.getInitParameter("Address"));
@@ -62,7 +118,7 @@ public class WazuaListener implements ServletContextListener{
 			}//file search for ends
 		}//file check if ends
 		
-//		Enumeration<String> names = context.getAttributeNames();
+//		Enumeration<String> names = context.getAttributeNames();//--------------below lines are test lines
 //		while(names.hasMoreElements()) {
 //			String name = names.nextElement();
 //			System.out.println(context.getAttribute(name));

@@ -10,10 +10,12 @@ public class Bouncer {
 	
 	private static String DoorView;//DoorViewView address
 	private static String ContextPath;
+	private static String id;
 	
-	public Bouncer(String DoorViewView,String ContextPath) {
+	public Bouncer(String DoorViewView,String ContextPath, String id) {
 		Bouncer.DoorView = DoorViewView;
 		Bouncer.ContextPath = ContextPath;
+		this.id=id;
 	}
 	
 	@SuppressWarnings("finally")

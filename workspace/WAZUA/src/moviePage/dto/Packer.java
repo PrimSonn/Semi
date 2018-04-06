@@ -10,8 +10,6 @@ import java.util.Stack;
 import moviePage.dto.entities.Entity;
 
 
-
-
 public class Packer extends Pack{
 	
 	private static String ADDRESS = null;
@@ -22,6 +20,10 @@ public class Packer extends Pack{
 	
 	public void init (String address) {
 		ADDRESS=address;
+	}
+	
+	public Packer(ResultSet rs) {
+		this(rs,"","");
 	}
 	
 	
@@ -91,7 +93,7 @@ public class Packer extends Pack{
 				for(Integer i : propset.keySet() ) {
 					String prop = propset.get(i);
 					String val = rs.getString(i);//------!!!!!!!!!!!!!!!!!!!!!!!!! something's wrong here??
-					if(prop!=null&val!=null)
+					if(prop!=null&&val!=null)
 					entity.setProperty(propset.get(i), rs.getString(i) );
 				}
 				
@@ -104,7 +106,10 @@ public class Packer extends Pack{
 					}
 				}
 				
-				curator(tag ,realPath, contextPath, entity);
+				if(realPath!=null&&contextPath!=null&&realPath!=""&contextPath!="") {
+					curator(tag ,realPath, contextPath, entity);
+				}
+				
 				super.putList(tag, entity);
 			}
 					

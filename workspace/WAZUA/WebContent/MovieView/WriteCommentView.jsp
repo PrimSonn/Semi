@@ -52,7 +52,7 @@ ArrayList<String> imgListHolder = null;
 
 
 
-if(movList!=null&accList!=null){
+if(movList!=null&&accList!=null){
 	for(Entity movies: movList){
 		if(movies.getIdx().matches((String)request.getAttribute("mvIdx"))){
 			movie = movies;
@@ -65,7 +65,7 @@ if(movList!=null&accList!=null){
 			break;
 		}
 	}
-	if(movie!=null&account!=null){
+	if(movie!=null&&account!=null){
 		
 		//ENGTITLE + KORTITLE
 				propHolder = movie.getProperty("ENGTITLE");

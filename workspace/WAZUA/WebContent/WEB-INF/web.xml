@@ -25,6 +25,22 @@
     <param-value>http://192.168.30.52:8001</param-value>
   </context-param>
   <context-param>
+    <param-name>sessionCheckAttr</param-name>
+    <param-value>id</param-value>
+  </context-param>
+  <context-param>
+    <param-name>commentNum</param-name>
+    <param-value>3</param-value>
+  </context-param>
+  <context-param>
+    <param-name>pageCommNum</param-name>
+    <param-value>5</param-value>
+  </context-param>
+  <context-param>
+    <param-name>pageNum</param-name>
+    <param-value>8</param-value>
+  </context-param>
+  <context-param>
     <param-name>Door</param-name>
     <param-value>/Door</param-value>
   </context-param>
@@ -76,8 +92,16 @@
     <param-name>WriteComment</param-name>
     <param-value>/WriteComment</param-value>
   </context-param>
-   <context-param>
+  <context-param>
     <param-name>WriteCommentView</param-name>
     <param-value>/MovieView/WriteCommentView.jsp</param-value>
+  </context-param>
+  <context-param>
+    <param-name>MoreComments</param-name>
+    <param-value>/MoreComments</param-value>
+  </context-param>
+  <context-param>
+    <param-name>MoreCommentsView</param-name>
+    <param-value>/MoreCommentsView/MoreCommView.jsp</param-value>
   </context-param>
 </web-app>

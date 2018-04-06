@@ -5,6 +5,9 @@
 <%@page import="moviePage.dto.Pack"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+String contextPath = application.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,7 +18,7 @@
 		document.getElementById("WriteComment").onclick = function(){
 			var form = document.createElement('form');
 			form.setAttribute('method', 'get');
-			form.setAttribute('action', '<%=application.getContextPath() + application.getInitParameter("WriteComment")%>');
+			form.setAttribute('action', '<%=contextPath + application.getInitParameter("WriteComment")%>');
 			
 			var hiddenField = document.createElement('input');
             hiddenField.setAttribute('type', 'hidden');
@@ -54,8 +57,8 @@ ArrayList<Entity> accList = pack.getList("ACCOUNT");
 ArrayList<Entity> movGuyList = pack.getList("MOVIEGUYS");
 ArrayList<String> imgListHolder = null;
 String propHolder=null, propHolder2=null;
-
 Entity movie=null;
+
 if(movList!=null){
 	for(Entity movies: movList){
 		if(movies.getIdx().matches((String)request.getAttribute("mvIdx"))){
@@ -252,6 +255,19 @@ if(movList!=null){
 				//commenter's score
 				//-----------------
 				
+				//comment's SCORE
+				propHolder = comEnt.getProperty("SCORE");
+				if(propHolder!=null){
+					%>
+					<div id='Comment Score'><%=propHolder%></div>
+					<%
+				}else{//when there's no name on this guy.
+					%>
+					<div id='Comment Score'></div>
+					<%
+				}//show commenter's name end
+				
+				
 				//comment's REGDATE
 				propHolder = comEnt.getProperty("REGDATE");
 				if(propHolder!=null){
@@ -276,13 +292,14 @@ if(movList!=null){
 					<%
 				}//comment contents end
 				
-				
 			}//comment listing for ends
+			%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>&page=1'>Read More Comments</a></p><%
 		}else{
 			//when there's no comments
 		}
 		
-		//COMMENTCOUNT
+		
+		//OUTLINE
 		propHolder = movie.getProperty("OUTLINE");
 		if(propHolder!=null){
 			%>
@@ -294,10 +311,30 @@ if(movList!=null){
 			</div>
 			<%
 		}else{
-			System.out.println("COMMENTCOUNT==null");//------------------------------test
+			System.out.println("OUTLINE==null");//------------------------------test
 			%>
 			<div id='OutLine'>
 			<p id='OutLine Ptag'></p>
+			</div>
+			<%
+		}
+		
+		//COMMENTCOUNT
+		propHolder = movie.getProperty("COMMENTCOUNT");
+		if(propHolder!=null){
+			%>
+			<hr>
+			<h3>Information</h3>
+			<h5>summary</h5>
+			<div id='CommentCount'>
+			<p id='CommentCount Ptag'>(<%=propHolder%>)</p>
+			</div>
+			<%
+		}else{
+			System.out.println("COMMENTCOUNT==null");//------------------------------test
+			%>
+			<div id='CommentCount'>
+			<p id='CommentCount Ptag'></p>
 			</div>
 			<%
 		}
@@ -361,7 +398,7 @@ if(movList!=null){
 		%>
 		<div>
 		<h2>Oops!sorry, can't find that movie.</h2>
-		<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
+		<a href='<%=contextPath+application.getInitParameter("Main")%>'>Go back to main page</a>
 		</div>
 		<%
 	}
@@ -369,11 +406,10 @@ if(movList!=null){
 	%>
 	<div>
 	<h2>Oops!sorry, No movie found.</h2>
-	<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
+	<a href='<%=contextPath+application.getInitParameter("Main")%>'>Go back to main page</a>
 	</div>
 	<%
 }
-
 
 %>
 

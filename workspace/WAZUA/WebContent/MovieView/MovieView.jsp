@@ -6,6 +6,9 @@
 <%@page import="moviePage.dto.Pack"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+String contextPath = application.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,7 +19,7 @@
 		document.getElementById("WriteComment").onclick = function(){
 			var form = document.createElement('form');
 			form.setAttribute('method', 'get');
-			form.setAttribute('action', '<%= application.getContextPath() + application.getInitParameter("WriteComment")%>');
+			form.setAttribute('action', '<%= contextPath + application.getInitParameter("WriteComment")%>');
 			
 			var hiddenField = document.createElement('input');
             hiddenField.setAttribute('type', 'hidden');
@@ -27,6 +30,7 @@
 		    document.body.appendChild(form);
 		    form.submit();
 		}
+		
 	}
 </script>
 </head>
@@ -35,7 +39,7 @@
 Pack pack = (Pack)request.getAttribute("pack");
 
 //============================== print pack ==================================================
-
+/*
 for(String key : pack.getKeys()) { %>
 	<Div><%=key %>
 	<% for(Entity e :pack.getList(key)){ %>
@@ -49,7 +53,7 @@ for(String key : pack.getKeys()) { %>
 	</Div>
 	<br><hr><br><hr><br>
 <%}
-
+*/
 //================================================================================
 
 ArrayList<Entity> movList = pack.getList("MOVIE");
@@ -235,7 +239,7 @@ if(movList!=null){
 				putPropNoName(comEnt,"NAME");
 				
 				//commenter's score
-				//-----------------
+				putPropNoName(comEnt,"SCORE");
 				
 				//comment's REGDATE
 				putPropNoName(comEnt,"REGDATE");
@@ -243,8 +247,8 @@ if(movList!=null){
 				//comment CONTENTS
 				putPropNoName(comEnt,"CONTENTS");
 				
-				
 			}//comment listing for ends
+			%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=(String)request.getAttribute("mvIdx")%>&page=1'>Read More Comments</a></p><%
 		}else{
 			//when there's no comments
 		}
@@ -253,9 +257,12 @@ if(movList!=null){
 		<h3>Information</h3>
 		<h5>summary</h5>
 		<%
+		
+		//OUTLINE
+		putPropNoName(movie,"OUTLINE");
+		
 		//COMMENTCOUNT
 		putPropNoName(movie,"COMMENTCOUNT");
-		
 		
 		//--------actors and such guys ...
 		Hashtable<String,Stack<Entity>> guyshash = new Hashtable<String,Stack<Entity>>();
@@ -317,7 +324,7 @@ if(movList!=null){
 		%>
 		<div>
 		<h2>Oops!sorry, can't find that movie.</h2>
-		<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
+		<a href='<%=contextPath +application.getInitParameter("Main")%>'>Go back to main page</a>
 		</div>
 		<%
 	}
@@ -325,7 +332,7 @@ if(movList!=null){
 	%>
 	<div>
 	<h2>Oops!sorry, No movie found.</h2>
-	<a href='<%=application.getContextPath()+application.getInitParameter("Main")%>'>Go back to main page</a>
+	<a href='<%=contextPath +application.getInitParameter("Main")%>'>Go back to main page</a>
 	</div>
 	<%
 }

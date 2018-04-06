@@ -66,6 +66,7 @@ TriggerList:
 			MOVGENRE_IDX_TRG
 			WAZPOINT_IDX_TRG
 			COMMENTS_IDX_TRG
+			COMM_COUNT_MGR
 			REPORT_SEQ
 			INQUIRE_SEQ
 			TRAILERS_IDX_TRG
@@ -103,6 +104,7 @@ drop table MOVIE_IMG cascade constraints;
 drop trigger REPORT_IDX_TRG;
 drop sequence REPORT_SEQ;
 drop table REPORT cascade constraints;
+drop trigger COMM_COUNT_MGR;
 drop trigger COMMENTS_IDX_TRG;
 drop sequence COMMENTS_SEQ;
 drop table COMMENTS cascade constraints;
@@ -272,6 +274,7 @@ create table MOVIE
 	,PRICE			number(7,0)		default 0
 	,TOT_SCORE		binary_double	default 0
 	,SCORE_COUNT	number(9,0)		default 0
+	,COMM_COUNT 	number(7)		default 0
 	,constraint MOVIE_PK primary key (IDX)
 );
 
@@ -315,6 +318,8 @@ comment on column MOVIE.PRICE is '가격';
 comment on column MOVIE.TOT_SCORE is '총점';
 
 comment on column MOVIE.SCORE_COUNT is '총 평가 갯수';
+
+comment on column MOVIE.COMM_COUNT is '총 코멘트 수';
 
 
 --drop trigger MOVIE_IDX_TRG;
@@ -473,6 +478,28 @@ begin
 end;
 /
 
+create or replace trigger COMM_COUNT_MGR
+after
+	insert
+	or delete
+	on COMMENTS
+	for each row
+begin
+	case
+		when inserting then
+			update MOVIE set
+				COMM_COUNT = COMM_COUNT + 1
+			where IDX = :NEW.MOVIE_IDX;
+		when deleting then
+			update MOVIE set
+				COMM_COUNT = COMM_COUNT-1
+			where IDX = :OLD.MOVIE_IDX;
+	end case;
+end;
+/
+
+
+
 comment on table COMMENTS is '코멘트 테이블';
 
 comment on column COMMENTS.IDX is '코멘트식별번호';
@@ -487,7 +514,7 @@ comment on column COMMENTS.CONTENTS is '코멘트내용';
 
 comment on column COMMENTS.ISBLIND is '블라인드';
 
-
+--drop trigger COMM_COUNT_MGR;
 --drop trigger COMMENTS_IDX_TRG;
 --drop sequence COMMENTS_SEQ;
 --drop table COMMENTS cascade constraints;

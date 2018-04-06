@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import bouncer.Bouncer;
 import moviePage.dao.Gatherer;
 import moviePage.dto.Pack;
+import moviePage.func.Func;
 
 
 @WebServlet(asyncSupported = true, description = "comment writer", urlPatterns = { "/WriteComment" })
@@ -26,11 +27,13 @@ public class WriteComment extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
+		String mvIdx=null;
 		ServletContext context = this.getServletContext();
-		String mvIdx = request.getParameter("mvIdx");
+		mvIdx = request.getParameter("mvIdx");
+		Func func = new Func();
 		
 		if(((Bouncer)context.getAttribute("bouncer")).check(request, response)){
-			if(mvIdx==null|!mvIdx.isEmpty()|isNumber(mvIdx)) {
+			if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)) {
 				String id = (String) request.getSession().getAttribute("id");
 				String realPath = (String) context.getAttribute("RealPath");
 				
@@ -64,12 +67,12 @@ public class WriteComment extends HttpServlet {
 		double doubleScore = 0, doubleMaxScore = 5;
 		boolean error = false;
 		boolean nullscore = true;
+		Func func = new Func();
+		if(score==null|score=="")nullscore=true;
 		
-		if(score==null|score!="")nullscore=true;
-		
-		if(isNumber(mvIdx)) {
+		if(func.isInt(mvIdx)) {
 			
-			if(!nullscore) {
+			if(!nullscore|func.isNumber(score)) {
 				try {
 					doubleMaxScore = Double.parseDouble(maxScore);
 					doubleScore = Double.parseDouble(score);
@@ -96,17 +99,6 @@ public class WriteComment extends HttpServlet {
 			
 		}//isNumber check ends
 		
-		
-	}
-	
-	private boolean isNumber(String idx) {
-		char[] i_dx = idx.toCharArray();
-		for(char c : i_dx) {
-			if(c!='.'&c<'0'|c>'9') {
-				return false;
-			}
-		}
-		return true;
 		
 	}
 	
