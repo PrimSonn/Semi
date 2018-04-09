@@ -74,15 +74,23 @@ inner join (select MM.MOV_IDX MIDX, LISTAGG(MG.GENRE, ',')WITHIN GROUP (order by
 ;
 
 
--------------
+-------------mvCmtInit
 
-
-select case when ACC.IDX is not null then 'ACCOUNT' when IDX is not null then 'MOVIE' end as TAG, ACC.IDX ACCOUNT_IDX, NAME ACCOUNT_NAME, SCORE ACCOUNT_SCORE, KORTITLE MOVIE_KORTITLE, ENGTITLE MOVIE_ENGTITLE, IDX MOVIE_IDX
-from ACCOUNT ACC inner join (select ACC_IDX, SCORE from MVSCORE where ACC_IDX = 1 and MOVIE_IDX = 1) MVS on ACC.IDX = MVS.ACC_IDX
+select
+    case 
+        when ACC.IDX is not null then 'ACCOUNT' 
+        when IDX is not null then 'MOVIE' 
+        when CONTENTS is not null then 'ACCOUNT' 
+    end as TAG
+    , ACC.IDX ACCOUNT_IDX, NAME ACCOUNT_NAME, SCORE ACCOUNT_SCORE
+    , IDX MOVIE_IDX, KORTITLE MOVIE_KORTITLE, ENGTITLE MOVIE_ENGTITLE
+    , C.CONTENTS ACCOUNT_CONTENTS, C.IDX ACCOUNT_COMMIDX
+from ACCOUNT ACC
+inner join (select ACC_IDX, SCORE from MVSCORE where ACC_IDX = 1 and MOVIE_IDX = 1) MVS on ACC.IDX = MVS.ACC_IDX 
+inner join (select CONTENTS, IDX, ACC_IDX from COMMENTS where ACC_IDX =1 and IDX = 63) C on ACC.IDX=C.ACC_IDX
 full outer join (select IDX, KORTITLE, ENGTITLE from MOVIE where IDX = 1) on 1=2;
-
-
-
+ 
+ 
 -- commenting plsql
 
 declare	
@@ -106,6 +114,16 @@ select
     , M.IDX MOVIE_IDX, M.ENGTITLE MOVIE_ENGTITLE, M.KORTITLE MOVIE_KORTITLE, M.COMM_COUNT MOVIE_COMMCOUNT
 from ACCOUNT AC
 inner join
-    (select * from (select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND, ROWNUM NUM from COMMENTS where MOVIE_IDX=1 order by REG_DATE desc) where NUM between 0 and 5) C on C.ACC_IDX=AC.IDX
+    (select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND, rownum NUM from (select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND from COMMENTS where MOVIE_IDX=1 order by REG_DATE desc)) C on C.ACC_IDX=AC.IDX and NUM between 16 and 20
 full outer join (select IDX, ENGTITLE, KORTITLE, COMM_COUNT from MOVIE where IDX = 1) M on 1=2;
+
+
+
+
+
+--------------------------------------------------------------------
+
+상품
+
+포인트
 

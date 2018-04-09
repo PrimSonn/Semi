@@ -216,7 +216,7 @@ if(movList!=null){
 		}
 		
 		
-		%><p id='WriteComment'>WriteComment</p><%
+		%><p id='WriteComment'style="display:inline-block;border-style: groove;border-width: 1px;border-color: red;">WriteComment</p><%
 		
 		//Comments
 		if(accList!=null){

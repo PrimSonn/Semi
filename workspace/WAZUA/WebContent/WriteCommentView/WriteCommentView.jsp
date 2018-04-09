@@ -3,19 +3,15 @@
     pageEncoding="UTF-8"%>
 <%@page import="moviePage.dto.Pack"%>
 <%@page import="moviePage.dto.entities.Entity"%>
+<%
+String contextPath = application.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
-<script>
-	windows.onload=function(){
-		document.getElementById('cancelbtn').onclick=function(){
-			window.location='<%=application.getInitParameter("Address")+application.getContextPath()+application.getInitParameter("MoviePage")+"?movie="+(String)(request.getAttribute("mvIdx"))%>';
-		}
-	}
-</script>
 <body>
 <%
 
@@ -45,11 +41,8 @@ ArrayList<Entity> movList = pack.getList("MOVIE");
 ArrayList<Entity> accList = pack.getList("ACCOUNT");
 Entity movie = null ;
 Entity account = null;
-String propHolder=null, propHolder2=null;
+String propHolder=null, propHolder2=null, propHolder3=null;
 ArrayList<String> imgListHolder = null;
-
-
-
 
 
 if(movList!=null&&accList!=null){
@@ -97,7 +90,7 @@ if(movList!=null&&accList!=null){
 		if(propHolder!=null){
 			%>
 			<div id='SCORE'>
-			<p id='SCORE Ptag'>Your Score: <%=propHolder%></p>
+			<p id='SCORE Ptag'>Score you gave: <%=propHolder%></p>
 			</div>
 			<%
 		}else{
@@ -108,14 +101,25 @@ if(movList!=null&&accList!=null){
 			<%
 		}
 		
+		propHolder = account.getProperty("COMMIDX");
+		propHolder2 = account.getProperty("CONTENTS");
+		propHolder3 = request.getParameter("page");
+		boolean isEdit = (propHolder!=null&&propHolder2!=null&&propHolder!=""&propHolder2!="");
 		%>
 		<div id='formdiv'>
 			<form action="<%=application.getContextPath()+application.getInitParameter("WriteComment")%>"id='form'method='post'>
-				<textarea rows="60"cols="30"name='comment'></textarea><br>
+				<textarea rows="20"cols="130"name='comment'><%if(isEdit)out.print(propHolder2);%></textarea><br>
 				<input type='hidden'name='mvIdx'value='<%=(String)request.getAttribute("mvIdx")%>'>
-				<p>점수를 입력하세요</p>
+				<%if(isEdit)
+					%><input type='hidden'name='commIdx'value='<%=propHolder%>'><%
+					;%>
+				<p>(선택)점수를 입력하세요(0~<%=application.getInitParameter("MaxScore")%>)</p>
+				<%
+				if(propHolder3!=null&&propHolder3!="")
+				%>
+				<input type='hidden'name='page'value='<%=propHolder3%>'/>
+				<%; %>
 				<input type='number'name='score'min='0'max='<%=application.getInitParameter("MaxScore")%>'step='0.1'>
-				<input type='button'id='cancelbtn'value='Cancel'>
 				<input type='submit'value='Commit!'>
 			</form>
 		</div>

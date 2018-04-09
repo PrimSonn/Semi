@@ -97,7 +97,7 @@ if(movList!=null&&accList!=null){
 		if(propHolder!=null){
 			%>
 			<div id='SCORE'>
-			<p id='SCORE Ptag'>Your Score: <%=propHolder%></p>
+			<p id='SCORE Ptag'>Score You gave to this movie: <%=propHolder%></p>
 			</div>
 			<%
 		}else{
@@ -111,7 +111,7 @@ if(movList!=null&&accList!=null){
 		%>
 		<div id='formdiv'>
 			<form action="<%=application.getContextPath()+application.getInitParameter("WriteComment")%>"id='form'method='post'>
-				<textarea rows="60"cols="30"name='comment'></textarea><br>
+				<textarea rows="50"cols="160"name='comment'style='width:100%;'></textarea><br>
 				<input type='hidden'name='mvIdx'value='<%=(String)request.getAttribute("mvIdx")%>'>
 				<p>점수를 입력하세요</p>
 				<input type='number'name='score'min='0'max='<%=application.getInitParameter("MaxScore")%>'step='0.1'>

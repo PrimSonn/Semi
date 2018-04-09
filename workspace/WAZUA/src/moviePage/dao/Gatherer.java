@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import moviePage.dto.Pack;
 import moviePage.dto.Packer;
+import moviePage.func.Func;
 
 
 public class Gatherer {
@@ -33,7 +34,7 @@ public class Gatherer {
 		}
 	}
 	
-	public Pack getThings(String contextPath, String realPath, String AccountIdx, String movieIdx) {
+	public Pack getThings(String contextPath, String realPath, String accountIdx, String movieIdx) {
 		
 		String sql = "select"
 						+ " case when M.IDX is not null then 'MOVIE' when MOVIEGUYS_IDX is not null then 'MOVIEGUYS' when COMMENT_IDX is not null then 'ACCOUNT_COMMENT' end as TAG"
@@ -63,16 +64,24 @@ public class Gatherer {
 		return (new Pack());//if something's wrong, return empty object
 	}
 	
-	public Pack mvCmtInit(String contextPath, String realPath, String AccountIdx, String movieIdx) {
+	public Pack mvCmtInit(String contextPath, String realPath, String accountIdx, String movieIdx, String commIdx) {
+		
+		Func func = new Func();
+		boolean isEdit = commIdx!=null&&commIdx!=""&func.isInt(commIdx);
 		
 		String sql = "select"
-						+ " case when ACC.IDX is not null then 'ACCOUNT' when IDX is not null then 'MOVIE' end as TAG"
+						+ " case when ACC.IDX is not null then 'ACCOUNT' when IDX is not null then 'MOVIE'";
+		if(isEdit) sql+= " when CONTENTS is not null then 'ACCOUNT'";
+		sql+= " end as TAG"
 						+ ", ACC.IDX ACCOUNT_IDX, NAME ACCOUNT_NAME, SCORE ACCOUNT_SCORE"
-						+ ", IDX MOVIE_IDX, KORTITLE MOVIE_KORTITLE, ENGTITLE MOVIE_ENGTITLE"
-					+ " from ACCOUNT ACC"
-					+" inner join (select ACC_IDX, SCORE from MVSCORE where ACC_IDX = "+AccountIdx+" and MOVIE_IDX = "+movieIdx+") MVS on ACC.IDX = MVS.ACC_IDX"
-					+" full outer join (select IDX, KORTITLE, ENGTITLE from MOVIE where IDX = "+movieIdx+") on 1=2";
+						+ ", IDX MOVIE_IDX, KORTITLE MOVIE_KORTITLE, ENGTITLE MOVIE_ENGTITLE";
+		if(isEdit) sql+=" , C.CONTENTS ACCOUNT_CONTENTS, C.IDX ACCOUNT_COMMIDX";
+		sql+=		 " from ACCOUNT ACC"
+					+" inner join (select ACC_IDX, SCORE from MVSCORE where ACC_IDX = "+accountIdx+" and MOVIE_IDX = "+movieIdx+") MVS on ACC.IDX = MVS.ACC_IDX";
+		if(isEdit) sql+=" inner join(select CONTENTS, IDX, ACC_IDX from COMMENTS where ACC_IDX = "+accountIdx+" and IDX = "+commIdx+") C on ACC.IDX = C.ACC_IDX";
+		sql+=		" full outer join (select IDX, KORTITLE, ENGTITLE from MOVIE where IDX = "+movieIdx+") on 1=2";
 		
+//		System.out.println(sql);//----------------------------------------------------------testcode
 		try {
 			Statement st =  conn.createStatement();
 			return new Packer(st.executeQuery(sql), contextPath, realPath) ;
@@ -84,15 +93,21 @@ public class Gatherer {
 		
 	}
 	
-	public boolean mvCmtCommit(String id, String mvIdx, boolean nullscore, double doubleScore, String comment) {
+	public boolean mvCmtCommit(String id, String mvIdx, boolean nullscore, double doubleScore, String comment, String commIdx) {
 		
-		
+		Func func = new Func();
+		boolean isEdit = false;
+		isEdit = commIdx!=null&&commIdx!=""&func.isInt(commIdx);
 		String plsql = 
 						"declare"
 								+" cnt number(1);"
-						+" begin"
-							+" insert into COMMENTS (ACC_IDX, MOVIE_IDX, CONTENTS) values("+id+","+mvIdx+",to_clob('"+comment+"'));"
-						;
+						+" begin";
+		if(isEdit) {
+			plsql+=			" update COMMENTS set CONTENTS = to_clob('"+comment+"') where ACC_IDX = "+id+" and MOVIE_IDX="+mvIdx+" and IDX="+commIdx+";";
+		}else {
+			plsql+=			" insert into COMMENTS (ACC_IDX, MOVIE_IDX, CONTENTS) values("+id+","+mvIdx+",to_clob('"+comment+"'));";
+		}
+		
 		if(!nullscore) {
 			plsql+=" select count(1)into cnt from MVSCORE where ACC_IDX ="+id+" and MOVIE_IDX ="+mvIdx+";"
 					+" if(cnt=0)"
@@ -112,7 +127,7 @@ public class Gatherer {
 		};
 		
 		
-		return true;
+		return isEdit;
 	}
 	
 	public Pack moreComments(String contextPath, String realPath, String movieIdx, int minCommNum, int maxCommNum) {
@@ -123,10 +138,9 @@ public class Gatherer {
 							+" , M.IDX MOVIE_IDX, M.ENGTITLE MOVIE_ENGTITLE, M.KORTITLE MOVIE_KORTITLE, M.COMM_COUNT MOVIE_COMMCOUNT"
 						+" from ACCOUNT AC"
 						+" inner join"
-						+" (select * from "
-							+ "(select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND, ROWNUM NUM from COMMENTS where MOVIE_IDX="+movieIdx+" order by REG_DATE desc)"
-							+ " where NUM between "+minCommNum+" and "+maxCommNum+") C"
-						+ " on C.ACC_IDX=AC.IDX"
+						+" (select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND, rownum NUM from "
+							+ "(select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND from COMMENTS where MOVIE_IDX="+movieIdx+" order by REG_DATE desc)) C"
+						+ " on C.ACC_IDX=AC.IDX and NUM between "+minCommNum+" and "+maxCommNum
 						+" full outer join (select IDX, ENGTITLE, KORTITLE, COMM_COUNT from MOVIE where IDX = "+movieIdx+") M on 1=2";
 		
 		try {
@@ -140,5 +154,15 @@ public class Gatherer {
 		
 	}
 	
-	
+	public int delComment(String commIdx, String mvIdx, String accIdx) {
+		
+		String sql = "delete from COMMENTS where IDX="+commIdx+" and MOVIE_IDX="+mvIdx+" and ACC_IDX="+accIdx;
+		try {
+			Statement st = conn.createStatement();
+			return st.executeUpdate(sql);
+		}catch (SQLException Noooooo) {
+			Noooooo.printStackTrace();
+			return -1;
+		}
+	}
 }

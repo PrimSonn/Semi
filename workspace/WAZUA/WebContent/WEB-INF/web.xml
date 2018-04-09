@@ -22,7 +22,7 @@
   </context-param>
   <context-param>
     <param-name>Address</param-name>
-    <param-value>http://192.168.0.22:8001</param-value>
+    <param-value>http://192.168.30.52:8001</param-value>
   </context-param>
   <context-param>
     <param-name>sessionCheckAttr</param-name>

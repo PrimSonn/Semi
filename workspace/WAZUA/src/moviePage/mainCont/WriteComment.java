@@ -27,20 +27,38 @@ public class WriteComment extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
-		String mvIdx=null;
+		String mvIdx=null, commIdx=null, isDeleteSt = null, page = null;
+		boolean isDelete = false;
 		ServletContext context = this.getServletContext();
 		mvIdx = request.getParameter("mvIdx");
+		page = request.getParameter("page");
 		Func func = new Func();
+		
+		isDeleteSt = request.getParameter("isDelete");
+		if(isDeleteSt!=null) {
+			isDelete = ("true".matches(isDeleteSt));
+		}
 		
 		if(((Bouncer)context.getAttribute("bouncer")).check(request, response)){
 			if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)) {
 				String id = (String) request.getSession().getAttribute("id");
 				String realPath = (String) context.getAttribute("RealPath");
-				
-				Pack pack = (new Gatherer()).mvCmtInit(context.getContextPath(), realPath, id, mvIdx);
-				request.setAttribute("pack", pack);
-				request.setAttribute("mvIdx", mvIdx);
-				request.getRequestDispatcher(context.getInitParameter("WriteCommentView")).forward(request, response);
+				commIdx = request.getParameter("commIdx");
+				if(isDelete) {
+					int result = new Gatherer().delComment(commIdx, mvIdx, id);
+					System.out.println(result);//-------------------------------------test
+					
+					if(page!=null&&page!="") {
+						response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx+"&page="+page);
+					}else {
+						response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx);
+					}
+				} else {
+					Pack pack = (new Gatherer()).mvCmtInit(context.getContextPath(), realPath, id, mvIdx, commIdx);
+					request.setAttribute("pack", pack);
+					request.setAttribute("mvIdx", mvIdx);
+					request.getRequestDispatcher(context.getInitParameter("WriteCommentView")).forward(request, response);
+				}
 			}else {
 				response.sendRedirect(context.getContextPath()+context.getInitParameter("Main"));
 			}
@@ -57,18 +75,22 @@ public class WriteComment extends HttpServlet {
 		
 //		System.out.println(request.getParameter("comment"));//-----------testcode
 //		System.out.println(request.getParameter("mvIdx"));//----------------test
-		System.out.println(request.getParameter("score"));
+//		System.out.println(request.getParameter("score"));
 		
+		String maxScore = context.getInitParameter("MaxScore");
 		String comment = request.getParameter("comment");
 		String mvIdx = request.getParameter("mvIdx");
 		String score = request.getParameter("score");
-		String maxScore = context.getInitParameter("MaxScore");
-		int intMvIdx;
+		String commIdx = request.getParameter("commIdx");
+		
 		double doubleScore = 0, doubleMaxScore = 5;
 		boolean error = false;
-		boolean nullscore = true;
+		boolean nullscore = false;
+		
 		Func func = new Func();
-		if(score==null|score=="")nullscore=true;
+		
+		
+		if(score==null|score=="") nullscore = true;
 		
 		if(func.isInt(mvIdx)) {
 			
@@ -81,19 +103,20 @@ public class WriteComment extends HttpServlet {
 					error=true;
 				}
 			}
-			try {
-				intMvIdx = Integer.parseInt(mvIdx);
-			}catch(NumberFormatException Noooo) {
-				error=true;
-			}
+			
+			if(!func.isInt(mvIdx)) error=true;
 			
 			if(((Bouncer)context.getAttribute("bouncer")).check(request, response)) {
 				if(error|comment==null|comment.isEmpty()|mvIdx.isEmpty()) {
 					doGet(request,response);
 				} else {
 					String id = (String)request.getSession().getAttribute("id");
-					new Gatherer().mvCmtCommit(id, mvIdx, nullscore, doubleScore, comment);
-					request.getRequestDispatcher(context.getInitParameter("MoviePage")).forward(request, response);
+					if(new Gatherer().mvCmtCommit(id, mvIdx, nullscore, doubleScore, comment, commIdx)) {
+						request.getRequestDispatcher(context.getInitParameter("MoreComments")).forward(request, response);
+					}else {
+						request.getRequestDispatcher(context.getInitParameter("MoviePage")).forward(request, response);
+					}
+					
 				}
 			}//attribute check ends
 			

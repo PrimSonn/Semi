@@ -50,6 +50,7 @@ public class MoreComments extends HttpServlet {
 						int minCommNum = (pageNumber-1)*PAGECOMMAMOUNT+1;
 						int maxCommNum = pageNumber*PAGECOMMAMOUNT;
 						
+						
 						Pack pack = (new Gatherer()).moreComments(context.getContextPath(), realPath,mvIdx,minCommNum,maxCommNum);
 						
 						String comCount = null;

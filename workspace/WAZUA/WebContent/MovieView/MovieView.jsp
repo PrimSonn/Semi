@@ -212,7 +212,7 @@ if(movList!=null){
 			write("</div>");
 		}
 		
-		%><p id='WriteComment'>Write Comment</p><%
+		%><p id='WriteComment'style="display:inline-block;border-style: groove;border-width: 1px;border-color: red;">Write Comment</p><%
 		
 		//Comments
 		if(accList!=null){

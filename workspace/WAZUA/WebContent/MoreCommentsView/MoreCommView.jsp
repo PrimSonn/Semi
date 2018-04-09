@@ -3,15 +3,36 @@
 <%@page import="moviePage.dto.Pack"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+String contextPath = application.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script>
+	window.onload = function(){ 
+		document.getElementById("WriteComment").onclick = function(){
+			var form = document.createElement('form');
+			form.setAttribute('method', 'get');
+			form.setAttribute('action', '<%= contextPath + application.getInitParameter("WriteComment")%>');
+			
+			var hiddenField = document.createElement('input');
+            hiddenField.setAttribute('type', 'hidden');
+            hiddenField.setAttribute('name', 'mvIdx');
+            hiddenField.setAttribute('value', <%=request.getAttribute("mvIdx")%>);
+            form.appendChild(hiddenField);
+            
+		    document.body.appendChild(form);
+		    form.submit();
+		}
+		
+	}
+</script>
 </head>
 <body>
 <%
-String contextPath = application.getContextPath();
 Pack pack = (Pack)request.getAttribute("pack");
 
 //============================== print pack ==================================================
@@ -72,7 +93,9 @@ if(movList!=null){
 				%><div id = MovieTitle><h4>No MovieTItle found</h4></div><%
 			}
 		}
-		%><hr><h4>댓글목록</h4><%
+		
+		%><hr><h4>댓글목록</h4>
+		<p id='WriteComment'style="display:inline-block;border-style: groove;border-width:1px;border-color:red;">Write Comment</p><%
 		
 		if(accList!=null){
 			for(Entity comEnt: accList){//listing comments
@@ -134,6 +157,33 @@ if(movList!=null){
 					<%
 				}//show commenter's name end
 				
+				
+				//edit link
+				propHolder = comEnt.getProperty("COMMIDX");
+				propHolder2 = request.getParameter("page");
+				boolean hasPage = false;
+				hasPage = propHolder2!=null && propHolder2!="";
+				if(propHolder!=null){
+				%>
+				<a href='<%=contextPath+application.getInitParameter("WriteComment")%>?mvIdx=<%=request.getParameter("mvIdx")%>&commIdx=<%=propHolder%><%
+				if(hasPage)out.print("&page="+propHolder2);
+				%>'>Edit Comment</a>
+				<%
+				}else{
+				}
+				
+				//delete link
+				propHolder = comEnt.getProperty("COMMIDX");
+				if(propHolder!=null){
+				%>
+				<a href='<%=contextPath+application.getInitParameter("WriteComment")%>?mvIdx=<%=request.getParameter("mvIdx")%>&isDelete=true&commIdx=<%=propHolder%><%
+				if(hasPage)out.print("&page="+propHolder2);
+				%>'style='color:red;'>Delete Comment</a>
+				<%
+				}else{
+				}
+				
+				
 				//comment contents
 				propHolder = comEnt.getProperty("CONTENTS");
 				if(propHolder!=null){
@@ -158,16 +208,21 @@ if(movList!=null){
 				int startPageNum;
 				int endPageNum;
 				
-				if(pageNum>pageAmount/2){
-					startPageNum = pageNum - pageAmount/2;
-				}else{
+				if(pageNum<=pageAmount/2){
 					startPageNum = 1;
-				}
-				if(pageNum<maxPage-pageAmount/2){
-					endPageNum = pageNum+pageAmount/2;
-				}else{
+					if(maxPage<=pageAmount){
+						endPageNum = maxPage;
+					}else{
+						endPageNum=startPageNum+pageAmount-1;
+					}
+				}else if(pageNum<maxPage-pageAmount/2){
+					startPageNum = pageAmount%2==0 ? pageNum - pageAmount/2+1 : pageNum - pageAmount/2;
+					endPageNum = pageNum + pageAmount/2;
+				} else {
 					endPageNum = maxPage;
+					startPageNum = maxPage-pageAmount+1;
 				}
+				
 				for( ; startPageNum <= endPageNum ; startPageNum++ ){
 					
 					if(startPageNum==pageNum){
