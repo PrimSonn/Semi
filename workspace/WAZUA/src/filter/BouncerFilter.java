@@ -28,16 +28,20 @@ public class BouncerFilter implements javax.servlet.Filter {
 	@Override
 	public void doFilter (ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 		
-		Bouncer bouncer = (Bouncer) context.getAttribute("bouncer");
-		if(bouncer.check((HttpServletRequest)request, (HttpServletResponse)response) ) {
-			 request.getRequestDispatcher(((HttpServletRequest) request).getServletPath()).forward(request, response);
-		} else {
-			try {
-				((HttpServletResponse) response).sendRedirect(contextPath+doorView);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+//		Bouncer bouncer = (Bouncer) context.getAttribute("bouncer");
+//		if(bouncer.check((HttpServletRequest)request, (HttpServletResponse)response) ) {
+//			 request.getRequestDispatcher(((HttpServletRequest) request).getServletPath()).forward(request, response);
+//		} else {
+//			try {
+//				((HttpServletResponse) response).sendRedirect(contextPath+doorView);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
+		System.out.println("Bouncer Filter Acted! id: "+(String)((HttpServletRequest)request).getSession().getAttribute("id"));
+		
+		filterChain.doFilter(request, response);
 	}
 
 }

@@ -110,17 +110,17 @@ if(movList!=null&&accList!=null){
 			<form action="<%=application.getContextPath()+application.getInitParameter("WriteComment")%>"id='form'method='post'>
 				<textarea rows="20"cols="130"name='comment'><%if(isEdit)out.print(propHolder2);%></textarea><br>
 				<input type='hidden'name='mvIdx'value='<%=(String)request.getAttribute("mvIdx")%>'>
-				<%if(isEdit)
+				<%if(isEdit){
 					%><input type='hidden'name='commIdx'value='<%=propHolder%>'><%
-					;%>
-				<p>(선택)점수를 입력하세요(0~<%=application.getInitParameter("MaxScore")%>)</p>
+				}
+				%><p>(선택)점수를 입력하세요(0~<%=application.getInitParameter("MaxScore")%>)</p>
 				<%
 				if(propHolder3!=null&&propHolder3!="")
 				%>
 				<input type='hidden'name='page'value='<%=propHolder3%>'/>
 				<%; %>
 				<input type='number'name='score'min='0'max='<%=application.getInitParameter("MaxScore")%>'step='0.1'>
-				<input type='submit'value='Commit!'>
+				<input type='submit'value='Write!'>
 			</form>
 		</div>
 		<%

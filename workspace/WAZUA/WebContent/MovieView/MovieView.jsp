@@ -76,18 +76,16 @@ public void write (String s)throws IOException {
 public void putProp (Entity ent,String tag) {	
 	try{
 		propHolder = ent.getProperty(tag);
+		write("<div id=/'"+capital(tag)+"\''>");
 		if(propHolder!=null){
-			write("<div id=\'"+capital(tag)+"\'>");
-				write("<p id=\'"+capital(tag)+" Ptag\'>");
-					write(capital(tag)+": "+propHolder);
-				write("</p>");
-			write("</div>");
+			write("<p id=\'"+capital(tag)+" Ptag\'>");
+				write(capital(tag)+": "+propHolder);
+			write("</p>");
 		}else{
 			System.out.println(tag+"==null");
-			write("<div id=\'"+capital(tag)+"\'>");
 			write("<p id=\'"+capital(tag)+" Ptag\'></p>");
-			write("</div>");
 		}
+		write("</div>");
 	} catch(IOException o_0){
 	}
 }
@@ -95,18 +93,16 @@ public void putProp (Entity ent,String tag) {
 public void putPropNoName (Entity ent,String tag) {	
 	try{
 		propHolder = ent.getProperty(tag);
+		write("<div id=/'"+capital(tag)+"\''>");
 		if(propHolder!=null){
-			write("<div id=\'"+capital(tag)+"\'>");
-				write("<p id=\'"+capital(tag)+" Ptag\'>");
-					write(propHolder);
-				write("</p>");
-			write("</div>");
+			write("<p id=\'"+capital(tag)+" Ptag\'>");
+				write(propHolder);
+			write("</p>");
 		}else{
 			System.out.println(tag+"==null");
-			write("<div id=\'"+capital(tag)+"\'>");
 			write("<p id=\'"+capital(tag)+" Ptag\'></p>");
-			write("</div>");
 		}
+		write("</div>");
 	} catch(IOException o_0){
 	}
 }

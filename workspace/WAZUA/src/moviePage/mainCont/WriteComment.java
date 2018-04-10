@@ -38,30 +38,27 @@ public class WriteComment extends HttpServlet {
 			isDelete = ("true".matches(isDeleteSt));
 		}
 		
-		if(((Bouncer)context.getAttribute("bouncer")).check(request, response)){
-			if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)) {
-				String id = (String) request.getSession().getAttribute("id");
-				commIdx = request.getParameter("commIdx");
-				if(isDelete) {
-					int result = new Gatherer().delComment(commIdx, mvIdx, id);
-					System.out.println(result);//-------------------------------------test
-					
-					if(page!=null&&page!="") {
-						response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx+"&page="+page);
-					}else {
-						response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx);
-					}
-				} else {
-					Pack pack = (new Gatherer()).mvCmtInit(context.getContextPath(), context.getRealPath("/"), id, mvIdx, commIdx);
-					request.setAttribute("pack", pack);
-					request.setAttribute("mvIdx", mvIdx);
-					request.getRequestDispatcher(context.getInitParameter("WriteCommentView")).forward(request, response);
+		if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)) {
+			String id = (String) request.getSession().getAttribute("id");
+			commIdx = request.getParameter("commIdx");
+			if(isDelete) {
+				int result = new Gatherer().delComment(commIdx, mvIdx, id);
+				System.out.println(result);//-------------------------------------test
+				
+				if(page!=null&&page!="") {
+					response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx+"&page="+page);
+				}else {
+					response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx);
 				}
-			}else {
-				response.sendRedirect(context.getContextPath()+context.getInitParameter("Main"));
+			} else {
+				Pack pack = (new Gatherer()).mvCmtInit(context.getContextPath(), context.getRealPath("/"), id, mvIdx, commIdx);
+				request.setAttribute("pack", pack);
+				request.setAttribute("mvIdx", mvIdx);
+				request.getRequestDispatcher(context.getInitParameter("WriteCommentView")).forward(request, response);
 			}
-		}//no else. if bouncer check was false, request has already redirected to DoorView
-		
+		}else {
+			response.sendRedirect(context.getContextPath()+context.getInitParameter("Main"));
+		}
 	}
 
 

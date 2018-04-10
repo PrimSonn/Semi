@@ -30,7 +30,11 @@
 <div>
 	SignInDriver
 	<hr>
-	<button id='SignIn'>SignInAs ID#1</button>
+<!-- 	<button id='SignIn'>SignInAs ID#1</button> -->
+	<form method='post'action='<%= application.getContextPath() + application.getInitParameter("SignIn")%>'>
+		<input type='number'name='id'min='1'max='3'step='1'>
+		<input type='submit'value='SignIn'>
+	</form>
 </div>
 
 </body>

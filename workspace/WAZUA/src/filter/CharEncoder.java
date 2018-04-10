@@ -24,7 +24,6 @@ public class CharEncoder implements javax.servlet.Filter{
 	
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 		
-		System.out.println("filter acted!!");//------------------test
 		if(CharEncoder.encoding!=null) {
 			request.setCharacterEncoding(CharEncoder.encoding);
 			response.setCharacterEncoding(CharEncoder.encoding);

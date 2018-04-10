@@ -1,3 +1,4 @@
+<%@page import="java.io.IOException"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="moviePage.dto.entities.Entity"%>
 <%@page import="moviePage.dto.Pack"%>
@@ -60,39 +61,96 @@ ArrayList<String> imgListHolder = null;
 String propHolder=null, propHolder2=null;
 Entity movie=null;
 
+%><%! 
+String propHolder=null, propHolder2=null;
+JspWriter writer = null;
+Entity movie=null;
 
+public String capital(String s){
+	return s=s.substring(0, 1).toUpperCase()+s.substring(1).toLowerCase();
+}
+
+public void write (String s)throws IOException {
+		writer.print(s);
+}
+
+public void putProp (Entity ent,String tag) {	
+	try{
+		propHolder = ent.getProperty(tag);
+		write("<div id=/'"+capital(tag)+"\''>");
+		if(propHolder!=null){
+			write("<p id=\'"+capital(tag)+" Ptag\'>");
+				write(capital(tag)+": "+propHolder);
+			write("</p>");
+		}else{
+			System.out.println(tag+"==null");
+			write("<p id=\'"+capital(tag)+" Ptag\'></p>");
+		}
+		write("</div>");
+	} catch(IOException o_0){
+	}
+}
+
+public void putPropNoName (Entity ent,String tag) {	
+	try{
+		propHolder = ent.getProperty(tag);
+		write("<div id=/'"+capital(tag)+"\''>");
+		if(propHolder!=null){
+			write("<p id=\'"+capital(tag)+" Ptag\'>");
+				write(propHolder);
+			write("</p>");
+		}else{
+			System.out.println(tag+"==null");
+			write("<p id=\'"+capital(tag)+" Ptag\'></p>");
+		}
+		write("</div>");
+		
+	} catch(IOException o_0){
+	}
+}
+
+%><%
+writer = out;
+String mvIdx = request.getParameter("mvIdx");
 
 if(movList!=null){
 	for(Entity movies: movList){
-		if(movies.getIdx().matches(request.getParameter("mvIdx"))){
+		if(movies.getIdx().matches(mvIdx)){
 			movie = movies;
 			break;
 		}
 	}
 	if(movie!=null){
+		
 		//poster
+		%><div id = MoviePoster><a href='<%=contextPath + application.getInitParameter("MoviePage")%>?mvIdx=<%=mvIdx%>'><%
 		imgListHolder= movie.getImgs("poster");
 		propHolder = (String)application.getAttribute("Nullposter");
 		if(imgListHolder!=null){
-			%><div id = MoviePoster><img src ='<%=imgListHolder.get(0)%>'></div><%
+			%><img src ='<%=imgListHolder.get(0)%>'><%
 		}else if(propHolder!=null){
-			%><div id = MoviePoster><img src ='<%=propHolder%>'></div><%
+			%><img src ='<%=propHolder%>'><%
 		}else{
 			System.out.println("movie poster null!");//------------------------------------------test
-			%><div id = MoviePoster><h4>Sorry, no poster found</h4></div><%
+			%><h4>Sorry, no poster found</h4><%
 		}
+		%></a></div><%
+		
+		
 		//ENGTITLE + KORTITLE
+		%><div id = MovieTitle><%
 		propHolder = movie.getProperty("ENGTITLE");
 		propHolder2 = movie.getProperty("KORTITLE");
 		if(propHolder!=null){
-			%><div id = MovieTitle><h4><%=propHolder%> (<%=propHolder2%>)</h4></div><%
+			%><h4><%=propHolder%> (<%=propHolder2%>)</h4><%
 		}else{
 			if(propHolder2!=null){
-				%><div id = MovieTitle><h4><%=propHolder2%></h4></div><%
+				%><h4><%=propHolder2%></h4><%
 			}else{
-				%><div id = MovieTitle><h4>No MovieTItle found</h4></div><%
+				%><h4>No MovieTItle found</h4><%
 			}
 		}
+		%></div><%	
 		
 		%><hr><h4>댓글목록</h4>
 		<p id='WriteComment'style="display:inline-block;border-style: groove;border-width:1px;border-color:red;">Write Comment</p><%
@@ -101,61 +159,27 @@ if(movList!=null){
 			for(Entity comEnt: accList){//listing comments
 				
 				propHolder2=(String)application.getAttribute("Nullthumb");
-				////show commenter's thumbnail
+				
+				//show commenter's thumbnail
+				%><div id='Comment Thumb'><%
 				if(comEnt.getImgs("thumb")!=null){
 					propHolder=comEnt.getImgs("thumb").get(0);
-					%>
-					<div id='Comment Thumb'><img src='<%=propHolder%>'/></div>
-					<%
+					%><img src='<%=propHolder%>'/><%
 				}else if(propHolder2!=null){//when there's no thumbnail on this guy.
-					%>
-					<div id='Comment Thumb'><img src='<%=propHolder2%>'/></div>
-					<%
+					%><img src='<%=propHolder2%>'/><%
 				}else{//no thumbnail, no contextAttribute thumbnail ready
-					%>
-					<div id='Comment Thumb'></div>
-					<%
-				}//show commenter's thumbnail ends
+				}
+				%></div><%
+				//show commenter's thumbnail ends
 				
 				//show commenter's name
-				propHolder = comEnt.getProperty("NAME");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Name'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Name'></div>
-					<%
-				}//show commenter's name ends
-				
-				//commenter's score
-				//-----------------
+				putPropNoName(comEnt,"NAME");
 				
 				//comment's SCORE
-				propHolder = comEnt.getProperty("SCORE");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Score'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Score'></div>
-					<%
-				}//show commenter's name end
-				
+				putPropNoName(comEnt,"SCORE");
 				
 				//comment's REGDATE
-				propHolder = comEnt.getProperty("REGDATE");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Regdate'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Regdate'></div>
-					<%
-				}//show commenter's name end
+				putPropNoName(comEnt,"REGDATE");
 				
 				
 				//edit link
@@ -183,22 +207,13 @@ if(movList!=null){
 				}else{
 				}
 				
-				
 				//comment contents
-				propHolder = comEnt.getProperty("CONTENTS");
-				if(propHolder!=null){
-					%>
-					<div id='Comment Contents'><%=propHolder%></div>
-					<%
-				}else{//when there's no name on this guy.
-					%>
-					<div id='Comment Contents'></div>
-					<%
-				}//comment contents end
+				putPropNoName(comEnt,"CONTENTS");
 				
 			}//comment listing for ends
 			
 			
+			//-----paging start
 			try{
 				int pageAmount = (int)application.getAttribute("pageAmount");
 				int pageNum =(int)request.getAttribute("pageNumber");
@@ -225,7 +240,9 @@ if(movList!=null){
 				
 				//writing page link
 				
-				if(startPageNum>1)%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=1'>&lt&lt</a></p><%;
+				if(startPageNum>1){
+				%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=1'>&lt&lt</a></p><%
+				}
 					
 				for( ; startPageNum<= endPageNum ; startPageNum++ ){//write page moving link for statement start
 					
@@ -237,7 +254,9 @@ if(movList!=null){
 					
 				}//end of writing page for statement
 				
-				if(endPageNum<maxPage)%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=<%=maxPage%>'>&gt&gt</a></p><% ;
+				if(endPageNum<maxPage){
+				%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=<%=maxPage%>'>&gt&gt</a></p><%
+				}
 				
 				//End of writing page link
 				
@@ -245,7 +264,7 @@ if(movList!=null){
 			}catch(NullPointerException e){
 				System.out.println("Null pointer while setting page number setting on more comment view!");
 			}
-			
+			//---end of paging
 			
 		}else{
 			System.err.println("No Comment found!");

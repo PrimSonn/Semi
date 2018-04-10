@@ -36,61 +36,58 @@ public class MoreComments extends HttpServlet {
 		Func func = new Func();
 		
 		
-		if(((Bouncer)context.getAttribute("bouncer")).check(request, response)){
+		if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)&func.isInt(id)) {
 			
-			if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)&func.isInt(id)) {
+			if(page!=null&&page!=""&func.isNumber(page)) {
 				
-				if(page!=null&&page!=""&func.isNumber(page)) {
+				int pageNumber;
+				
+				try {
+					pageNumber = Integer.parseInt(page);
+					int minCommNum = (pageNumber-1)*PAGECOMMAMOUNT+1;
+					int maxCommNum = pageNumber*PAGECOMMAMOUNT;
 					
-					int pageNumber;
 					
-					try {
-						pageNumber = Integer.parseInt(page);
-						int minCommNum = (pageNumber-1)*PAGECOMMAMOUNT+1;
-						int maxCommNum = pageNumber*PAGECOMMAMOUNT;
-						
-						
-						Pack pack = (new Gatherer()).moreComments(context.getContextPath(), context.getRealPath("/") ,mvIdx,minCommNum,maxCommNum);
-						
-						String comCount = null;
-						for(Entity mv: pack.getList("MOVIE")) {
-							if( mvIdx.matches(mv.getIdx()) ) {
-								comCount= mv.getProperty("COMMCOUNT");
-								break;
-							}
+					Pack pack = (new Gatherer()).moreComments(context.getContextPath(), context.getRealPath("/") ,mvIdx,minCommNum,maxCommNum);
+					
+					String comCount = null;
+					for(Entity mv: pack.getList("MOVIE")) {
+						if( mvIdx.matches(mv.getIdx()) ) {
+							comCount= mv.getProperty("COMMCOUNT");
+							break;
 						}
-						if(comCount!=null) {
-							
-							int intComCount = Integer.parseInt(comCount);
-							request.setAttribute("COMMCOUNT", intComCount);
-							request.setAttribute("PAGECOMMAMOUNT", PAGECOMMAMOUNT);
-							request.setAttribute("pageNumber", pageNumber);
-							request.setAttribute("pack", pack);
-							request.setAttribute("mvIdx", mvIdx);
-							
-							request.getRequestDispatcher(context.getInitParameter("MoreCommentsView")).forward(request, response);
-							
-						}else {
-							System.out.println("No CommCount!!!!!");
-							//send back to moviepage
-						}
+					}
+					if(comCount!=null) {
 						
-					} catch(NumberFormatException e) {
-						System.out.println("Wrong Page Number or CommCount, parsing failed");
-						//forward to Movie page
-					} catch(Exception Noooooo) {
-						System.out.println("Exception occured on MoreComments page!!!!!!!!!!!!");
-						//forward to main?? movie??
-					}//try catch ends
+						int intComCount = Integer.parseInt(comCount);
+						request.setAttribute("COMMCOUNT", intComCount);
+						request.setAttribute("PAGECOMMAMOUNT", PAGECOMMAMOUNT);
+						request.setAttribute("pageNumber", pageNumber);
+						request.setAttribute("pack", pack);
+						request.setAttribute("mvIdx", mvIdx);
+						
+						request.getRequestDispatcher(context.getInitParameter("MoreCommentsView")).forward(request, response);
+						
+					}else {
+						System.out.println("No CommCount!!!!!");
+						//send back to moviepage
+					}
 					
-				}else {// if page parameter check failed
-					// forward to MoviePAge?
-				}
-			}else {// mvIdx, id check failed
-				response.sendRedirect(context.getContextPath()+context.getInitParameter("Main"));
+				} catch(NumberFormatException e) {
+					System.out.println("Wrong Page Number or CommCount, parsing failed");
+					//forward to Movie page
+				} catch(Exception Noooooo) {
+					System.out.println("Exception occured on MoreComments page!!!!!!!!!!!!");
+					//forward to main?? movie??
+				}//try catch ends
+				
+			}else {// if page parameter check failed
+				// forward to MoviePAge?
 			}
-		}//no else. if bouncer check failed, request has already redirected to DoorView
-		
+		}else {// mvIdx, id check failed
+			response.sendRedirect(context.getContextPath()+context.getInitParameter("Main"));
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
