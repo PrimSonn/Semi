@@ -1,0 +1,115 @@
+"OWNER","TABLE_NAME","COLUMN_NAME","QUALIFIED_COL_NAME","COMMENTS","DATA_TYPE","DATA_LENGTH","DATA_PRECISION","NULLABLE","DATA_DEFAULT","CHARACTER_SET_NAME","CHAR_LENGTH"
+"WAZUA","ACCOUNT","EMAIL","EMAIL","이메일","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","ACCOUNT","IDX","IDX","회원번호","NUMBER",22,9,"N","","",0
+"WAZUA","ACCOUNT","IMG","IMG","프로필이미지","VARCHAR2",255,,"Y","'-'
+	","CHAR_CS",255
+"WAZUA","ACCOUNT","DEL_FLAG","DEL_FLAG","삭제플래그","VARCHAR2",100,,"Y","'N'
+	","CHAR_CS",100
+"WAZUA","ACCOUNT","LEFT_DATE","LEFT_DATE","탈퇴일자","TIMESTAMP(6)",11,,"Y","","",0
+"WAZUA","ACCOUNT","REG_DATE","REG_DATE","가입일자","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","ACCOUNT","WAZLV_IDX","WAZLV_IDX","회원등급 - 참조","NUMBER",22,3,"Y","","",0
+"WAZUA","ACCOUNT","PW","PW","비밀번호","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","ACCOUNT","NAME","NAME","이름","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","ACCOUNT","BIRTH","BIRTH","생년월일","DATE",7,,"N","","",0
+"WAZUA","ANNOUNCE","ISEVENT","ISEVENT","공지사항과 이벤트 구분 0=공지사항 1=이벤트","NUMBER",22,1,"N","","",0
+"WAZUA","ANNOUNCE","REG_DATE","REG_DATE","등록시간 +복합 주 키","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","ANNOUNCE","VIEWCOUNT","VIEWCOUNT","조회수","NUMBER",22,11,"Y","0
+	","",0
+"WAZUA","ANNOUNCE","ACC_IDX","ACC_IDX","등록한 계정 +복합 주 키 + 외래키 (관리자 계정도 ACCOUNT 테이블에 있다고 일단 가정함","NUMBER",22,9,"N","","",0
+"WAZUA","ANNOUNCE","TITLE","TITLE","제목","VARCHAR2",200,,"Y","''
+	","CHAR_CS",200
+"WAZUA","ANNOUNCE","CONTENTS","CONTENTS","내용","CLOB",4000,,"Y","''
+	","CHAR_CS",0
+"WAZUA","COMMENTS","REF_IDX","REF_IDX","","NUMBER",22,12,"Y","","",0
+"WAZUA","COMMENTS","IDX","IDX","코멘트식별번호","NUMBER",22,12,"N","","",0
+"WAZUA","COMMENTS","ACC_IDX","ACC_IDX","회원번호(참조키)","NUMBER",22,9,"N","","",0
+"WAZUA","COMMENTS","ISBLIND","ISBLIND","블라인드","VARCHAR2",100,,"Y","","CHAR_CS",100
+"WAZUA","COMMENTS","CONTENTS","CONTENTS","코멘트내용","CLOB",4000,,"N","","CHAR_CS",0
+"WAZUA","COMMENTS","REG_DATE","REG_DATE","등록일자","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","COMMENTS","MOVIE_IDX","MOVIE_IDX","영화번호(참조키)","NUMBER",22,8,"N","","",0
+"WAZUA","INQUIRE","IDX","IDX","문의번호","NUMBER",22,9,"N","","",0
+"WAZUA","INQUIRE","ACC_IDX","ACC_IDX","회원번호(참조키)","NUMBER",22,9,"N","","",0
+"WAZUA","INQUIRE","CONTENTS","CONTENTS","문의내용","CLOB",4000,,"N","","CHAR_CS",0
+"WAZUA","INQUIRE","RESPONSE","RESPONSE","답변내용","CLOB",4000,,"Y","","CHAR_CS",0
+"WAZUA","INQUIRE","REG_DATE","REG_DATE","문의일자","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","INQUIRE","RES_DATE","RES_DATE","답변일자","TIMESTAMP(6)",11,,"Y","","",0
+"WAZUA","MOVGENRE_MAP","MOV_IDX","MOV_IDX","영화 식별 코드 - 외래키","NUMBER",22,8,"N","","",0
+"WAZUA","MOVGENRE_MAP","GENRE_IDX","GENRE_IDX","장르 키 - 외래키","NUMBER",22,3,"N","","",0
+"WAZUA","MOVGUYS","IDX","IDX","식별번호","NUMBER",22,7,"N","","",0
+"WAZUA","MOVGUYS","NAME","NAME","이름","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","MOVGUYS_MAPPING","ROLE","ROLE","역할, 감독이냐 배우냐 등등","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","MOVGUYS_MAPPING","MOVGUYS_IDX","MOVGUYS_IDX","인물 식별 코드 - 외래키 + 복합 주 키","NUMBER",22,7,"N","","",0
+"WAZUA","MOVGUYS_MAPPING","MOV_IDX","MOV_IDX","영화 식별 코드 - 외래키 + 복합 주 키","NUMBER",22,8,"N","","",0
+"WAZUA","MOVGUYS_MAPPING","CHARACTER","CHARACTER","배역","VARCHAR2",50,,"Y","''
+	","CHAR_CS",50
+"WAZUA","MOVIE","IDX","IDX","영화번호","NUMBER",22,8,"N","","",0
+"WAZUA","MOVIE","KORTITLE","KORTITLE","영화제목(한글)","VARCHAR2",500,,"N","","CHAR_CS",500
+"WAZUA","MOVIE","ENGTITLE","ENGTITLE","원제","VARCHAR2",500,,"N","","CHAR_CS",500
+"WAZUA","MOVIE","COUNTRY","COUNTRY","제작국가","VARCHAR2",100,,"N","","CHAR_CS",100
+"WAZUA","MOVIE","RELEASEDATE","RELEASEDATE","개봉일자","DATE",7,,"N","","",0
+"WAZUA","MOVIE","RATING","RATING","연령등급","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","MOVIE","PLAYTIME","PLAYTIME","영화의 길이","VARCHAR2",50,,"N","","CHAR_CS",50
+"WAZUA","MOVIE","VIEWCOUNT","VIEWCOUNT","시청(평가)수","NUMBER",22,9,"Y","0
+	","",0
+"WAZUA","MOVIE","OUTLINE","OUTLINE","줄거리","CLOB",4000,,"Y","''
+	","CHAR_CS",0
+"WAZUA","MOVIE","TICKETSOLD","TICKETSOLD","관람객수","NUMBER",22,8,"Y","0
+	","",0
+"WAZUA","MOVIE","PRICE","PRICE","가격","NUMBER",22,7,"Y","0
+	","",0
+"WAZUA","MOVIE","TOT_SCORE","TOT_SCORE","총점","BINARY_DOUBLE",8,,"Y","0
+	","",0
+"WAZUA","MOVIE","SCORE_COUNT","SCORE_COUNT","총 평가 갯수","NUMBER",22,9,"Y","0
+	","",0
+"WAZUA","MOVIE","COMM_COUNT","COMM_COUNT","총 코멘트 수","NUMBER",22,7,"Y","0
+	","",0
+"WAZUA","MOVIE_IMG","MOVIE_IDX","MOVIE_IDX","영화번호(참조키)","NUMBER",22,8,"N","","",0
+"WAZUA","MOVIE_IMG","POSTER","POSTER","포스터","VARCHAR2",255,,"N","","CHAR_CS",255
+"WAZUA","MOVIE_IMG","THUM","THUM","썸네일","VARCHAR2",255,,"N","","CHAR_CS",255
+"WAZUA","MOVIE_IMG","SC1","SC1","스틸컷1","VARCHAR2",255,,"N","","CHAR_CS",255
+"WAZUA","MOVIE_IMG","SC2","SC2","스틸컷2","VARCHAR2",255,,"N","","CHAR_CS",255
+"WAZUA","MOVIE_IMG","SC5","SC5","스틸컷5","VARCHAR2",255,,"Y","'-'
+	","CHAR_CS",255
+"WAZUA","MOVIE_IMG","SC3","SC3","스틸컷3","VARCHAR2",255,,"Y","'-'
+	","CHAR_CS",255
+"WAZUA","MOVIE_IMG","SC4","SC4","스틸컷4","VARCHAR2",255,,"Y","'-'
+	","CHAR_CS",255
+"WAZUA","MOV_GENRE","IDX","IDX","인덱스 + 주 키","NUMBER",22,3,"N","","",0
+"WAZUA","MOV_GENRE","GENRE","GENRE","영화 장르(태그)","CHAR",30,,"N","","CHAR_CS",30
+"WAZUA","MVSCORE","ACC_IDX","ACC_IDX","계정식별 번호 - 참조키 + 복합 주 키","NUMBER",22,9,"N","","",0
+"WAZUA","MVSCORE","MOVIE_IDX","MOVIE_IDX","영화식별 번호 - 참조키 + 복합 주 키","NUMBER",22,8,"N","","",0
+"WAZUA","MVSCORE","SCORE","SCORE","점수","BINARY_DOUBLE",8,,"N","","",0
+"WAZUA","POSSESION","IDX","IDX","인덱스 +주 키","NUMBER",22,10,"N","","",0
+"WAZUA","POSSESION","ACC_IDX","ACC_IDX","계정번호 + 외래키","NUMBER",22,9,"Y","","",0
+"WAZUA","POSSESION","PRODUCTS_IDX","PRODUCTS_IDX","상품번호 + 외래키","NUMBER",22,8,"Y","","",0
+"WAZUA","POSSESION","REG_DATE","REG_DATE","등록일자 - 트리거로 관리","TIMESTAMP(6)",11,,"Y","","",0
+"WAZUA","POSSESION","EXPDATE","EXPDATE","기간이 있는 제품의 경우 만료일 등록","TIMESTAMP(6)",11,,"Y","","",0
+"WAZUA","POSSESION","ISUSED","ISUSED","사용여부 처음 이 상품이 사용된 시간 기록","TIMESTAMP(6)",11,,"Y","","",0
+"WAZUA","PRODUCTS","IDX","IDX","상품번호(식별) +주 키","NUMBER",22,8,"N","","",0
+"WAZUA","PRODUCTS","MOV_IDX","MOV_IDX","영화번호(개별구매영화) +외래키, 월결제시 null, 혹시 나중에 개별영화를 기간을 두고 구매 가능하게 할 때에도 사용 가능","NUMBER",22,8,"Y","","",0
+"WAZUA","PRODUCTS","DURATION","DURATION","유효기간, 일단 월결제 용","TIMESTAMP(6)",11,,"Y","","",0
+"WAZUA","PRODUCTS","PRICE","PRICE","가격","NUMBER",22,7,"N","","",0
+"WAZUA","REPORT","IDX","IDX","신고식별번호","NUMBER",22,12,"N","","",0
+"WAZUA","REPORT","DEALT","DEALT","조치내용","VARCHAR2",200,,"N","","CHAR_CS",200
+"WAZUA","REPORT","REPORT_DATE","REPORT_DATE","신고일자","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","REPORT","COMM_IDX","COMM_IDX","코멘트번호(참조키)","NUMBER",22,12,"N","","",0
+"WAZUA","REPORT","ACC_IDX","ACC_IDX","회원번호(참조키)","NUMBER",22,9,"N","","",0
+"WAZUA","TRAILERS","IDX","IDX","영상식별번호","NUMBER",22,9,"N","","",0
+"WAZUA","TRAILERS","MOVIE_IDX","MOVIE_IDX","영화번호(참조키)","NUMBER",22,8,"N","","",0
+"WAZUA","TRAILERS","TRAILER_FILE","TRAILER_FILE","파일이름","VARCHAR2",200,,"N","","CHAR_CS",200
+"WAZUA","TRAILERS","TRAILER_TITLE","TRAILER_TITLE","영상제목","VARCHAR2",200,,"N","","CHAR_CS",200
+"WAZUA","WATCHEDLIST","TIMEWHEN","TIMEWHEN","마지막으로 본 시간 기록 + 복합 주 키","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","WATCHEDLIST","MOVIE_IDX","MOVIE_IDX","계정 +외래키","NUMBER",22,8,"N","","",0
+"WAZUA","WATCHEDLIST","ACC_IDX","ACC_IDX","계정 + 복합 주 키 +외래키 ","NUMBER",22,9,"N","","",0
+"WAZUA","WAZLEVEL","IDX","IDX","인덱스 + 주 키","NUMBER",22,3,"N","","",0
+"WAZUA","WAZLEVEL","LEVEL_NAME","LEVEL_NAME","레벨명","CHAR",25,,"Y","","CHAR_CS",25
+"WAZUA","WAZPOINT","IDX","IDX","식별번호","NUMBER",22,11,"N","","",0
+"WAZUA","WAZPOINT","GIVEN_DATE","GIVEN_DATE","부여일자","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","WAZPOINT","EXP_DATE","EXP_DATE","만료일자","TIMESTAMP(6)",11,,"N","","",0
+"WAZUA","WAZPOINT","ACC_IDX","ACC_IDX","회원번호(참조키)","NUMBER",22,9,"N","","",0
+"WAZUA","WAZPOINT","INIT_POINTS","INIT_POINTS","해당 묶음의 초기 포인트","NUMBER",22,8,"N","","",0
+"WAZUA","WAZPOINT","LEFT_POINTS","LEFT_POINTS","해당 묶음의 잔여 포인트","NUMBER",22,8,"N","","",0
+"WAZUA","WAZPOINT","GIVEN_FOR","GIVEN_FOR","부여사유","VARCHAR2",200,,"N","","CHAR_CS",200
+"WAZUA","WISH_LIST","ACC_IDX","ACC_IDX","회원번호(참조키)","NUMBER",22,9,"N","","",0
+"WAZUA","WISH_LIST","MOVIE_IDX","MOVIE_IDX","영화번호(참조키)","NUMBER",22,8,"N","","",0
+"WAZUA","WISH_LIST","FLAG","FLAG","플래그","VARCHAR2",200,,"N","","CHAR_CS",200
