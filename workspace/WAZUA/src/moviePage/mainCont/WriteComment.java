@@ -25,7 +25,6 @@ public class WriteComment extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
 		
 		String mvIdx=null, commIdx=null, isDeleteSt = null, page = null;
 		boolean isDelete = false;
@@ -42,7 +41,6 @@ public class WriteComment extends HttpServlet {
 		if(((Bouncer)context.getAttribute("bouncer")).check(request, response)){
 			if(mvIdx!=null&&!mvIdx.isEmpty()&func.isInt(mvIdx)) {
 				String id = (String) request.getSession().getAttribute("id");
-				String realPath = (String) context.getAttribute("RealPath");
 				commIdx = request.getParameter("commIdx");
 				if(isDelete) {
 					int result = new Gatherer().delComment(commIdx, mvIdx, id);
@@ -54,7 +52,7 @@ public class WriteComment extends HttpServlet {
 						response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx);
 					}
 				} else {
-					Pack pack = (new Gatherer()).mvCmtInit(context.getContextPath(), realPath, id, mvIdx, commIdx);
+					Pack pack = (new Gatherer()).mvCmtInit(context.getContextPath(), context.getRealPath("/"), id, mvIdx, commIdx);
 					request.setAttribute("pack", pack);
 					request.setAttribute("mvIdx", mvIdx);
 					request.getRequestDispatcher(context.getInitParameter("WriteCommentView")).forward(request, response);

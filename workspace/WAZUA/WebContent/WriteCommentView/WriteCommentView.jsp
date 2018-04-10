@@ -17,7 +17,7 @@ String contextPath = application.getContextPath();
 
 Pack pack = (Pack)request.getAttribute("pack");
 //============================== print pack ==================================================
-
+/*
 for(String key : pack.getKeys()) { %>
 	<Div><%=key %>
 	<% for(Entity e :pack.getList(key)){ %>
@@ -34,7 +34,7 @@ for(String key : pack.getKeys()) { %>
 %>
 <hr><br>
 <%
-
+*/
 //================================================================================
 
 ArrayList<Entity> movList = pack.getList("MOVIE");

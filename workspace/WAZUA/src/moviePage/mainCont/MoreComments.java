@@ -28,7 +28,6 @@ public class MoreComments extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		ServletContext context = this.getServletContext();
-		String realPath = (String) context.getAttribute("RealPath");
 		
 		String mvIdx = request.getParameter("mvIdx");
 		String page = request.getParameter("page");
@@ -51,7 +50,7 @@ public class MoreComments extends HttpServlet {
 						int maxCommNum = pageNumber*PAGECOMMAMOUNT;
 						
 						
-						Pack pack = (new Gatherer()).moreComments(context.getContextPath(), realPath,mvIdx,minCommNum,maxCommNum);
+						Pack pack = (new Gatherer()).moreComments(context.getContextPath(), context.getRealPath("/") ,mvIdx,minCommNum,maxCommNum);
 						
 						String comCount = null;
 						for(Entity mv: pack.getList("MOVIE")) {

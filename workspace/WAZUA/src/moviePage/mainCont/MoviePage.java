@@ -18,15 +18,13 @@ public class MoviePage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
 		
 		ServletContext context = this.getServletContext();
 		String id = (String) request.getSession().getAttribute("id");
 		String mvIdx = request.getParameter("mvIdx");
-		String realPath = (String) context.getAttribute("RealPath");
 		
 		
-		Pack pack = (new Gatherer()).getThings(context.getContextPath(),realPath,id,mvIdx);
+		Pack pack = (new Gatherer()).getThings(context.getContextPath(),context.getRealPath("/"),id,mvIdx);
 		
 		request.setAttribute("pack", pack);
 		request.setAttribute("mvIdx", mvIdx);

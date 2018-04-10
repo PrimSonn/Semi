@@ -19,7 +19,6 @@ public class SignInCont extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		//---------------test driver..need proper signin
-		System.out.println(request.getParameter("id"));
 		String id = request.getParameter("id");
 		request.getSession().setAttribute("id", id);
 		response.sendRedirect(this.getServletContext().getContextPath()+this.getServletContext().getInitParameter("Main"));

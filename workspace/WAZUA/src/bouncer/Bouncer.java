@@ -15,14 +15,14 @@ public class Bouncer {
 	public Bouncer(String DoorViewView,String ContextPath, String id) {
 		Bouncer.DoorView = DoorViewView;
 		Bouncer.ContextPath = ContextPath;
-		this.id=id;
+		Bouncer.id=id;
 	}
 	
 	@SuppressWarnings("finally")
 	public boolean check(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		if(session !=null) {
-			if(session.getAttribute("id")!=null) {
+			if(session.getAttribute(id)!=null) {
 				return true;
 			}
 		}

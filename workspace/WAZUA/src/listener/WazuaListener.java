@@ -9,6 +9,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import bouncer.Bouncer;
+import filter.CharEncoder;
 import moviePage.dao.Gatherer;
 import moviePage.dto.Packer;
 import moviePage.func.Func;
@@ -20,12 +21,14 @@ public class WazuaListener implements ServletContextListener{
 		
 		ServletContext context = sce.getServletContext();
 		
-		context.setRequestCharacterEncoding("utf-8");
-		context.setResponseCharacterEncoding("utf-8");
+//		context.setRequestCharacterEncoding("utf-8");
+//		context.setResponseCharacterEncoding("utf-8");
 		
 		Bouncer bouncer = new Bouncer(context.getInitParameter("DoorView"),context.getContextPath(),context.getInitParameter("sessionCheckAttr"));
 		context.setAttribute("bouncer", bouncer);
 		context.setAttribute("RealPath", context.getRealPath("/"));
+		
+		new CharEncoder().charFilterInit(context.getInitParameter("charEncoding"));
 		
 		String maxScore = context.getInitParameter("MaxScore");
 		Func func = new Func();

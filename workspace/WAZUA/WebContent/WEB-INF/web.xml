@@ -12,6 +12,18 @@
   <listener>
     <listener-class>listener.WazuaListener</listener-class>
   </listener>
+  <filter>
+  	<filter-name>CharEncoder</filter-name>
+  	<filter-class>filter.CharEncoder</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>CharEncoder</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <context-param>
+    <param-name>charEncoding</param-name>
+    <param-value>utf-8</param-value>
+  </context-param>
   <context-param>
     <param-name>OracleUser</param-name>
     <param-value>WAZUA</param-value>

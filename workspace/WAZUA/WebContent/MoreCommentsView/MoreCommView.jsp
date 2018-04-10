@@ -36,7 +36,7 @@ String contextPath = application.getContextPath();
 Pack pack = (Pack)request.getAttribute("pack");
 
 //============================== print pack ==================================================
-
+/*
 for(String key : pack.getKeys()) { %>
 	<Div><%=key %>
 	<% for(Entity e :pack.getList(key)){ %>
@@ -50,7 +50,7 @@ for(String key : pack.getKeys()) { %>
 	</Div>
 	<br><hr><br><hr><br>
 <%}
-
+*/
 //================================================================================
 
 
@@ -223,15 +223,25 @@ if(movList!=null){
 					startPageNum = maxPage-pageAmount+1;
 				}
 				
-				for( ; startPageNum <= endPageNum ; startPageNum++ ){
+				//writing page link
+				
+				if(startPageNum>1)%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=1'>&lt&lt</a></p><%;
+					
+				for( ; startPageNum<= endPageNum ; startPageNum++ ){//write page moving link for statement start
 					
 					if(startPageNum==pageNum){
-						%><p id='MoreComments'style="color:purple;"><%=startPageNum%></p><%
+						%><p id='MoreComments'style="color:purple;font-weight:bold;"><%=startPageNum%></p><%
 					}else{
 						%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=<%=startPageNum%>'><%=startPageNum%></a></p><%
 					}
 					
-				}
+				}//end of writing page for statement
+				
+				if(endPageNum<maxPage)%><p id='MoreComments'><a href='<%=contextPath + application.getInitParameter("MoreComments")%>?mvIdx=<%=request.getParameter("mvIdx")%>&page=<%=maxPage%>'>&gt&gt</a></p><% ;
+				
+				//End of writing page link
+				
+				
 			}catch(NullPointerException e){
 				System.out.println("Null pointer while setting page number setting on more comment view!");
 			}
