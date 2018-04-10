@@ -134,13 +134,14 @@ public class Gatherer {
 		
 		String sql = "select"
 							+" case when AC.IDX is not null then 'ACCOUNT' when M.IDX is not null then 'MOVIE' end as TAG"
-							+" , AC.IDX ACCOUNT_IDX, AC.NAME ACCOUNT_NAME, C.IDX ACCOUNT_COMMIDX, C.REG_DATE ACCOUNT_REGDATE, C.CONTENTS ACCOUNT_CONTENTS, C.ISBLIND ACCOUNT_ISBLIND, NUM ACCOUNT_COMMNUM"
+							+" , AC.IDX ACCOUNT_IDX, AC.NAME ACCOUNT_NAME, C.IDX ACCOUNT_COMMIDX, C.REG_DATE ACCOUNT_REGDATE, C.CONTENTS ACCOUNT_CONTENTS, C.ISBLIND ACCOUNT_ISBLIND, NUM ACCOUNT_COMMNUM, S.ACC_IDX ACCOUNT_SCORE"
 							+" , M.IDX MOVIE_IDX, M.ENGTITLE MOVIE_ENGTITLE, M.KORTITLE MOVIE_KORTITLE, M.COMM_COUNT MOVIE_COMMCOUNT"
 						+" from ACCOUNT AC"
 						+" inner join"
 						+" (select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND, rownum NUM from "
 							+ "(select IDX, ACC_IDX, REG_DATE, CONTENTS, ISBLIND from COMMENTS where MOVIE_IDX="+movieIdx+" order by REG_DATE desc)) C"
-						+ " on C.ACC_IDX=AC.IDX and NUM between "+minCommNum+" and "+maxCommNum
+						+" on C.ACC_IDX=AC.IDX and NUM between "+minCommNum+" and "+maxCommNum
+						+" inner join (select SCORE, ACC_IDX from MVSCORE where MOVIE_IDX ="+movieIdx+")S on S.ACC_IDX = AC.IDX "
 						+" full outer join (select IDX, ENGTITLE, KORTITLE, COMM_COUNT from MOVIE where IDX = "+movieIdx+") M on 1=2";
 		
 		try {

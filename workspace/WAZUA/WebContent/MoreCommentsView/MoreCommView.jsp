@@ -176,7 +176,7 @@ if(movList!=null){
 				putPropNoName(comEnt,"NAME");
 				
 				//comment's SCORE
-				putPropNoName(comEnt,"SCORE");
+				putProp(comEnt,"SCORE");
 				
 				//comment's REGDATE
 				putPropNoName(comEnt,"REGDATE");

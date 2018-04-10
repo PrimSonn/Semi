@@ -43,7 +43,7 @@ public class WriteComment extends HttpServlet {
 			commIdx = request.getParameter("commIdx");
 			if(isDelete) {
 				int result = new Gatherer().delComment(commIdx, mvIdx, id);
-				System.out.println(result);//-------------------------------------test
+//				System.out.println(result);//-------------------------------------test
 				
 				if(page!=null&&page!="") {
 					response.sendRedirect(context.getContextPath()+context.getInitParameter("MoreComments")+"?mvIdx="+mvIdx+"&page="+page);
