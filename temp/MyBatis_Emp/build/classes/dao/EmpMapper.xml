@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.EmpDao">
+  <select id='selectAll' resultType="dto.Emp">
+  	select * from EMP order by EMPNO
+  </select>
+  <insert id="insertEmp" parameterType="dto.Emp">
+  	insert into EMP (EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+  	 values (#{empNo}, #{eName}, #{job}, #{mgr}, to_date(#{hireDate},'yyyy/mm/dd'), #{sal}, #{comm}, #{deptNo})
+  </insert>
+  <select id="selectByEmpNo" parameterType="int" resultType="dto.Emp">
+  	select * from EMP where EMPNO = #{empNo}
+  </select>
+  <delete id="deleteByEmpNo" parameterType="int">
+  	delete from EMP where EMPNO = #{empNo}
+  </delete>
+</mapper>
