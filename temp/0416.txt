@@ -1,0 +1,49 @@
+
+
+
+https://stackoverflow.com/questions/9749746/what-is-the-difference-between-atomic-volatile-synchronized?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+http://www.oracle.com/technetwork/articles/java/architect-lambdas-part1-2080972.html
+http://www.oracle.com/technetwork/articles/java/java8-optional-2175753.html
+https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ofNullable-T-
+and concurrency books..
+
+
+
+
+
+
+
+Spring
+	STS - Spring Tool Suite (Eclipse plug in)
+		- plug in install or download eclipse with STS
+		version change - pom.xml - properties
+
+Maven: build tool
+		pon.xml
+
+Dependency: dependency between objects
+				ex: new A;
+			Composition relationship. has-a relation
+				A makes B.
+dependency Injection:
+	Constructor DI:
+	Setter DI:
+
+Design Pattern
+	
+static block - initialization block
+	executed once when class is loaded
+	1. load class
+	2. create class variable
+	3. execute static block
+
+MyBatis 3.4.6
+	encapsulate (Connection.Statement -> send query -> result -> close)
+	
+	Mybatis-#.#.#.jar
+	Ojdbc#.jar
+	config.xml: connection configuration
+	mapper.xml: sql configuration
+	
+	Mybatis ConnectionFactory file.
+
