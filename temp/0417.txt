@@ -1,0 +1,45 @@
+Spring structure
+
+- java runtime --1.8 buildpath,pom.xml
+
+src/main/java
+	java sources ( Controller, service, dao, dto, util, common...)
+	
+src/main/resources
+	resources (setting files like .xml files)
+	log4j.xml: logging library
+
+src/test/java
+	4 test
+
+src/test/resources
+	4 test
+	
+jre system library
+
+maven dependencies
+	-jre system lib
+	-mavel libs.
+	-apache tomcat
+
+src/main/webapp
+	-servlet pj webcontents
+			/resources
+	css, image, js
+			/web-inf
+	reponse resources
+				/views
+				web.xml(DD), .jsp
+	spring settings
+				/classes.
+					deployment directory
+				/spring
+					servlet-context.xml	: response&request configuration
+					root-context.xml : application configuration
+						->setting spring's context
+						
+target
+	.class
+pom.xml
+	maven setting
+	build manager.

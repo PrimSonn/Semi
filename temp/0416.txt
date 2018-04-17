@@ -10,9 +10,6 @@ and concurrency books..
 
 
 
-
-
-
 Spring
 	STS - Spring Tool Suite (Eclipse plug in)
 		- plug in install or download eclipse with STS
