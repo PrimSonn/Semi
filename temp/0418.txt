@@ -1,0 +1,104 @@
+
+
+
+
+
+
+
+
+
+ + Spring Controller 클래스 만들기
+
+ 1. 일반 클래스 생성
+
+ 2. 클래스 선언 앞에 @Controller 애노테이션 붙이기
+
+ 3. 일반 메소드 만들기
+
+ 4. 메소드 정의 앞에 @RequestMapping 붙이기
+	@RequestMapping(value="/url패턴", method=메소드형식)
+
+ 5. 메소드의 return 타입 정의
+	-> view와 관련됨
+
+ 6. 메소드의 매개변수 정의
+	-> request 파라미터
+	-> 요청처리에 필요한 각종 기능 및 설정 추가
+
+
+
+ + Spring 요청 처리 방식(순서)
+
+	0. 브라우저(클라이언트)의 요청 발생
+
+	1. DispatcherServlet이 모든 요청을 받음
+	( url mapping : "/" )
+	( 개별적인 Servlet을 생성하지 않음 )
+
+	2. URL Mapping 이 적절히 적용된 Controller에게
+	  Request 처리를 맡김
+	( Servlet을 대신해서 Controller가 Request를 처리 )
+
+	3. Controller는 요청에 대한 적절한 처리를 한 후
+	  DispatcherServlet에게 결과 반환
+	( ModelAndView 객체 이용 )
+
+	4. DispatcherServlet이 ViewResolver를 통해서 View(.jsp)
+	  를 찾음
+
+	5. Model과 View를 이용해서 Response 생성 ( html 결과물 )
+
+	6. 클라이언트에게 결과 내용을 Response
+
+
+
+
+
+ - 모델1 : 비지니스로직, 프레젠테이션 로직이 혼재된 형식
+ - 모델2 : 둘을 분리한 형식
+
+ ** 비지니스로직 : 서버로직, 주로 DB데이터 처리
+ ** 프레젠테이션로직 : 클라이언트로직, UI 구현
+
+ - MVC패턴 : 모델2를 MODEL, VIEW, CONTROLLER로 정형화 시킨 모델
+
+
+ + Spring MVC
+
+  - Controller
+	Servlet의 축소판, Controller 클래스의 메소드가 담당
+	요청과 응답을 주로 담당
+
+  - View
+	JSP 파일
+	ViewResolver를 통해서 클라이언트에게 응답 제공
+	( 최대한 Java코드 사용 X )
+
+  - Model
+	View로 전달되는 정보(객체)
+
+
+
+  - Service
+	비지니스로직을 담당
+	Controller의 일부로 볼 수 있음
+
+	데이터 가공
+
+  - Dao, Data Access Object
+	퍼시스턴스 계층, Persistence Layer
+
+	CRUD작업을 직접처리
+	직접적인 DB SQL처리
+	DB의 원본데이터를 처리(SELECT, INSERT, UPDATE, DELETE)
+
+
+
+
+
+
+
+
+
+
+
