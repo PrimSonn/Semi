@@ -1,0 +1,96 @@
+
+@Autowired - SpringAnnotation
+	
+	on field, constructor, method with multiple parameters
+	Type first Name next
+	
+	binding.
+		1. by Type
+		2. by Name(id)
+	@Qualifier("id")
+		2. specifically by name
+
+@Resource - javaAnnotation
+	on field, method with one parameter
+	name first, Type next
+
+@Inject - javaAnnotation
+	same as @Autowired but can be used after Spring 3.0
+	not included in jdk
+
+
+adding MyBatis Lib.
+
+	mybatis-spring
+	mybatis
+	spring jdbc
+	odjbc
+
+
+-----------------------------------   1. using MAVEN (or download to lib folder manually)     -----------------------------------
+
+-www.mbcrepository.com	.search dependency	.copy/paste(Version check!)
+mybatis-1.3.2 :: need version later than mybatis 3.4.0
+
+maven mybatis spring
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>1.3.2</version>
+</dependency>
+
+maven mybatis
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.4.6</version>
+</dependency>
+
+spring jdbc 3218
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>3.2.18.RELEASE</version>
+</dependency>
+
+ojdbc6  --hard to find in repository..
+<!-- ojdbc6 12.1.0.2 -->
+<dependency>
+	<groupId>com.oracle</groupId>
+	<artifactId>ojdbc6</artifactId>
+	<version>12.1.0.2</version>
+</dependency>
+
+to use jdbc, add this at pom.xml above <dependencies> tag
+<repositories>
+	<repository>
+		<id>oracle</id>
+		<url>http://maven.jahia.org/maven2</url>
+	</repository>
+</repositories>
+
+after this........
+Maven Dependencies
+	mybatis-spring-1.3.2.jar
+	mybatis - 3.4.6.jar
+	spring-jdbc-3.2.18.RELEASE.jar
+	ojdbc6-12.1.0.2.jar
+
+-----------------------------------   2. root-context.xml add mybatis as bean   -----------------------------------
+-1. dataSource setting - DB connection information
+-2. SqlSessionFactory setting - MyBatis operation object
+-3. assign DAO - MyBatis interface
+
+-----------------------------------
+	3. src/main/resources +mabatys-config.xml
+	4. src/main/resources +/mappers
+
+Mapper
+	id="dao.methodname"
+	resultType="return datatype from query"
+	resultMap="defined datatype(ResultMap)"
+	parameterType="real type to send query"
+	parameterMap=".."

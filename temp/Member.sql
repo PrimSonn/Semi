@@ -1,0 +1,14 @@
+DROP TABLE member;
+CREATE TABLE member(
+	idx number primary key,
+	name varchar2(100) NOT NULL,
+	email varchar2(300) NOT NULL,
+	phone varchar2(50) NOT NULL,
+	join_date DATE DEFAULT SYSDATE NOT NULL
+);
+
+CREATE SEQUENCE SEQ_TB_MEMBER_IDX
+START WITH 1
+INCREMENT BY 1
+NOMAXVALUE
+NOCACHE;

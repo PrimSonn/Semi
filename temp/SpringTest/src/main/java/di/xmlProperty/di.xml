@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="gCar" class="di.xmlProperty.Car">
+		<property name="tire" ref="gTire"></property>
+	</bean>
+	<bean id="sCar" class="di.xmlProperty.Car">
+		<property name="tire" ref="sTire"></property>
+	</bean>
+	<bean id="gTire" class="di.tire.GoldenTire" />
+	<bean id="sTire" class="di.tire.SilverTire" />
+
+</beans>
