@@ -11,4 +11,10 @@
 	<select id="selectAll" resultMap="Member">
 		select * from MEMBER order by IDX
 	</select>
+	<insert id="insert" parameterType="web.dto.Member">
+		insert into MEMBER ( IDX, PHONE, EMAIL, NAME) values (SEQ_TB_MEMBER_IDX.nextval, #{phone}, #{email}, #{name})
+	</insert>
+	<delete id="delete" parameterType="web.dto.Member">
+		delete from Member where IDX = ${idx}
+	</delete>
 </mapper>

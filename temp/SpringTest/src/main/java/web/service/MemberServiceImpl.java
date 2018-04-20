@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import web.dao.MemberDao;
+import web.dto.Member;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -16,5 +17,16 @@ public class MemberServiceImpl implements MemberService{
 	public List getMembers() {
 		return memberDao.selectAll();
 	}
+
+	@Override
+	public void insertMember(Member m) {
+		memberDao.insert(m);
+	}
+
+	@Override
+	public void delete(Member m) {
+		memberDao.delete(m);
+	}
+	
 
 }

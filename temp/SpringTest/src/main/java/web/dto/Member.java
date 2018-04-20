@@ -9,7 +9,7 @@ public class Member {
 	private String name;
 	private String email;
 	private String phone;
-	private String joinDate;
+	private Date joinDate;
 	
 	@Override
 	public String toString() {
@@ -20,7 +20,7 @@ public class Member {
 		return email;
 	}public int getIdx() {
 		return idx;
-	}public String getJoinDate() {
+	}public Date getJoinDate() {
 		return joinDate;
 	}public String getName() {
 		return name;
@@ -31,12 +31,13 @@ public class Member {
 	}public void setIdx(int idx) {
 		this.idx = idx;
 	}public void setJoinDate(Date joinDate) {
-		if(joinDate!=null) {
-			DateFormat formatter = new SimpleDateFormat("YYYY/MM/dd");
-			this.joinDate = formatter.format(joinDate);
-		} else {
-			this.joinDate="no joinDate";
-		}
+//		if(joinDate!=null) {
+//			DateFormat formatter = new SimpleDateFormat("YYYY/MM/dd");
+//			this.joinDate = formatter.format(joinDate);
+//		} else {
+//			this.joinDate="no joinDate";
+//		}
+		this.joinDate=joinDate;
 	}public void setName(String name) {
 		this.name = name;
 	}public void setPhone(String phone) {
