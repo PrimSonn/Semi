@@ -85,5 +85,17 @@ Model
 Reader -> request.getReader()
 Writer -> response.getWriter()
 
-
-
+----------  @RequestParam  ----------
+@RequestParam String name
+	getValue(key name) -> name	: default behavior
+@RequestParam (value ="n") String name
+	getValue(n) -> name
+@RequestParam (value="n", required=true) String name
+	getValue(n) -> name
+		if true then error if value is null
+		if false OK
+@RequestParam (value="n", defaultValue="abc") String name
+	getValue(n) -> name
+		if value==null then name = defaultValue
+@RequestParam HashMap<String,String> map
+	multiple parameter -> map
