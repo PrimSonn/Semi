@@ -1,0 +1,89 @@
+
+
+post vs get (html structure)
+
+
+
+
+
+
+--------------------------------------------------------
+
+/main-> submit button clicked!
+request header to /insert (post)
+
+MemberController.insert() - post
+	parameter name, email, phone
+	target dto: Member
+	
+	Spring..
+	Service. void insert(Member m)
+		MemberDao. void insert(Member m);
+			
+			spring - MyBatis
+			Mapper: <insert id="insert", parameter type="web.dto.Member">
+						sql
+			
+	
+	redirect to /main (return "redirect://main"
+->
+/main
+
+
+/web/member/main -> /web/member/delete
+	MemberController.delete(Member m) {Service.delete(m)}
+		Service.void delete(Member m){ MemberDao.delete(m)}
+			MemberDao.delete(Member m)
+				MemberMapper
+					<delete id: delete , parameterType: web.dto.Member>
+						delete from MEMBER where IDX = idx
+	controller: redirect: member/main
+/main
+
+
+------------  MyBatis.Logging()  ------------
+
+pom.xml +log4jdbc-remix.jar
+mvn
+<!-- https://mvnrepository.com/artifact/org.lazyluke/log4jdbc-remix -->
+<dependency>
+    <groupId>org.lazyluke</groupId>
+    <artifactId>log4jdbc-remix</artifactId>
+    <version>0.2.7</version>
+</dependency>
+
+root-context.xml edit: id="dataSource" -> id="dataSourceSpied"
+
+<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+	<constructor-arg ref="dataSourceSpied" />
+	<property name="logFormatter">
+		<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+			<property name="loggingType" value="MULTI_LINE" />
+			<property name="sqlPrefix" value="SQL:::" />
+		</bean>
+	</property>		
+</bean>
+
+log4j.xml +
+
+
+---------------------  Controller's return type  ---------------------
+return -> set's viewName ( ViewResolver forward to : --contextPath --.* ++prefix ++suffix  ++*.jsp)
+
+void(null) ->mapped to RequestMapping.value +.jsp
+String	-> if start's with redirect: then redirect to :...
+			else ++contextPath ++*.jsp forward
+ModelAndView -> model + viewName return. ie) ModelAndView mA.addObject("key",value); mA.setViewName("viewName"); return mA
+
+---------------------  Controller's Parameters  ---------------------
+
+HttpServletRequest
+HttpServletResponse
+HttpSession
+Locale
+Model
+Reader -> request.getReader()
+Writer -> response.getWriter()
+
+
+
