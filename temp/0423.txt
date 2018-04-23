@@ -1,0 +1,44 @@
+
+
+
+
+
+
+
+
+
+
+
+1. HttpServletRequest
+
+2.@RequestParam Map<String,String>
+	@RequestMapping(value="page")
+	public void controller(@RequestParamMap<String,String> map){
+		String param1=map.get("param1");
+		String param1=map.get("param2");
+	}
+	
+3.@RequestParam - mapping
+	@RequestMapping(value="page")
+	public void controllerMethod(@RequestParam String param1, @RequestParam String param2){
+		-> auto casting
+	}
+	
+4. Using DTO class
+	@RequestMapping(value="page)
+	public void controller(ParamDto param){
+	}
+
+5. Model and Dto Mapping
+	@RequestMapping(value="page)
+	public void controller(ParamDto param, Model model){
+		
+	}
+	-> ModelAttribute already has DTO
+	-> ModelAttribute Name -> lowercase(1) Class.name
+
+6. @ModelAttribute set mapping name
+	@RequestMapping(value="page)
+	public void controller(@ModelAttribute("paramData") ParamdTo param, Model model){
+	}
+

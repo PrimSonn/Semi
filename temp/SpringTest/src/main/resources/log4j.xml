@@ -11,7 +11,6 @@
 	</appender>
 	
 	
-	
 	<!-- Application Loggers -->
 <!-- 	<logger name="aaa.bbb.ccc"> -->
 <!-- 		<level value="info" /> -->

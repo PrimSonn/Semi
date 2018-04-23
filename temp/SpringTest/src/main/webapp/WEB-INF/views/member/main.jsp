@@ -54,6 +54,65 @@
 		
 		$form.submit();
 	}
+	$(document).ready(function(){
+		$(".updateBtn").click(function(){
+			
+			var id = $(this).attr("id");
+			
+// 			console.log($(this));
+			
+// 			$.ajax({
+// 				type: "post"
+// 				,url: "update"
+// 				,data:{
+// 					idx: $(this).attr("id")
+// 					,name: $("#name").val()
+// 					,email: $("#email").val()
+// 					,phone: $("#phone").val()
+// 				}
+// 				, dataType: "json"
+// 				//, dataType: "Html"
+// 				, success: function( response ){
+// // 					$(location).attr("href", "main");
+// // 					locatino.href="main";
+// 					$("#tr"+id).css("color","red");
+					
+// // 					$("#tr"+id+" td").eq(1).html($("#name").val());
+// // 					$("#tr"+id+" td").eq(2).html($("#email").val());
+// // 					$("#tr"+id+" td").eq(3).html($("#phone").val());
+					
+// 					$("#tr"+id+" td").eq(1).html(response.name);
+// 					$("#tr"+id+" td").eq(2).html(response.email);
+// 					$("#tr"+id+" td").eq(3).html(response.phone);
+
+// 				}
+// 				, error: function(){
+// 					alert("Ajax communication failed!");
+// 				}
+// 			});
+			
+			$.ajax({
+				type: "post"
+				, url: "update"
+				, data: {
+					idx: $(this).attr("id")
+					, name: $("#name").val()
+					, email: $("#email").val()
+					, phone: $("#phone").val()
+				}
+				, dataType: "html"
+				, success: function( d ) {
+					alert("AJAX 통신 성공(정상적인 응답)");
+					console.log(d);
+					$("#tr"+id).html(d);
+				}
+				, error: function() {
+					alert("AJAX 통신 실패(비정상적인 응답)");
+				}
+			});
+			
+		});
+	});
 </script>
 </head>
 <body>
@@ -99,14 +158,14 @@
 		</thead>
 	<tbody>
 		<c:forEach items="${list }" var="data">
-			<tr>
+			<tr id="tr${data.idx }">
 				<td>${data.idx }</td>
 				<td>${data.name }</td>
 				<td>${data.email }</td>
 				<td>${data.phone }</td>
 				<td><fmt:formatDate value="${data.joinDate }" pattern="yyyy-MM-dd"/></td>
 				<td>
-					<button data-idx="${data.idx}">수정</button>
+					<button class="updateBtn" id="${data.idx}">수정</button>
 					<button onclick="deleteAct(${data.idx});">삭제</button>
 				</td>
 			</tr>

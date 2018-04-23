@@ -17,4 +17,10 @@
 	<delete id="delete" parameterType="web.dto.Member">
 		delete from Member where IDX = ${idx}
 	</delete>
+	<update id="update" parameterType="web.dto.Member">
+		update MEMBER set NAME=#{name}, EMAIL=#{email}, PHONE=#{phone} where IDX=${idx}
+	</update>
+	<select id="select" parameterType="web.dto.Member" resultMap="Member">
+		select * from MEMBER where IDX=${idx} and NAME=#{name} and EMAIL=#{email} and PHONE=#{phone}
+	</select>
 </mapper>

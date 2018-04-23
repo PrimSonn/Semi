@@ -1,6 +1,11 @@
 package web.memberController;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.google.gson.Gson;
 
 import web.dto.Member;
 import web.service.MemberService;
@@ -48,6 +55,35 @@ public class MemberController {
 		memberService.delete(m);
 		
 		return "redirect:/member/main";
+	}
+	
+	@RequestMapping(value="/member/update", method=RequestMethod.POST)
+	public String update(Member m, HttpServletResponse response, Model model) {
+		
+		logger.info(m.toString());
+		
+		memberService.update(m);
+		Member newMem = memberService.select(m);
+		/*
+		Gson gson = new Gson();
+		if(newMem!=null) {
+			try {
+				response.setContentType("text/html");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(gson.toJson(newMem));
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+		}
+		
+		*/
+		if(newMem!=null) {
+			model.addAttribute("data", newMem);
+		}
+		return "member/result";
+		
 	}
 	
 }

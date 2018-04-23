@@ -22,7 +22,7 @@
 	</beans:bean>
 	
 <!-- 	<context:component-scan base-package="aaa.bbb.ccc" /> -->
-	<context:component-scan base-package="web.memberController,web.service"/>
+	<context:component-scan base-package="web.memberController,web.paramTest,web.service"/>
 	
 	
 	
