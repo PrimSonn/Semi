@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+
+
+
+
+
+servlet spec
+DispatcherServlet
+HandleInterceptorAdaptor class -> interceptor (filter of spring framework)
+controllers..
+DispatcherServlet - viewResolver + ModelAttribute
+interceptor
+send html	
+
+HandleInterceptorAdaptor
+	preHandle:	return true -> allow controller access
+				return false -> block controller access
+
+
+
+
+
+
+
+
