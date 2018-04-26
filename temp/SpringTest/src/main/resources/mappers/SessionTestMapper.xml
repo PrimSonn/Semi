@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="web.dao.SessionTestDao">
+	<insert id="join" parameterType="web.dto.SessionTestMember">
+		insert into USERTB (ID, PW, EMAIL, PHONE) values(#{id},#{pw},#{email},#{phone})
+	</insert>
+	<select id="pick" parameterType="web.dto.SessionTestMember" resultType="web.dto.SessionTestMember">
+		select * from USERTB where ID=#{id} and PW=#{pw}
+	</select>
+	<select id="checkId" parameterType="web.dto.SessionTestMember" resultType="int">
+		select count(1) i from USERTB where ID=#{id}
+	</select>
+	<select id="pickById" parameterType="String" resultType="web.dto.SessionTestMember">
+		select * from USERTB where ID=#{id}
+	</select>
+</mapper>

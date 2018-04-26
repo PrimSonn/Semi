@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board.dao.BoardDao">
+	<select id="selectAll" resultType="board.dto.Board">
+		select BOARDNO, TITLE, WRITER, HIT, RECOMMEND, WRITTENDATE from BOARD order by BOARDNO
+	</select>
+	<select id="getTotal" resultType="int">
+		select count(*) from BOARD
+	</select>
+	<select id="getPagingList" parameterType="board.util.Paging" resultType="board.dto.Board">
+		select * from (
+			select B.*, ROWNUM R from (
+				select BOARDNO, TITLE, WRITER, HIT, RECOMMEND, WRITTENDATE from BOARD
+				order by BOARDNO desc
+			) B
+			order by R
+		) T
+		where T.R between ${startNo} and ${endNo}
+	</select>
+	<insert id="write" parameterType="board.dto.Board">
+		insert into BOARD (BOARDNO, TITLE, WRITER, CONTENT, HIT, RECOMMEND)
+		values (board_seq.nextval, #{title}, #{writer}, #{content}, 0, 0)
+	</insert>
+</mapper>

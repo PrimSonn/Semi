@@ -21,21 +21,8 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-<!-- 	<context:component-scan base-package="aaa.bbb.ccc" /> -->
-	<context:component-scan base-package="web.memberController,web.intercepter,web.paramTest,web.service,web.sessionTest"/>
+	<context:component-scan base-package="board.controller,board.service" />
 	
-	<interceptors>
-		<interceptor>
-			<mapping path="/intercepter/admin/**" />
-			<exclude-mapping path="/intercepter/admin/fail"/>
-			<beans:bean class="web.intercepter.AdminIntercepter" />
-		</interceptor>
-	</interceptors>
 	
-	<interceptors>
-		<interceptor>
-			<mapping path="/intercepter/forum/write"/>
-			<beans:bean class="web.intercepter.ForumIntercepter"></beans:bean>
-		</interceptor>
-	</interceptors>
+	
 </beans:beans>
