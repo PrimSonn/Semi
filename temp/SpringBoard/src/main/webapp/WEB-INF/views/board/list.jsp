@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -28,7 +29,7 @@ if(list!=null){ %>
 <tbody>
 	<tr>
 		<th><%=board.getBoardNo() %></th>
-		<th><%=board.getTitle() %></th>
+		<th><a href='view?boardNo=<%=board.getBoardNo()%>'><%=board.getTitle() %></a></th>
 		<th><%=board.getWriter() %></th>
 		<th><%=board.getHit() %></th>
 		<th><%=board.getRecommend() %></th>
@@ -42,6 +43,16 @@ if(list!=null){ %>
 <jsp:include page="../util/paging.jsp"/>
 
 <a href='write'><button>write</button></a>
+<a href='Sign/Main'><button>Main</button></a>
+
+<br>
+<form action='list' method='post'>
+	<input type='text' name='title'>
+	<input type='hidden' name='curPage' value=''>	<!-- Paging connect required -->
+	<button type='submit' value='search'>search title</button>
+</form>
+
 </div>
+
 </body>
 </html>

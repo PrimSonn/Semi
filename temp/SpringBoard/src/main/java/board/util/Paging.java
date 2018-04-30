@@ -14,6 +14,8 @@ public class Paging {
 	private int startNo;	//게시물리스트 첫 번호
 	private int endNo;	//게시물리스트 마지막 번호
 	
+	private String title;
+	
 	// 총 게시글 수만 입력하는 생성자
 	//	curPage == 1
 	//	pageCount == 10
@@ -166,4 +168,11 @@ public class Paging {
 				", startPage="+startPage+
 				", endPage="+endPage+"]";
 	}
+	
+	public String getTitle() {
+		return title;
+	}public void setTitle(String title) {
+		this.title = title;
+	}
+	
 }

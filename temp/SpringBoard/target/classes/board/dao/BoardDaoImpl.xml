@@ -17,8 +17,44 @@
 		) T
 		where T.R between ${startNo} and ${endNo}
 	</select>
+	<select id="getSearchTotal" parameterType="board.dto.Board" resultType="int">
+		select count(*) from BOARD where TITLE like '%${title}%'
+	</select>
+	<select id="searchTitle" parameterType="board.dto.Board" resultType="board.dto.Board" >
+	
+		select * from (
+			select B.*, ROWNUM R from (
+				select BOARDNO, TITLE, WRITER, HIT, RECOMMEND, WRITTENDATE from BOARD
+				where TITLE like '%${title}%'
+				order by BOARDNO desc
+			) B
+			order by R
+		) T
+		where T.R between ${startNo} and ${endNo}
+	</select>
 	<insert id="write" parameterType="board.dto.Board">
-		insert into BOARD (BOARDNO, TITLE, WRITER, CONTENT, HIT, RECOMMEND)
-		values (board_seq.nextval, #{title}, #{writer}, #{content}, 0, 0)
+		insert into BOARD (BOARDNO, TITLE, WRITER, CONTENT, HIT, RECOMMEND,WRITERID)
+		values (board_seq.nextval, #{title}, #{writer}, #{content}, 0, 0,#{writerId})
 	</insert>
+	<select id="viewContent" parameterType="board.dto.Board" resultType="board.dto.Board">
+		select * from BOARD where BOARDNO = #{boardNo}
+	</select>
+	<update id="hitUp" parameterType="board.dto.Board">
+		update BOARD set HIT = HIT+1 where BOARDNO = #{boardNo}
+	</update>
+	<delete id="delete" parameterType="board.dto.Board">
+		delete from BOARD where BOARDNO=#{boardNo}
+	</delete>
+	<update id="edit" parameterType="board.dto.Board">
+		update BOARD set TITLE = #{title}, CONTENT=#{content} where BOARDNO = ${boardNo}
+	</update>
+	<select id='recommendCheck' parameterType="board.dto.Board" resultType="board.dto.Board" >
+		select USERID as writerId from RECOMMEND where BOARDNO=${boardNo} and USERID=#{writerId}
+	</select>
+	<insert id='doRecommend' parameterType="board.dto.Board">
+		insert into RECOMMEND (BOARDNO, USERID) values (${boardNo}, #{writerId})
+	</insert>
+	<delete id='undoRecommend' parameterType="board.dto.Board">
+		delete from RECOMMEND where USERID = #{writerId} and BOARDNO = ${boardNo}
+	</delete>
 </mapper>

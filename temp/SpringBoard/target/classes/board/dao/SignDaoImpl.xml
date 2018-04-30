@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="board.dao.SignDao">
+	<select id="in" parameterType="board.dto.User" resultType="board.dto.User">
+		select * from USERTB where ID=#{id} and PW=#{pw}
+	</select>
+	<insert id="up" parameterType="board.dto.User">
+		insert into USERTB (ID, PW, EMAIL, PHONE, NICK)
+			values (#{id}, #{pw}, #{email}, #{phone}, #{nick})
+	</insert>
+	<select id="selectAccountById" parameterType="board.dto.User" resultType="board.dto.User">
+		select * from USERTB where ID=#{id}
+	</select>
+</mapper>

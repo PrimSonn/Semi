@@ -22,7 +22,15 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="board.controller,board.service" />
-	
+	<interceptors>
+		<interceptor>
+			<mapping path="/view" />
+			<mapping path="/write" />
+			<mapping path="/edit"/>
+			<mapping path="/delete"/>
+			<beans:bean class="board.interceptor.BoardInterceptor" />
+		</interceptor>
+	</interceptors>
 	
 	
 </beans:beans>

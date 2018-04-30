@@ -17,7 +17,6 @@ public class Board {
 	
 	@Override
 	public String toString() {
-		
 		return "Board [boardNo: "+getBoardNo()+" title: "+getTitle()+" writerId: "+getWriterId()+" writer: "+getWriter()+" content: "+getContent()+" hit: "+getHit()+" recommend: "+getRecommend()+" writtenDate: "+getWrittenDate()+" ]";
 	}
 	
@@ -34,13 +33,13 @@ public class Board {
 		this.title = title;
 	}
 	public String getWriterId() {
-		return writerId==null||writerId=="" ? "empty": writerId;
+		return (writerId==null||writerId.equals("")) ? "empty": writerId;
 	}
 	public void setWriterId(String writerId) {
 		this.writerId = writerId;
 	}
 	public String getWriter() {
-		return writer==null||writer=="" ? "empty" : writer;
+		return (writer==null||writer.equals("")) ? "empty" : writer;
 	}
 	public void setWriter(String writer) {
 		this.writer = writer;

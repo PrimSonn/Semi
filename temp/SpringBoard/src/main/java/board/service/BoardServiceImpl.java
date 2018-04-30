@@ -35,4 +35,49 @@ public class BoardServiceImpl implements BoardService{
 		boardDao.write(board);
 	}
 
+	@Override
+	public Board viewContent(Board board) {
+		
+		Board newBoard = boardDao.viewContent(board);
+		boardDao.hitUp(board);
+		
+		return newBoard;
+	}
+
+	@Override
+	public void delete(Board board) {
+		boardDao.delete(board);
+	}
+
+	@Override
+	public void edit(Board board) {
+		
+		boardDao.edit(board);
+	}
+
+	@Override
+	public Board recommendCheck(Board board) {
+		return boardDao.recommendCheck(board);
+	}
+
+	@Override
+	public void doRecommend(Board board) {
+		boardDao.doRecommend(board);
+	}
+
+	@Override
+	public void undoRecommend(Board board) {
+		boardDao.undoRecommend(board);
+	}
+
+	@Override
+	public int getSearchTotal(Board board) {
+		return boardDao.getSearchTotal(board);
+	}
+
+	@Override
+	public List<Board> searchTitle(Paging paging) {
+		return boardDao.searchTitle(paging);
+	}
+
 }
