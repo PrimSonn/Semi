@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import board.dto.Board;
+import board.dto.Comment;
 import board.dto.User;
 import board.service.BoardService;
 import board.service.SignService;
@@ -26,7 +27,7 @@ public class BoardController {
 	@RequestMapping(value="list",method=RequestMethod.GET)
 	public ModelAndView list(ModelAndView mv, @RequestParam(defaultValue="0") int curPage, Board board) {
 		
-		if(!board.getTitle().equals("empty")) {
+		if(!board.isTitleNull()) {
 			return listPost(mv,curPage,board);
 		}
 		int totalCount = boardService.getTotal();
@@ -80,7 +81,6 @@ public class BoardController {
 		
 		String writerId = (String) session.getAttribute("id");
 		board.setWriterId(writerId);
-		System.out.println(board);
 		boardService.write(board);
 		
 		mv.setViewName("redirect:list");
@@ -88,17 +88,22 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="view",method=RequestMethod.GET)
-	public ModelAndView viewContent(HttpSession session, ModelAndView mv,Board board) {
+	public ModelAndView viewContent(HttpSession session, ModelAndView mv,Board board, @RequestParam(defaultValue="0")int curPage) {
 		
 		Board newBoard = boardService.viewContent(board);
+		int totalCount = boardService.totalComment(board.getBoardNo());
 		newBoard = newBoard==null? new Board() : newBoard;
 		mv.addObject("board",newBoard);
 		
-		if(session.getAttribute("id")!=null) {
-			board.setWriterId((String)session.getAttribute("id"));
-			board = boardService.recommendCheck(board);
-			mv.addObject("recBoard", board);
-		}
+		board.setWriterId((String)session.getAttribute("id"));
+		board = boardService.recommendCheck(board);
+		mv.addObject("recBoard", board);
+		
+		Paging paging = new Paging(totalCount, curPage);
+		mv.addObject("paging", paging);
+		
+		List<Comment> list = boardService.listComment(paging);
+		mv.addObject("commentList", list);
 		
 		mv.setViewName("board/contentView");
 		return mv;
@@ -137,16 +142,12 @@ public class BoardController {
 	@RequestMapping(value="delete",method=RequestMethod.GET)
 	public ModelAndView delete(ModelAndView mv,HttpSession session,Board board) {
 		
-		System.out.println(board);
-		System.out.println(session.getAttribute("id"));
 		if(board!=null) {
 			if(session.getAttribute("id").equals(board.getWriterId())) {
 				boardService.delete(board);
 			}else {}
 		}else {}
-		
 		mv.setViewName("redirect:list");
-		
 		return mv;
 	}
 	
@@ -184,6 +185,48 @@ public class BoardController {
 		
 		mv.setViewName("redirect:list");
 		return mv;
+	}
+	
+	@RequestMapping(value="writeComment",method=RequestMethod.POST)
+	public ModelAndView writeComment(ModelAndView mv,HttpSession session, Comment comment) {
+		
+		comment.setUserId((String)session.getAttribute("id"));
+		comment.setNick((String)session.getAttribute("nick"));
+		boardService.writeComment(comment);
+		
+		mv.setViewName("redirect:view?boardNo="+comment.getBoardNo());
+		return mv;
+	}
+	
+	@RequestMapping(value="deleteComment",method=RequestMethod.GET)
+	public ModelAndView deleteComment(ModelAndView mv,HttpSession session, Comment comment) {
+		
+		System.out.println(comment);
+		comment.setUserId((String)session.getAttribute("id"));
+		
+		if(boardService.checkComment(comment)) {
+			boardService.deleteComment(comment);
+			mv.setViewName("redirect:view?boardNo="+comment.getBoardNo());
+		}else {
+			mv.setViewName("redirect:view?boardNo="+comment.getBoardNo());
+		}
+		
+		return mv;
+	}
+	
+	@RequestMapping(value="deleteBoardList",method=RequestMethod.POST)
+	public ModelAndView deleteBoardList (ModelAndView mv, Board board, @RequestParam(defaultValue="0")int curPage) {
+		
+		if(!board.getContent().equals("")) boardService.deleteBoardList(board);
+		
+		if(!board.getTitle().equals("")) {
+			mv.setViewName("redirect:list?curPage="+curPage+"&title="+board.getTitle());
+		}else {
+			mv.setViewName("redirect:list?curPage="+curPage);
+		}
+		
+		return mv;
+		
 	}
 	
 }

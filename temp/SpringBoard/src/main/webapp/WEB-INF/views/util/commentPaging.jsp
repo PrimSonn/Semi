@@ -15,7 +15,7 @@
 		<%-- 첫 페이지가 아니면 버튼 노출 --%>
 		<c:if test="${paging.curPage ne 1 }">
 		<li>
-			<a href="/board/list?curPage=1">
+			<a href="/board/view?curPage=1">
 				<span aria-hidden="true">&larr;</span>
 				처음
 			</a>
@@ -25,14 +25,14 @@
 		<%-- 첫 페이지면 금지 표시 --%>
 		<c:if test="${paging.curPage eq 1 }">
 		<li class="disabled">
-			<a href="/board/list?curPage=${paging.curPage }<%if(paging.getTitle()!=null) {%>&title=<%=paging.getTitle() %><% } %>" aria-label="Previous">
+			<a href="/board/view?curPage=${paging.curPage }&boardNo=${board.boardNo }" aria-label="Previous">
 				<span aria-hidden="true">&laquo;</span>
 			</a>
 		</li>
 		</c:if>
 		<c:if test="${paging.curPage ne 1 }">
 		<li>
-			<a href="/board/list?curPage=${paging.curPage-1 }<%if(paging.getTitle()!=null) {%>&title=<%=paging.getTitle() %><% } %>" aria-label="Previous">
+			<a href="/board/view?curPage=${paging.curPage-1 }&boardNo=${board.boardNo }" aria-label="Previous">
 				<span aria-hidden="true">&laquo;</span>
 			</a>
 		</li>
@@ -50,7 +50,7 @@
 			<c:if test="${paging.curPage ne page }">
 			<li>
 			</c:if>
-			<a href="/board/list?curPage=${page }<%if(paging.getTitle()!=null) {%>&title=<%=paging.getTitle() %><% } %>">${page }</a>
+			<a href="/board/view?curPage=${page }&boardNo=${board.boardNo }">${page }</a>
 			</li>
 		</c:forEach>
 		
@@ -58,14 +58,14 @@
 		<%-- 마지막 페이지면 금지 표시 --%>
 		<c:if test="${paging.curPage eq paging.totalPage }">
 		<li class="disabled">
-			<a href="/board/list?curPage=${paging.curPage }<%if(paging.getTitle()!=null) {%>&title=<%=paging.getTitle() %><% } %>" aria-label="Next">
+			<a href="/board/view?curPage=${paging.curPage }&boardNo=${board.boardNo }" aria-label="Next">
 				<span aria-hidden="true">&raquo;</span>
 			</a>
 		</li>
 		</c:if>
 		<c:if test="${paging.curPage ne paging.totalPage }">
 		<li>
-			<a href="/board/list?curPage=${paging.curPage+1 }<%if(paging.getTitle()!=null) {%>&title=<%=paging.getTitle() %><% } %>" aria-label="Next">
+			<a href="/board/view?curPage=${paging.curPage+1 }&boardNo=${board.boardNo }" aria-label="Next">
 				<span aria-hidden="true">&raquo;</span>
 			</a>
 		</li>

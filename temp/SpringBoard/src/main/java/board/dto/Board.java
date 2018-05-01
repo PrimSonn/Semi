@@ -29,6 +29,13 @@ public class Board {
 	public String getTitle() {
 		return title = title==null||title==""? "empty": title;
 	}
+	public boolean isTitleNull() {
+		if(title==null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -67,7 +74,7 @@ public class Board {
 			DateFormat formatter = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
 			return formatter.format(writtenDate);
 		}else {
-			return "----/--/--";
+			return "----/--/-- --:--:--";
 		}
 	}
 	public void setWrittenDate(Date writtenDate) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import board.dao.BoardDao;
 import board.dto.Board;
+import board.dto.Comment;
 import board.util.Paging;
 
 @Service
@@ -63,11 +64,13 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public void doRecommend(Board board) {
 		boardDao.doRecommend(board);
+		boardDao.upRecommendCount(board);
 	}
 
 	@Override
 	public void undoRecommend(Board board) {
 		boardDao.undoRecommend(board);
+		boardDao.downRecommendCount(board);
 	}
 
 	@Override
@@ -78,6 +81,36 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public List<Board> searchTitle(Paging paging) {
 		return boardDao.searchTitle(paging);
+	}
+
+	@Override
+	public void writeComment(Comment comment) {
+		boardDao.writeComment(comment);
+	}
+
+	@Override
+	public List<Comment> listComment(Paging paging) {
+		return boardDao.listComment(paging);
+	}
+
+	@Override
+	public boolean checkComment(Comment comment) {
+		return !(boardDao.checkComment(comment)==0) ;
+	}
+
+	@Override
+	public Integer totalComment(int boardNo) {
+		return boardDao.totalComment(boardNo);
+	}
+
+	@Override
+	public void deleteComment(Comment comment) {
+		boardDao.deleteComment(comment);
+	}
+
+	@Override
+	public void deleteBoardList(Board board) {
+		boardDao.deleteBoardList(board);
 	}
 
 }

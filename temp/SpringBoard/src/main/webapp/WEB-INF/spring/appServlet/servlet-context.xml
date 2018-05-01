@@ -24,10 +24,9 @@
 	<context:component-scan base-package="board.controller,board.service" />
 	<interceptors>
 		<interceptor>
-			<mapping path="/view" />
-			<mapping path="/write" />
-			<mapping path="/edit"/>
-			<mapping path="/delete"/>
+			<mapping path="/*" />
+			<exclude-mapping path="/list"/>
+			<exclude-mapping path="/Sign/*"/>
 			<beans:bean class="board.interceptor.BoardInterceptor" />
 		</interceptor>
 	</interceptors>

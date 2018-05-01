@@ -54,7 +54,38 @@
 	<insert id='doRecommend' parameterType="board.dto.Board">
 		insert into RECOMMEND (BOARDNO, USERID) values (${boardNo}, #{writerId})
 	</insert>
+	<update id='upRecommendCount' parameterType="board.dto.Board">
+		update BOARD set RECOMMEND = RECOMMEND +1 where BOARDNO = ${boardNo}
+	</update>
+	<update id='downRecommendCount' parameterType="board.dto.Board">
+		update BOARD set RECOMMEND = RECOMMEND -1 where BOARDNO = ${boardNo}	
+	</update>
 	<delete id='undoRecommend' parameterType="board.dto.Board">
 		delete from RECOMMEND where USERID = #{writerId} and BOARDNO = ${boardNo}
+	</delete>
+	<insert id="writeComment" parameterType="board.dto.Comment">
+		insert into COMMENTTB (BOARDNO, USERID, PW, CONTENT, NICK) values (${boardNo}, #{userId}, #{pw}, #{content}, #{nick} )
+	</insert>
+	<select id="listComment" parameterType="board.util.Paging" resultType="board.dto.Comment">
+		select * from (
+			select B.*, ROWNUM R from (
+				select NICK, CONTENT, WRITTENDATE, USERID, COMMENTNO from COMMENTTB
+				order by COMMENTNO desc
+			) B
+			order by R
+		) T
+		where T.R between ${startNo} and ${endNo}
+	</select>
+	<select id='checkComment' parameterType="board.dto.Comment" resultType="int">
+		select count(*) from COMMENTTB where USERID = #{userId} and COMMENTNO = ${commentNo}
+	</select>
+	<select id='totalComment' parameterType="int" resultType="int">
+		select count(*) from COMMENTTB where BOARDNO = #{boardNo}
+	</select>
+	<delete id='deleteComment' parameterType="board.dto.Comment">
+		delete from COMMENTTB where COMMENTNO = ${commentNo} and USERID = #{userId}
+	</delete>
+	<delete id='deleteBoardList' parameterType="board.dto.Board">
+		delete from BOARD where BOARDNO in (${content})
 	</delete>
 </mapper>
