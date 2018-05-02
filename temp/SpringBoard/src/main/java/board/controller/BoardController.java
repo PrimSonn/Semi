@@ -2,6 +2,7 @@ package board.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import board.dto.Board;
@@ -152,7 +154,8 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="recommend",method=RequestMethod.GET)
-	public ModelAndView recommend(ModelAndView mv, HttpSession session, Board board) {
+	@ResponseBody
+	public String recommend(HttpServletResponse response,HttpSession session, Board board) {
 		
 		Board newBoard=null;
 		
@@ -161,30 +164,49 @@ public class BoardController {
 			board.setWriterId((String)session.getAttribute("id"));
 			newBoard = boardService.recommendCheck(board);
 			
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			
 			if(newBoard==null) {
 				boardService.doRecommend(board);
-				mv.setViewName("redirect:view?boardNo="+board.getBoardNo());
-				return mv;
+				return boardService.viewContent(board).getRecommend().toString();
+//				mv.setViewName("redirect:view?boardNo="+board.getBoardNo());
+//				return mv;
+			}else {
+				return boardService.viewContent(board).getRecommend().toString();
 			}
 		}
 		
-		mv.setViewName("list");
-		return mv;
+//		mv.setViewName("list");
+		return "error";
 	}
 	
 	@RequestMapping(value="undoRecommend",method=RequestMethod.GET)
-	public ModelAndView undoRecommend(ModelAndView mv, HttpSession session, Board board) {
+	@ResponseBody
+	public String undoRecommend(HttpServletResponse response,HttpSession session, Board board) {
 		
 		if(session.getAttribute("id")!=null) {
 			
 			board.setWriterId( (String)session.getAttribute("id"));
-			boardService.undoRecommend(board);
-			mv.setViewName("redirect:view?boardNo="+board.getBoardNo());
-			return mv;	
+			Board newBoard = boardService.recommendCheck(board);
+			
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			
+			if(newBoard!=null) {
+				boardService.undoRecommend(board);
+				return boardService.viewContent(board).getRecommend().toString();
+			}else {
+				return boardService.viewContent(board).getRecommend().toString();
+			}
+//			mv.setViewName("redirect:view?boardNo="+board.getBoardNo());
+			
+			
+//			return mv;	
 		}
-		
-		mv.setViewName("redirect:list");
-		return mv;
+		return "error";
+//		mv.setViewName("redirect:list");
+//		return mv;
 	}
 	
 	@RequestMapping(value="writeComment",method=RequestMethod.POST)
