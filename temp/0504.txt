@@ -1,0 +1,58 @@
+
+
+
+
+
+
+
+Spring file I/O over network
+ -maven multipart
+	mvn repository - commons fileupload 1.3.3
+		dependancy
+
+<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+<dependency>
+	<groupId>commons-fileupload</groupId>
+	<artifactId>commons-fileupload</artifactId>
+	<version>1.3.3</version>
+</dependency>
+
+servlet-context (or root-context) edit - add beans:beans
+<beans:bean id ='multipartResolver' class="org.springframework.web.multipart.commons.CommonsMultipartResolver">		<!-- using Apache commons-fileupload : dependancy orrured-->
+	<beans:property name='' value=''></...>  <!-- prop: memory size.. max file size.. value: byte size-->
+</beans:bean>
+
+prop list:
+	maxUplaocSize - in byte size
+	maxInMemorySize
+
+	uploadTempDir
+
+	defaultEncoding - overridden by HttpRequest encoding setting (almost no use.. default: ISO-8859-1)
+
+	resolveLazily - delaying parsing request (boolean)
+	servletContext - set's what servlet for this to work
+
+
+MultipartFile Class:
+	make file information from request parameter
+		(MIME TYPE: application/x-www-form-urlencoded )
+
+	boolean isEmpty();
+	long getSize();
+	String getName(); - name of request parameter
+	String getOriginalFilename();
+	byte[] getBytes();
+	void transferTo(File dest); -> save file to 'dest'
+	InputStream getInputStream();
+
+
+UUID : Universally Unique IDentifier
+	java's UUID
+		32 hexadecimal number + 4 '-' identifier
+		8~4~4~4~12
+		.randomUUID().toString().split("-")
+
+
+
+

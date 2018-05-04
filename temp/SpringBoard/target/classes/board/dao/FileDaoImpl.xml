@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board.dao.FileDao">
+	<insert id="insert" parameterType='board.dto.UploadFile'>
+		insert into UPLOADFILE (fileNo, ORIGINAL_FILENAME, STORED_FILENAME, FILE_SIZE, BOARDNO)
+		values (
+			seq_uploadfile.nextval
+			, #{original_filename }
+			, #{stored_filename }
+			, #{file_size }
+			, #{boardNo }
+		)
+	</insert>
+</mapper>

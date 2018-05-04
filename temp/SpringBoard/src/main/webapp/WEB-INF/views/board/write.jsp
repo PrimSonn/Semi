@@ -21,7 +21,7 @@
 <%
 String nick = (String)session.getAttribute("nick");
 %>
-<form action="write" method="post">
+<form action="write" method="post" enctype='multipart/form-data'>
 	<div class="form-group">
 		<label for="writer">작성자</label>
 		<input type="text" id="writer" name="writer" 
@@ -37,6 +37,11 @@ String nick = (String)session.getAttribute("nick");
 		<label for="content">본문</label>
 		<textarea rows="10" id="content" name="content"></textarea>
 	</div>
+	<div>
+	<label for='file'>add file</label>
+	<input type='file' id='file' name='file'/>
+	</div>
+	<br>
 	<button id="btnWrite">작성</button>
 </form>
 <script>

@@ -33,8 +33,20 @@
 		where T.R between ${startNo} and ${endNo}
 	</select>
 	<insert id="write" parameterType="board.dto.Board">
-		insert into BOARD (BOARDNO, TITLE, WRITER, CONTENT, HIT, RECOMMEND,WRITERID)
-		values (board_seq.nextval, #{title}, #{writer}, #{content}, 0, 0,#{writerId})
+		insert all 
+		into BOARD (BOARDNO, TITLE, WRITER, CONTENT, HIT, RECOMMEND,WRITERID)
+			values (board_seq.nextval, #{title}, #{writer}, #{content}, 0, 0,#{writerId})
+		  <if test="#{upFile} != null">
+			into UPLOADFILE (fileNo, ORIGINAL_FILENAME, STORED_FILENAME, FILE_SIZE, BOARDNO)
+			values (
+				seq_uploadfile.nextval
+				, #{upFile.original_filename }
+				, #{upFile.stored_filename }
+				, #{upFile.file_size }
+				, board_seq.currval
+			)
+			</if>
+		select 1 from DUAL
 	</insert>
 	<select id="viewContent" parameterType="board.dto.Board" resultType="board.dto.Board">
 		select * from BOARD where BOARDNO = #{boardNo}

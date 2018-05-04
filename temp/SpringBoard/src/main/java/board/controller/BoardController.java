@@ -1,7 +1,11 @@
 package board.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -11,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import board.dao.FileDao;
 import board.dto.Board;
 import board.dto.Comment;
+import board.dto.UploadFile;
 import board.dto.User;
 import board.service.BoardService;
 import board.service.SignService;
@@ -24,7 +31,9 @@ import board.util.Paging;
 public class BoardController {
 	
 	@Autowired BoardService boardService;
+	@Autowired FileDao fileDao;
 	@Autowired SignService signService;
+	@Autowired ServletContext context;
 	
 	@RequestMapping(value="list",method=RequestMethod.GET)
 	public ModelAndView list(ModelAndView mv, @RequestParam(defaultValue="0") int curPage, Board board) {
@@ -83,7 +92,32 @@ public class BoardController {
 		
 		String writerId = (String) session.getAttribute("id");
 		board.setWriterId(writerId);
+		
+		MultipartFile file = board.getFile();
+		
+		String uID = UUID.randomUUID().toString().split("-")[0];
+		String realpath = context.getRealPath("upload");
+		String storedName = file.getOriginalFilename() +"_"+uID;
+		File dest = new File(realpath, storedName );
+		
+		try {
+			file.transferTo(dest);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		UploadFile uploadFile = new UploadFile();
+		uploadFile.setOriginal_filename(file.getOriginalFilename());
+		uploadFile.setStored_filename(storedName);
+		uploadFile.setFile_size(file.getSize());
+		uploadFile.setBoardNo(board.getBoardNo());
+		
+		board.setUpFile(uploadFile);
+		
 		boardService.write(board);
+//		fileDao.insert(uploadFile);
 		
 		mv.setViewName("redirect:list");
 		return mv;

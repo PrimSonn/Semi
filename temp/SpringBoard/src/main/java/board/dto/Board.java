@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Board {
 	
 	Integer boardNo;
@@ -14,6 +16,8 @@ public class Board {
 	Integer hit;
 	Integer recommend;
 	Date writtenDate;
+	MultipartFile file;
+	UploadFile upFile;
 	
 	@Override
 	public String toString() {
@@ -79,8 +83,15 @@ public class Board {
 	}
 	public void setWrittenDate(Date writtenDate) {
 		this.writtenDate = writtenDate;
+	}public MultipartFile getFile() {
+		return file;
+	}public void setFile(MultipartFile file) {
+		this.file = file;
+	}public UploadFile getUpFile() {
+		return upFile;
+	}public void setUpFile(UploadFile upFile) {
+		this.upFile = upFile;
 	}
-	
 }
 /*
  CREATE TABLE board (
