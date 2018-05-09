@@ -1,0 +1,12 @@
+download
+	new view class (extend abstract view)
+		register bean
+		new view resolver -> order check
+	setContextType: application/octet-stream
+	setContentType: (int)file.length
+	
+	URLEncoder.encode(
+	reponse setCharacterEncoding utf-8
+
+byte - (byte) string - string???
+new modelAndView
