@@ -1,0 +1,141 @@
+
+CDN??
+
+
+
+
+--------------------------------------------------------------------------------------------------
+
+
+Standard function/method
+	ready made function/method in program language
+
+API
+	word comes from Windows related development
+
+Library
+	bundle of methods/functions (for development)
+
+Framework
+	bundle of libraries (that is still library) + inversion of control (framed development)
+
+--------------------------------------------------------------------------------------------------
+
+Apache-tiles
+
+	Java's VIEW template framework
+	simplifies UI configuration
+	setting header,footer,menu...
+
+	tiles3 -> spring 3.2 jdk7.0 servlet 2.5 jsp2.1
+
+	configuration
+		- servlet-context.xml
+
+			<!-- Apache-tiles -->
+			<beans:bean id='tilesViewResolver' class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+				<beans:property name="viewClass" value='org.springframework.web.servlet.view.tiles3.TilesView'></beans:property>
+				<beans:property name='order' value='1'/>
+			</beans:bean>
+			<beans:bean id='tilesConfigurer' class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+				<beans:property name="definitions">
+					<beans:list>
+						<beans:value>/WEB-INF/tiles/template.xml</beans:value><!-- configuration XML -->
+		<!-- 			name suggestion: /WEB-INF/layout.xml -->
+		<!-- 			name suggestion: /WEB-INF/tiles-template.xml -->
+					</beans:list>
+				</beans:property>
+			</beans:bean>
+
+		- template.xml	-> resolves view(from returned string - view name)
+
+			<?xml version="1.0" encoding="UTF-8"?>
+			<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+			<tiles-definitions>
+				<definition name='tilebase' template='/WEB-INF/tiles/layout.jsp'>
+					<put-attribute name='header' value='/WEB-INF/tiles/layout/header.jsp' />
+					<put-attribute name='body' />
+					<put-attribute name='footer' value='/WEB-INF/tiles/layout/footer.jsp' />
+				</definition>
+					<definition name='*' extends='tilebase'>
+						<put-attribute name='body' value='/WEB-INF/views/{1}.jsp'/>
+					</definition>
+					<definition name='*/*' extends='tilebase'>
+						<put-attribute name='body' value='/WEB-INF/views/{1}/{2}.jsp'/>
+					</definition>
+					<definition name='*/*/*' extends='tilebase'>
+						<put-attribute name='body' value='/WEB-INF/views/{1}/{2}/{3}.jsp'/>
+					</definition>
+			</tiles-definitions>
+
+		- add folder/files.. header footer layout .jsp
+
+			*layout.jsp
+
+				<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+				<body>
+					<div class='wrap'>
+						<tiles:insertAttribute name='header' />
+						<tiles:insertAttribute name='body' />
+						<tiles:insertAttribute name='footer' />
+					</div>
+				</body>
+
+			*header.jsp
+
+				<div class='header'>
+					<h1>HEADER</h1>
+				</div>
+
+			*footer.jsp
+
+				<div class='footer'>
+					<h1>FOOTER</h1>
+				</div>
+
+			* all .jsp
+			add <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+------------------------------------------------------------------------------------------------------
+
+project lombok
+
+	eclipse plug-in
+	jar file deployed
+
+	@annotation for automatically adding getter/setter/toString...
+
+https://projectlombok.org/
+
+	maven dependency
+		pom.xml
+			<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.16.20</version>
+				<scope>provided</scope>
+			</dependency>
+		run .jar file from .m2/**/lombok.jar ->this will add lombok setting to eclipse.ini
+			ex: C:\Users\user1\.m2\repository\org\projectlombok\lombok\1.16.20\lombok.jar
+
+		usage:
+			@NoArgsConstructor - default constructor
+			@AllArgsConstructor - constructor with parameter for every member field
+			@RequiredArgsConstructor - final or @NonNull filed only constructor
+		
+			@Getter @Setter			type property name; - if boolean isProperty, setProperty
+			@delegate				type property name;
+			
+			@Data					accessModifier class Classname {}
+				->@ToString @EqualsAndHashCode @NoArgsConstructor/@RequiredArgsConstructor
+			@EqualsAndHashCode		accessModifier class Classname {}
+			@ToString				accessModifier class Classname {}
+			@EqualsAndHashCode		accessModifier class Classname {}
+
+		a
+
+
+
+
+

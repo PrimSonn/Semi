@@ -6,6 +6,9 @@ import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Board {
 	
 	Integer boardNo;
@@ -18,6 +21,8 @@ public class Board {
 	Date writtenDate;
 	MultipartFile file;
 	UploadFile upFile;
+	
+	
 	
 	@Override
 	public String toString() {
