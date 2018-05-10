@@ -19,9 +19,17 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+		<beans:property name='order' value='1'/>
+	</beans:bean>
+
+	<beans:bean class='org.springframework.web.servlet.view.BeanNameViewResolver'>
+		<beans:property name='order' value='0'/>
 	</beans:bean>
 	
+	<beans:bean id='download' class='board.view.DownloadView' />
+	
 	<context:component-scan base-package="board.controller,board.service" />
+
 	<interceptors>
 		<interceptor>
 			<mapping path="/*" />

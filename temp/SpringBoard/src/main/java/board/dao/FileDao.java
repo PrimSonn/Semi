@@ -13,4 +13,6 @@ public interface FileDao {
 	 * 
 	 * */
 	public void insert(UploadFile uploadFile);
+	public UploadFile selectByBoardNo(Integer boardNo);
+	public UploadFile selectByFileNo(Integer fileNo);
 }

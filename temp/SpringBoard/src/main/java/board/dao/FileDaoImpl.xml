@@ -11,4 +11,10 @@
 			, #{boardNo }
 		)
 	</insert>
+	<select id='selectByBoardNo' parameterType='Integer' resultType='board.dto.UploadFile'>
+		select * from UPLOADFILE where BOARDNO = ${value}
+	</select>
+	<select id='selectByFileNo' parameterType='Integer' resultType='board.dto.UploadFile'>
+		select * from UPLOADFILE where FILENO = ${value}
+	</select>
 </mapper>

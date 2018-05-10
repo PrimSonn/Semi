@@ -129,6 +129,7 @@ public class BoardController {
 		Board newBoard = boardService.viewContent(board);
 		int totalCount = boardService.totalComment(board.getBoardNo());
 		newBoard = newBoard==null? new Board() : newBoard;
+		newBoard.setUpFile(fileDao.selectByBoardNo(newBoard.getBoardNo()));
 		mv.addObject("board",newBoard);
 		
 		board.setWriterId((String)session.getAttribute("id"));
@@ -144,6 +145,21 @@ public class BoardController {
 		mv.setViewName("board/contentView");
 		return mv;
 	}
+	
+	
+	@RequestMapping(value="download",method=RequestMethod.GET)
+	public ModelAndView download(ModelAndView mv,UploadFile reqFile) {
+		
+//		System.out.println(reqFile);
+		reqFile=fileDao.selectByFileNo(reqFile.getFileno());
+		
+		File file = new File(context.getRealPath("upload"),reqFile.getStored_filename());
+		
+		mv.addObject("file", file);
+		mv.setViewName("download");
+		return mv;
+	}
+	
 	
 	@RequestMapping(value="edit",method=RequestMethod.GET)
 	public ModelAndView edit(HttpSession session,ModelAndView mv,Board board) {

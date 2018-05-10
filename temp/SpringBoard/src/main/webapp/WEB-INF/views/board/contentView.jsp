@@ -47,6 +47,7 @@
 <div id='recTot'>recommend: ${board.recommend }</div>
 <div>writtenDate: ${board.writtenDate }</div>
 <div>boardNo: ${board.boardNo }</div>
+<div>attached file: <a href='/board/download?fileno=${board.upFile.fileno}'>${board.upFile.original_filename }</a></div>
 <div style="text-align: center;">
 <form action='writeComment'method="post">
 	<label for="writer">작성자</label>
