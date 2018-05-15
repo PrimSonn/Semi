@@ -30,6 +30,14 @@ Apache-tiles
 	tiles3 -> spring 3.2 jdk7.0 servlet 2.5 jsp2.1
 
 	configuration
+		- pom.xml
+		<!-- http://tiles.apache.org/download.html -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-extras</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+		
 		- servlet-context.xml
 
 			<!-- Apache-tiles -->
